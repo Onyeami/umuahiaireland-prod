@@ -1,0 +1,26 @@
+# render.yaml
+databases:
+  - name: umuahia-db # Name your database
+    plan: free
+    databaseName: umuahia-db # Name of the database itself
+    user: umuahia_user # Database user
+
+services:
+  - type: web
+    name: umuahia-web # Name for your web service
+    runtime: python
+    # Build command uses the build.sh script we created earlier
+    buildCommand: "./build.sh"
+    # Start command uses Gunicorn. Replace 'umuahia' with your actual Django project folder name.
+    startCommand: "gunicorn umuahia_ireland.wsgi:application"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: umuahia-db # Reference the database defined above
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true # Render will generate a strong secret key for you
+      - key: WEB_CONCURRENCY
+        value: 2 # Adjust based on your plan and needs (e.g., number of CPU cores)
+      - key: DEBUG
+        value: False # Ensure DEBUG is off in production
