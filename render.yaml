@@ -1,7 +1,7 @@
 # render.yaml
 databases:
   - name: umuahia_db # Name your database
-    plan: free
+    plan: Basic-256mb
     databaseName: umuahia_db # Name of the database itself
     user: umuahia_user # Database user
 
