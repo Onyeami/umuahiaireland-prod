@@ -4,7 +4,6 @@ from pathlib import Path
 from .config import (
     SECRET_KEY,
     DEBUG,
-    ALLOWED_HOSTS,
     DB_NAME,
     DB_USER,
     DB_PASSWORD,
@@ -104,7 +103,6 @@ DATABASES = {
     )
 }
 
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
@@ -166,23 +164,3 @@ EMAIL_HOST_PASSWORD = EMAIL_HOST_PASSWORD
 
 SUPERUSER_EMAIL = (SUPERUSER_EMAIL,)
 SUPERUSER_PASSWORD = (SUPERUSER_PASSWORD,)
-
-# # Security Settings for Production
-if not DEBUG:
-    SECURE_BROWSER_XSS_FILTER = True
-    SECURE_CONTENT_TYPE_NOSNIFF = True
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_HSTS_SECONDS = 31536000
-    SECURE_REDIRECT_EXEMPT = []
-    SECURE_SSL_REDIRECT = True
-    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-    USE_TZ = True
-    X_FRAME_OPTIONS = "DENY"
-
-    # Update ALLOWED_HOSTS for production
-    ALLOWED_HOSTS = [
-        "localhost",
-        "127.0.0.1",
-        "*.herokuapp.com",
-        "*.render.com",
-    ]
