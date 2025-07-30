@@ -25,7 +25,7 @@
     .slider-bg,
     .slider-image {
         width: 100vw !important;
-        height: 60vh !important;
+        height: 70vh !important;
         box-sizing: border-box !important;
         margin: 0 !important;
         padding: 0 !important;
@@ -41,6 +41,7 @@
 
     .slider-image {
         position: absolute;
+      
         top: 0;
         left: 0;
         object-fit: cover !important;
@@ -60,21 +61,24 @@
     }
 </style>
 
-<section class="scroll-section relative overflow-hidden" id="hero" style="height:60vh; min-height:350px;">
+<section class="scroll-section relative overflow-hidden" id="hero" style="height:70vh; min-height:350px;">
     <!-- Background Images -->
     <div class="slider-bg z-[1]">
-        <img src="{% static 'img/back1.jpg' %}" class="slider-image active" />
-        <img src="{% static 'img/back3.jpg' %}" class="slider-image" />
-        <img src="{% static 'img/back5.jpg' %}" class="slider-image" />
-        <img src="{% static 'img/back6.jpg' %}" class="slider-image" />
+       <!-- <img src="{% static 'img/back1.jpg' %}" class="slider-image active" /> -->
+       <!-- <img src="{% static 'img/back3.jpg' %}" class="slider-image" /> -->
+        <img src="{% static 'img/back5a.png' %}" class="slider-image" />
+       <!-- <img src="{% static 'img/back6.jpg' %}" class="slider-image" /> -->
+        <img src="{% static 'img/back7.jpg' %}" class="slider-image" />
+        <img src="{% static 'img/back8.jpg' %}" class="slider-image" /> 
+        <!-- <img src="{% static 'img/back9.jpg' %}" class="slider-image" /> -->
+
     </div>
 
     <!-- Dark Overlay -->
-    <div class="absolute inset-0 z-[3] bg-black" style="background: rgba(0,0,0,0.5);"></div>
+    <div class="absolute inset-0 z-[3] bg-black" style="background: rgba(0,0,0,0.2);"></div>
 
     <!-- Hero Text Content -->
-    <div class="flex items-center justify-center py-10 h-full flex-col relative z-10"
-        style="height:60vh; min-height:350px;">
+    <div class="flex flex-col items-center justify-center h-full w-full relative z-10" style="height:60vh; min-height:350px;">
         <div class="flex items-center flex-col text-center space-y-5">
             <h1 class="text-4xl md:text-7xl font-bold text-white opensans-text" data-aos="fade-up">
                 Welcome to
@@ -361,7 +365,7 @@
                 <!-- Slide 1 -->
                 <div class="swiper-slide">
                     <div class="relative group">
-                        <img src="{% static 'img/allmahous.JPG' %}" alt="Gallery 1" class="w-full">
+                        <img src="{% static 'img/cross1.JPG' %}" alt="Gallery 1" class="w-full">
                         <div
                             class="overlay absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center p-4">
                             <div class="text-white text-center">
@@ -374,7 +378,7 @@
 
                 <div class="swiper-slide">
                     <div class="relative group">
-                        <img src="{% static 'img/moses.jpg' %}" alt="Gallery 1" class="w-full">
+                        <img src="{% static 'img/cross2.jpg' %}" alt="Gallery 1" class="w-full">
                         <div
                             class="overlay absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center p-4">
                             <div class="text-white text-center">
@@ -386,7 +390,7 @@
                 </div>
                 <div class="swiper-slide">
                     <div class="relative group">
-                        <img src="{% static 'img/machris.JPG' %}" alt="Gallery 1" class="w-full">
+                        <img src="{% static 'img/cross3.JPG' %}" alt="Gallery 1" class="w-full">
                         <div
                             class="overlay absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center p-4">
                             <div class="text-white text-center">
@@ -398,7 +402,7 @@
                 </div>
                 <div class="swiper-slide">
                     <div class="relative group">
-                        <img src="{% static 'img/onye.jpg' %}" alt="Gallery 1" class="w-full">
+                        <img src="{% static 'img/OnuzMartins.jpg' %}" alt="Gallery 1" class="w-full">
                         <div
                             class="overlay absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center p-4">
                             <div class="text-white text-center">
@@ -410,7 +414,7 @@
                 </div>
                 <div class="swiper-slide">
                     <div class="relative group">
-                        <img src="{% static 'img/mosnke.JPG' %}" alt="Gallery 1" class="w-full">
+                        <img src="{% static 'img/founding1.JPG' %}" alt="Gallery 1" class="w-full">
                         <div
                             class="overlay absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center p-4">
                             <div class="text-white text-center">
@@ -422,7 +426,7 @@
                 </div>
                 <div class="swiper-slide">
                     <div class="relative group">
-                        <img src="{% static 'img/drcoy.jpg' %}" alt="Gallery 1" class="w-full">
+                        <img src="{% static 'img/group1.jpg' %}" alt="Gallery 1" class="w-full">
                         <div
                             class="overlay absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center p-4">
                             <div class="text-white text-center">
@@ -575,7 +579,7 @@
             <p class="text-gray-500 mt-2" data-aos="fade-up" data-aos-delay="200">
                 Fill out the form below or contact us by email or phone
             </p>
-            <img src="{% static 'img/intouch.JPG' %}" alt="Contact Us Image" class="mt-6 w-full h-auto"
+            <img src="{% static 'img/group1.JPG' %}" alt="Contact Us Image" class="mt-6 w-full h-auto"
                 data-aos="zoom-in" data-aos-delay="400" />
         </div>
 
