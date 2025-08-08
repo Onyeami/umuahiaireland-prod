@@ -20,4 +20,9 @@ urlpatterns = [
     path("blog/", include("blog.urls", namespace="blog")),
 ]
 
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# Serve media files in development and production
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+else:
+    # In production, serve media files through the static files system
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

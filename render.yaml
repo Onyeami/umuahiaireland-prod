@@ -24,3 +24,10 @@ services:
         value: 2 # Adjust based on your plan and needs (e.g., number of CPU cores)
       - key: DEBUG
         value: False # Ensure DEBUG is off in production
+      # Cloudinary configuration for media storage
+      - key: CLOUDINARY_CLOUD_NAME
+        value: "" # You'll need to set this in Render dashboard
+      - key: CLOUDINARY_API_KEY
+        value: "" # You'll need to set this in Render dashboard
+      - key: CLOUDINARY_API_SECRET
+        value: "" # You'll need to set this in Render dashboard
