@@ -190,25 +190,59 @@
         // Handle Home link clicks to scroll to top without URL hash
         function scrollToTop(e) {
             e.preventDefault();
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
+            // If we're on the home page, just scroll to top
+            if (window.location.pathname === '/' || window.location.pathname === '') {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            } else {
+                // If we're on another page, navigate to home page
+                window.location.href = '/';
+            }
         }
 
-        // Handle section scrolling without URL hash
+        // Handle section scrolling with cross-page navigation support
         function scrollToSection(sectionId) {
             return function (e) {
                 e.preventDefault();
-                const section = document.getElementById(sectionId);
-                if (section) {
-                    section.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
+
+                // If we're on the home page, scroll to the section
+                if (window.location.pathname === '/' || window.location.pathname === '') {
+                    const section = document.getElementById(sectionId);
+                    if (section) {
+                        section.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                } else {
+                    // If we're on another page, navigate to home page with hash
+                    // We'll use sessionStorage to remember which section to scroll to
+                    sessionStorage.setItem('scrollToSection', sectionId);
+                    window.location.href = '/';
                 }
             };
         }
+
+        // Check if we need to scroll to a specific section after page load
+        document.addEventListener('DOMContentLoaded', function () {
+            const sectionToScrollTo = sessionStorage.getItem('scrollToSection');
+            if (sectionToScrollTo) {
+                sessionStorage.removeItem('scrollToSection');
+
+                // Wait a bit for the page to fully load, then scroll
+                setTimeout(function () {
+                    const section = document.getElementById(sectionToScrollTo);
+                    if (section) {
+                        section.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                }, 100);
+            }
+        });
 
         // Add event listeners for all navigation links
         document.getElementById('home-link').addEventListener('click', scrollToTop);
