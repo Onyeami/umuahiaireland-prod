@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     "django_extensions",
     "storages",
     "cloudinary",
-    "cloudinary_storage",
     # Local apps
     "app.apps.AppConfig",
     "_admin.apps.AdminConfig",
