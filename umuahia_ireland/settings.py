@@ -150,33 +150,7 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 # Production media file handling
 if not DEBUG:
-    # Cloudinary configuration for production media storage
-    import cloudinary
-    import cloudinary.uploader
-    import cloudinary.api
-
-    # Cloudinary settings - these will be environment variables in production
-    CLOUDINARY_STORAGE = {
-        "CLOUD_NAME": os.getenv("CLOUDINARY_CLOUD_NAME", ""),
-        "API_KEY": os.getenv("CLOUDINARY_API_KEY", ""),
-        "API_SECRET": os.getenv("CLOUDINARY_API_SECRET", ""),
-    }
-
-    # Only use cloudinary in production if credentials are available
-    if all(CLOUDINARY_STORAGE.values()):
-        cloudinary.config(
-            cloud_name=CLOUDINARY_STORAGE["CLOUD_NAME"],
-            api_key=CLOUDINARY_STORAGE["API_KEY"],
-            api_secret=CLOUDINARY_STORAGE["API_SECRET"],
-            secure=True,
-        )
-
-        # Use Cloudinary for media storage
-        DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
-        MEDIA_URL = f'https://res.cloudinary.com/{CLOUDINARY_STORAGE["CLOUD_NAME"]}/'
-    else:
-        # Fallback: serve media through static files system
-        MEDIA_ROOT = os.path.join(BASE_DIR, "staticfiles", "media")
+    MEDIA_ROOT = os.path.join(BASE_DIR, "staticfiles", "media")
 
 LOGIN_URL = "accounts:login"
 
