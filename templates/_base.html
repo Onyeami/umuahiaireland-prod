@@ -48,11 +48,13 @@
                     <li><a href="#" id="home-link"
                             class="text-gray-700 hover:text-primary transition-all duration-300">Home</a>
                     </li>
-                    <li><a href="/#about" class="text-gray-700 hover:text-primary transition-all duration-300">About
+                    <li><a href="#" id="about-link"
+                            class="text-gray-700 hover:text-primary transition-all duration-300">About
                             Us</a></li>
-                    <li><a href="/#gallery"
+                    <li><a href="#" id="gallery-link"
                             class="text-gray-700 hover:text-primary transition-all duration-300">Gallery</a></li>
-                    <li><a href="/#contact" class="text-gray-700 hover:text-primary transition-all duration-300">Contact
+                    <li><a href="#" id="contact-link"
+                            class="text-gray-700 hover:text-primary transition-all duration-300">Contact
                             Us</a></li>
                     <li><a href="{% url 'blog:post_list' %}"
                             class="text-gray-700 hover:text-primary transition-all duration-300">Blog</a></li>
@@ -86,9 +88,12 @@
             <ul class="flex flex-col items-start space-y-4 text-lg font-medium text-gray-700">
                 <li><a href="#" id="mobile-home-link" class="hover:text-primary transition-all duration-300">Home</a>
                 </li>
-                <li><a href="/#about" class="hover:text-primary transition-all duration-300">About Us</a></li>
-                <li><a href="/#gallery" class="hover:text-primary transition-all duration-300">Gallery</a></li>
-                <li><a href="/#contact" class="hover:text-primary transition-all duration-300">Contact Us</a></li>
+                <li><a href="#" id="mobile-about-link" class="hover:text-primary transition-all duration-300">About
+                        Us</a></li>
+                <li><a href="#" id="mobile-gallery-link"
+                        class="hover:text-primary transition-all duration-300">Gallery</a></li>
+                <li><a href="#" id="mobile-contact-link" class="hover:text-primary transition-all duration-300">Contact
+                        Us</a></li>
                 {% if request.user.is_authenticated %}
                 <li><a href="{% url 'accounts:logout' %}"
                         class="text-gray-700 hover:text-primary transition-all duration-300">Logout</a></li>
@@ -191,10 +196,34 @@
             });
         }
 
-        // Add event listeners for both desktop and mobile home links
+        // Handle section scrolling without URL hash
+        function scrollToSection(sectionId) {
+            return function (e) {
+                e.preventDefault();
+                const section = document.getElementById(sectionId);
+                if (section) {
+                    section.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            };
+        }
+
+        // Add event listeners for all navigation links
         document.getElementById('home-link').addEventListener('click', scrollToTop);
         document.getElementById('mobile-home-link').addEventListener('click', scrollToTop);
         document.getElementById('logo-link').addEventListener('click', scrollToTop);
+
+        // Desktop navigation
+        document.getElementById('about-link').addEventListener('click', scrollToSection('about'));
+        document.getElementById('gallery-link').addEventListener('click', scrollToSection('gallery'));
+        document.getElementById('contact-link').addEventListener('click', scrollToSection('contact'));
+
+        // Mobile navigation
+        document.getElementById('mobile-about-link').addEventListener('click', scrollToSection('about'));
+        document.getElementById('mobile-gallery-link').addEventListener('click', scrollToSection('gallery'));
+        document.getElementById('mobile-contact-link').addEventListener('click', scrollToSection('contact'));
 
         $('#contactForm').on('submit', function (e) {
             e.preventDefault();
