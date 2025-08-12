@@ -40,8 +40,8 @@ Posts in {{ category.name }}
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {% for post in posts %}
       <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
-        {% if post.featured_image %}
-        <img src="{{ post.featured_image.url }}" class="w-full h-48 object-cover" alt="{{ post.title }}" />
+        {% if post.featured_image_url %}
+        <img src="{{ post.featured_image_url }}" class="w-full h-48 object-cover" alt="{{ post.title }}" />
         {% else %}
         <div class="w-full h-48 bg-gray-100 flex items-center justify-content-center">
           <i class="fas fa-image text-4xl text-gray-400"></i>

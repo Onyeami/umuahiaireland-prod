@@ -49,8 +49,8 @@
           {% for post in featured_posts %}
           <div
             class="bg-white rounded-lg shadow-md overflow-hidden blog-card transform transition duration-300 hover:-translate-y-1 hover:shadow-lg">
-            {% if post.featured_image %}
-            <img src="{{ post.featured_image.url }}" class="w-full h-48 object-cover" alt="{{ post.title }}">
+            {% if post.featured_image_url %}
+            <img src="{{ post.featured_image_url }}" class="w-full h-48 object-cover" alt="{{ post.title }}">
             {% else %}
             <div
               class="w-full h-48 bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-content-center">
@@ -80,8 +80,8 @@
         {% for post in posts %}
         <div
           class="bg-white rounded-lg shadow-md overflow-hidden blog-card transform transition duration-300 hover:-translate-y-1 hover:shadow-lg">
-          {% if post.featured_image %}
-          <img src="{{ post.featured_image.url }}" class="w-full h-48 object-cover" alt="{{ post.title }}">
+          {% if post.featured_image_url %}
+          <img src="{{ post.featured_image_url }}" class="w-full h-48 object-cover" alt="{{ post.title }}">
           {% else %}
           <div class="w-full h-48 bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
             <i class="fas fa-image text-4xl text-gray-400"></i>

@@ -41,7 +41,7 @@
 
     .slider-image {
         position: absolute;
-      
+
         top: 0;
         left: 0;
         object-fit: cover !important;
@@ -64,12 +64,12 @@
 <section class="scroll-section relative overflow-hidden" id="hero" style="height:70vh; min-height:350px;">
     <!-- Background Images -->
     <div class="slider-bg z-[1]">
-       <!-- <img src="{% static 'img/back1.jpg' %}" class="slider-image active" /> -->
-       <!-- <img src="{% static 'img/back3.jpg' %}" class="slider-image" /> -->
+        <!-- <img src="{% static 'img/back1.jpg' %}" class="slider-image active" /> -->
+        <!-- <img src="{% static 'img/back3.jpg' %}" class="slider-image" /> -->
         <img src="{% static 'img/back5a.png' %}" class="slider-image" />
-       <!-- <img src="{% static 'img/back6.jpg' %}" class="slider-image" /> -->
+        <!-- <img src="{% static 'img/back6.jpg' %}" class="slider-image" /> -->
         <img src="{% static 'img/back7.jpg' %}" class="slider-image" />
-        <img src="{% static 'img/back8.jpg' %}" class="slider-image" /> 
+        <img src="{% static 'img/back8.jpg' %}" class="slider-image" />
         <!-- <img src="{% static 'img/back9.jpg' %}" class="slider-image" /> -->
 
     </div>
@@ -78,7 +78,8 @@
     <div class="absolute inset-0 z-[3] bg-black" style="background: rgba(0,0,0,0.2);"></div>
 
     <!-- Hero Text Content -->
-    <div class="flex flex-col items-center justify-center h-full w-full relative z-10" style="height:60vh; min-height:350px;">
+    <div class="flex flex-col items-center justify-center h-full w-full relative z-10"
+        style="height:60vh; min-height:350px;">
         <div class="flex items-center flex-col text-center space-y-5">
             <h1 class="text-4xl md:text-7xl font-bold text-white opensans-text" data-aos="fade-up">
                 Welcome to
@@ -116,7 +117,8 @@
     </script>
 </section>
 
-<section id='about' class="scroll-section h-fit flex items-center justify-center mt-10" data-aos="fade-left" data-aos-duration="1200">
+<section id='about' class="scroll-section h-fit flex items-center justify-center mt-10" data-aos="fade-left"
+    data-aos-duration="1200">
     <div class="container flex sm:flex-row flex-col-reverse">
         <div class="w-full md:w-1/2 space-y-2 p-10 flex items-center justify-center" data-aos="fade-right"
             data-aos-delay="400">
@@ -213,7 +215,8 @@
         <div class="text-center mb-12" data-aos="fade-up">
             <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Testimonials</h2>
             <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-                Hear from our community members about their journey and how Umuahia Community Ireland has made a difference in their lives.
+                Hear from our community members about their journey and how Umuahia Community Ireland has made a
+                difference in their lives.
             </p>
         </div>
 
@@ -228,15 +231,16 @@
                             <!-- Testimonial Image -->
                             <div class="w-full md:w-1/3 flex justify-center">
                                 {% if testimonial.image %}
-                                <img src="{{ testimonial.image.url }}" alt="{{ testimonial.name }}" 
-                                     class="w-48 h-48 object-cover rounded-full shadow-lg">
+                                <img src="{{ testimonial.image.url }}" alt="{{ testimonial.name }}"
+                                    class="w-48 h-48 object-cover rounded-full shadow-lg">
                                 {% else %}
-                                <div class="w-48 h-48 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full shadow-lg flex items-center justify-center">
+                                <div
+                                    class="w-48 h-48 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full shadow-lg flex items-center justify-center">
                                     <i class="fas fa-user text-4xl text-white"></i>
                                 </div>
                                 {% endif %}
                             </div>
-                            
+
                             <!-- Testimonial Content -->
                             <div class="w-full md:w-2/3 space-y-4">
                                 <blockquote class="text-lg text-gray-600 italic leading-relaxed">
@@ -254,11 +258,11 @@
                 </div>
                 {% endfor %}
             </div>
-            
+
             <!-- Navigation Arrows -->
             <div class="swiper-button-next text-primary"></div>
             <div class="swiper-button-prev text-primary"></div>
-            
+
             <!-- Pagination -->
             <div class="swiper-pagination"></div>
         </div>
@@ -268,14 +272,17 @@
             <div class="bg-white rounded-lg shadow-lg p-8 mx-4">
                 <div class="flex flex-col md:flex-row items-center space-y-6 md:space-y-0 md:space-x-8">
                     <div class="w-full md:w-1/3 flex justify-center">
-                        <img src="{% static 'img/chirite.JPG' %}" alt="Testimonial" 
-                             class="w-48 h-48 object-cover rounded-full shadow-lg">
+                        <img src="{% static 'img/chirite.JPG' %}" alt="Testimonial"
+                            class="w-48 h-48 object-cover rounded-full shadow-lg">
                     </div>
                     <div class="w-full md:w-2/3 space-y-4">
                         <blockquote class="text-lg text-gray-600 italic leading-relaxed">
-                            "From being taken under until now, I have learned and grown so much. I thank each and every one of
-                            you for teaching and inspiring me. I'm excited about the future while I continue to be excited about all the things we will continue to
-                            accomplish here. Please remember that the work you all do here is very special. Every day you all help others. It has been an
+                            "From being taken under until now, I have learned and grown so much. I thank each and every
+                            one of
+                            you for teaching and inspiring me. I'm excited about the future while I continue to be
+                            excited about all the things we will continue to
+                            accomplish here. Please remember that the work you all do here is very special. Every day
+                            you all help others. It has been an
                             absolute honour!"
                         </blockquote>
                         <div class="border-l-4 border-primary pl-4">
@@ -466,8 +473,8 @@
                 data-aos="fade-up" data-aos-delay="{{ forloop.counter }}">
                 <!-- Post Image -->
                 <div class="relative overflow-hidden">
-                    {% if post.featured_image %}
-                    <img src="{{ post.featured_image.url }}" alt="{{ post.title }}"
+                    {% if post.featured_image_url %}
+                    <img src="{{ post.featured_image_url }}" alt="{{ post.title }}"
                         class="w-full h-48 object-cover transition-transform duration-300 hover:scale-105">
                     {% else %}
                     <div

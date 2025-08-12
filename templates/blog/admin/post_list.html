@@ -59,8 +59,8 @@
                         <tr>
                             <td>
                                 <div class="d-flex align-items-center">
-                                    {% if post.featured_image %}
-                                    <img src="{{ post.featured_image.url }}" class="me-3 rounded"
+                                    {% if post.featured_image_url %}
+                                    <img src="{{ post.featured_image_url }}" class="me-3 rounded"
                                         style="width: 40px; height: 40px; object-fit: cover;" alt="{{ post.title }}">
                                     {% else %}
                                     <div class="me-3 bg-light rounded d-flex align-items-center justify-content-center"

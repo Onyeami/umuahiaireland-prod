@@ -58,9 +58,9 @@
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
       {% for post in featured_posts %}
       <article class="bg-white rounded-lg shadow-md overflow-hidden blog-card">
-        {% if post.featured_image %}
+        {% if post.featured_image_url %}
         <div class="h-48 overflow-hidden">
-          <img src="{{ post.featured_image.url }}" alt="{{ post.title }}" class="w-full h-full object-cover">
+          <img src="{{ post.featured_image_url }}" alt="{{ post.title }}" class="w-full h-full object-cover">
         </div>
         {% endif %}
         <div class="p-6">
@@ -123,9 +123,9 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {% for post in posts %}
       <article class="bg-white rounded-lg shadow-md overflow-hidden blog-card">
-        {% if post.featured_image %}
+        {% if post.featured_image_url %}
         <div class="h-48 overflow-hidden">
-          <img src="{{ post.featured_image.url }}" alt="{{ post.title }}" class="w-full h-full object-cover">
+          <img src="{{ post.featured_image_url }}" alt="{{ post.title }}" class="w-full h-full object-cover">
         </div>
         {% else %}
         <div class="h-48 bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">

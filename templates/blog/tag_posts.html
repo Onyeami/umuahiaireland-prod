@@ -34,9 +34,9 @@ Browse all blog posts tagged with "{{ tag.name }}". Discover related content and
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         {% for post in posts %}
         <article class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300">
-          {% if post.featured_image %}
+          {% if post.featured_image_url %}
           <div class="aspect-w-16 aspect-h-9">
-            <img src="{{ post.featured_image.url }}" class="w-full h-48 object-cover" alt="{{ post.title }}" />
+            <img src="{{ post.featured_image_url }}" class="w-full h-48 object-cover" alt="{{ post.title }}" />
           </div>
           {% endif %}
 

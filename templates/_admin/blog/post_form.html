@@ -151,9 +151,9 @@
           {% if form.featured_image.errors %}
           <p class="mt-1 text-sm text-red-600">{{ form.featured_image.errors.0 }}</p>
           {% endif %}
-          {% if post and post.featured_image %}
+          {% if post and post.featured_image_url %}
           <div class="mt-2">
-            <img src="{{ post.featured_image.url }}" alt="Current featured image"
+            <img src="{{ post.featured_image_url }}" alt="Current featured image"
               class="w-full h-32 object-cover rounded-lg">
           </div>
           {% endif %}
