@@ -56,7 +56,6 @@ class BlogPostForm(forms.ModelForm):
             "tags",
             "excerpt",
             "content",
-            "featured_image",  # URL field
             "meta_title",
             "meta_description",
             "status",
@@ -89,13 +88,6 @@ class BlogPostForm(forms.ModelForm):
                 }
             ),
             "tags": forms.CheckboxSelectMultiple(attrs={"class": "space-y-2"}),
-            "featured_image": forms.URLInput(
-                attrs={
-                    "class": "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
-                    "placeholder": "Featured image URL (auto-filled when you upload)",
-                    "readonly": True,
-                }
-            ),
             "meta_title": forms.TextInput(
                 attrs={
                     "class": "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
@@ -155,15 +147,8 @@ class BlogImageForm(forms.ModelForm):
 
     class Meta:
         model = BlogImage
-        fields = ["image", "caption", "alt_text", "order"]
+        fields = ["caption", "alt_text", "order"]
         widgets = {
-            "image": forms.URLInput(
-                attrs={
-                    "class": "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
-                    "placeholder": "Image URL (auto-filled when you upload)",
-                    "readonly": True,
-                }
-            ),
             "caption": forms.TextInput(
                 attrs={
                     "class": "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
