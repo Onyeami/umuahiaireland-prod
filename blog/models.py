@@ -72,8 +72,11 @@ class BlogPost(models.Model):
         max_length=500, help_text="Brief description of the post"
     )
     content = models.TextField(help_text="Main content of the blog post")
-    featured_image = models.ImageField(
-        upload_to="blog/featured/", blank=True, null=True
+    featured_image = models.URLField(
+        max_length=500,
+        blank=True,
+        null=True,
+        help_text="URL of the featured image (Cloudinary URL)",
     )
 
     # Meta fields
@@ -123,7 +126,9 @@ class BlogImage(models.Model):
     """Additional images for blog posts"""
 
     post = models.ForeignKey(BlogPost, on_delete=models.CASCADE, related_name="images")
-    image = models.ImageField(upload_to="blog/images/")
+    image = models.URLField(
+        max_length=500, help_text="URL of the image (Cloudinary URL)"
+    )
     caption = models.CharField(max_length=200, blank=True)
     alt_text = models.CharField(max_length=100, blank=True)
     order = models.PositiveIntegerField(default=0)

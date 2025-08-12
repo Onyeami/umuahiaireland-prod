@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     "django.contrib.humanize",
     # Third party apps
     "django_extensions",
+    "cloudinary_storage",
+    "cloudinary",
     # Local apps
     "app.apps.AppConfig",
     "_admin.apps.AdminConfig",
@@ -141,9 +143,59 @@ if not DEBUG:
     # and renames the files with unique names for each version to support long-term caching
     STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
+    # Add media files to WhiteNoise configuration
+    WHITENOISE_USE_FINDERS = True
+    WHITENOISE_AUTOREFRESH = True
+
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
+
+# Production media file handling
+if not DEBUG:
+    # First, try Cloudinary if configured
+    try:
+        import cloudinary
+        import cloudinary.uploader
+        import cloudinary.api
+
+        # Cloudinary settings - these will be environment variables in production
+        CLOUDINARY_STORAGE = {
+            "CLOUD_NAME": os.getenv("CLOUDINARY_CLOUD_NAME", ""),
+            "API_KEY": os.getenv("CLOUDINARY_API_KEY", ""),
+            "API_SECRET": os.getenv("CLOUDINARY_API_SECRET", ""),
+        }
+
+        # Only use cloudinary in production if credentials are available
+        if all(CLOUDINARY_STORAGE.values()):
+            cloudinary.config(
+                cloud_name=CLOUDINARY_STORAGE["CLOUD_NAME"],
+                api_key=CLOUDINARY_STORAGE["API_KEY"],
+                api_secret=CLOUDINARY_STORAGE["API_SECRET"],
+                secure=True,
+            )
+
+            # Use Cloudinary for media storage
+            DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+            MEDIA_URL = (
+                f'https://res.cloudinary.com/{CLOUDINARY_STORAGE["CLOUD_NAME"]}/'
+            )
+            print(
+                f"✅ Cloudinary configured for cloud: {CLOUDINARY_STORAGE['CLOUD_NAME']}"
+            )
+        else:
+            # Fallback: Use WhiteNoise to serve media files
+            MEDIA_ROOT = os.path.join(BASE_DIR, "staticfiles", "media")
+            MEDIA_URL = "/media/"
+            print("⚠️  Cloudinary not configured - using WhiteNoise for media files")
+            print(
+                "   Set CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET"
+            )
+    except ImportError:
+        # Fallback if cloudinary packages not installed
+        MEDIA_ROOT = os.path.join(BASE_DIR, "staticfiles", "media")
+        MEDIA_URL = "/media/"
+        print("⚠️  Cloudinary packages not installed - using WhiteNoise for media files")
 
 LOGIN_URL = "accounts:login"
 
