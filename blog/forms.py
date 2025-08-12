@@ -56,6 +56,7 @@ class BlogPostForm(forms.ModelForm):
             "tags",
             "excerpt",
             "content",
+            "featured_image_file",  # This will show the file upload field
             "meta_title",
             "meta_description",
             "status",
@@ -147,7 +148,12 @@ class BlogImageForm(forms.ModelForm):
 
     class Meta:
         model = BlogImage
-        fields = ["caption", "alt_text", "order"]
+        fields = [
+            "image_file",
+            "caption",
+            "alt_text",
+            "order",
+        ]  # Include the file upload field
         widgets = {
             "caption": forms.TextInput(
                 attrs={
