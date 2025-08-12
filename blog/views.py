@@ -284,6 +284,7 @@ def admin_post_list(request):
 
 
 @user_passes_test(is_admin_user)
+@user_passes_test(is_admin_user)
 def admin_create_post(request):
     """Create new blog post"""
     if request.method == "POST":
@@ -300,12 +301,9 @@ def admin_create_post(request):
                 # Handle featured image
                 if post.featured_image:
                     logger.info(
-                        f"Featured image uploaded for post '{post.title}': {post.featured_image.url}"
+                        f"Featured image uploaded for post '{post.title}': {post.featured_image}"
                     )
-                    if not settings.DEBUG:
-                        logger.info(
-                            f"Image stored in Cloudinary: {post.featured_image.url}"
-                        )
+                    messages.info(request, f"Featured image uploaded to Cloudinary")
 
                 # Handle additional images
                 formset.instance = post
@@ -316,28 +314,15 @@ def admin_create_post(request):
                         f"Additional images uploaded for post '{post.title}': {len(saved_images)} images"
                     )
                     for img in saved_images:
-                        logger.info(f"Image URL: {img.image.url}")
+                        logger.info(f"Image URL: {img.image}")
+                    messages.info(
+                        request,
+                        f"{len(saved_images)} additional images uploaded to Cloudinary",
+                    )
 
                 messages.success(
                     request, f"Blog post '{post.title}' created successfully!"
                 )
-
-                # Add debug message in development
-                if settings.DEBUG:
-                    messages.info(request, "Images stored locally in development mode")
-                else:
-                    if (
-                        hasattr(settings, "DEFAULT_FILE_STORAGE")
-                        and "cloudinary" in settings.DEFAULT_FILE_STORAGE.lower()
-                    ):
-                        messages.info(
-                            request, "Images uploaded to Cloudinary cloud storage"
-                        )
-                    else:
-                        messages.warning(
-                            request,
-                            "Cloudinary not configured - images may not persist in production",
-                        )
 
                 return redirect("blog:admin_post_list")
 
@@ -348,8 +333,16 @@ def admin_create_post(request):
             # Log form errors for debugging
             if not form.is_valid():
                 logger.error(f"Blog post form errors: {form.errors}")
+                for field, errors in form.errors.items():
+                    for error in errors:
+                        messages.error(request, f"{field}: {error}")
             if not formset.is_valid():
                 logger.error(f"Image formset errors: {formset.errors}")
+                for form_error in formset.errors:
+                    if form_error:
+                        for field, errors in form_error.items():
+                            for error in errors:
+                                messages.error(request, f"Image {field}: {error}")
     else:
         form = BlogPostForm()
         formset = BlogImageFormSet()
@@ -380,8 +373,9 @@ def admin_edit_post(request, slug):
                 # Handle featured image updates
                 if updated_post.featured_image:
                     logger.info(
-                        f"Featured image updated for post '{updated_post.title}': {updated_post.featured_image.url}"
+                        f"Featured image updated for post '{updated_post.title}': {updated_post.featured_image}"
                     )
+                    messages.info(request, "Featured image updated in Cloudinary")
 
                 # Handle additional images
                 saved_images = formset.save()
@@ -391,26 +385,15 @@ def admin_edit_post(request, slug):
                         f"Additional images updated for post '{updated_post.title}': {len(saved_images)} images"
                     )
                     for img in saved_images:
-                        if img.image:
-                            logger.info(f"Image URL: {img.image.url}")
+                        logger.info(f"Image URL: {img.image}")
+                    messages.info(
+                        request,
+                        f"{len(saved_images)} additional images updated in Cloudinary",
+                    )
 
                 messages.success(
                     request, f"Blog post '{updated_post.title}' updated successfully!"
                 )
-
-                # Add debug message in development
-                if settings.DEBUG:
-                    messages.info(request, "Images stored locally in development mode")
-                else:
-                    if _is_cloudinary_configured():
-                        messages.info(
-                            request, "Images uploaded to Cloudinary cloud storage"
-                        )
-                    else:
-                        messages.warning(
-                            request,
-                            "Cloudinary not configured - images may not persist in production",
-                        )
 
                 return redirect("blog:admin_post_list")
 
@@ -421,8 +404,16 @@ def admin_edit_post(request, slug):
             # Log form errors for debugging
             if not form.is_valid():
                 logger.error(f"Blog post form errors: {form.errors}")
+                for field, errors in form.errors.items():
+                    for error in errors:
+                        messages.error(request, f"{field}: {error}")
             if not formset.is_valid():
                 logger.error(f"Image formset errors: {formset.errors}")
+                for form_error in formset.errors:
+                    if form_error:
+                        for field, errors in form_error.items():
+                            for error in errors:
+                                messages.error(request, f"Image {field}: {error}")
     else:
         form = BlogPostForm(instance=post)
         formset = BlogImageFormSet(instance=post)
@@ -438,6 +429,7 @@ def admin_edit_post(request, slug):
     return render(request, "blog/admin/post_form.html", context)
 
 
+# Public views
 @user_passes_test(is_admin_user)
 def admin_delete_post(request, slug):
     """Delete blog post"""
