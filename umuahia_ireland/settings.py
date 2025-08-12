@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     "django.contrib.humanize",
     # Third party apps
     "django_extensions",
-    "storages",
+    "cloudinary_storage",
     "cloudinary",
     # Local apps
     "app.apps.AppConfig",
@@ -147,9 +147,49 @@ if not DEBUG:
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
-# Production media file handling
+# Production media file handling with Cloudinary
 if not DEBUG:
-    MEDIA_ROOT = os.path.join(BASE_DIR, "staticfiles", "media")
+    # Cloudinary configuration for production media storage
+    try:
+        import cloudinary
+        import cloudinary.uploader
+        import cloudinary.api
+
+        # Cloudinary settings - these will be environment variables in production
+        CLOUDINARY_STORAGE = {
+            "CLOUD_NAME": os.getenv("CLOUDINARY_CLOUD_NAME", ""),
+            "API_KEY": os.getenv("CLOUDINARY_API_KEY", ""),
+            "API_SECRET": os.getenv("CLOUDINARY_API_SECRET", ""),
+        }
+
+        # Only use cloudinary in production if credentials are available
+        if all(CLOUDINARY_STORAGE.values()):
+            cloudinary.config(
+                cloud_name=CLOUDINARY_STORAGE["CLOUD_NAME"],
+                api_key=CLOUDINARY_STORAGE["API_KEY"],
+                api_secret=CLOUDINARY_STORAGE["API_SECRET"],
+                secure=True,
+            )
+
+            # Use Cloudinary for media storage
+            DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+            MEDIA_URL = (
+                f'https://res.cloudinary.com/{CLOUDINARY_STORAGE["CLOUD_NAME"]}/'
+            )
+            print(
+                f"✅ Cloudinary configured for cloud: {CLOUDINARY_STORAGE['CLOUD_NAME']}"
+            )
+        else:
+            # Fallback: serve media through static files system
+            MEDIA_ROOT = os.path.join(BASE_DIR, "staticfiles", "media")
+            print("⚠️  Cloudinary not configured - using fallback media storage")
+            print(
+                "   Set CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET"
+            )
+    except ImportError:
+        # Fallback if cloudinary packages not installed
+        MEDIA_ROOT = os.path.join(BASE_DIR, "staticfiles", "media")
+        print("⚠️  Cloudinary packages not installed - using fallback media storage")
 
 LOGIN_URL = "accounts:login"
 

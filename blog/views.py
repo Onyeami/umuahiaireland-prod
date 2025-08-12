@@ -8,6 +8,8 @@ from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import get_user_model
+from django.conf import settings
+import logging
 from .models import BlogPost, Category, Tag, Comment, BlogSettings
 from .forms import (
     BlogPostForm,
@@ -20,6 +22,21 @@ from .forms import (
 )
 
 User = get_user_model()
+logger = logging.getLogger(__name__)
+
+
+def _is_cloudinary_configured():
+    """Check if Cloudinary is properly configured"""
+    if settings.DEBUG:
+        return False
+
+    try:
+        return (
+            hasattr(settings, "DEFAULT_FILE_STORAGE")
+            and "cloudinary" in settings.DEFAULT_FILE_STORAGE.lower()
+        )
+    except:
+        return False
 
 
 def is_admin_user(user):
@@ -274,16 +291,65 @@ def admin_create_post(request):
         formset = BlogImageFormSet(request.POST, request.FILES)
 
         if form.is_valid() and formset.is_valid():
-            post = form.save(commit=False)
-            post.author = request.user
-            post.save()
-            form.save_m2m()  # Save many-to-many relationships
+            try:
+                post = form.save(commit=False)
+                post.author = request.user
+                post.save()
+                form.save_m2m()  # Save many-to-many relationships
 
-            formset.instance = post
-            formset.save()
+                # Handle featured image
+                if post.featured_image:
+                    logger.info(
+                        f"Featured image uploaded for post '{post.title}': {post.featured_image.url}"
+                    )
+                    if not settings.DEBUG:
+                        logger.info(
+                            f"Image stored in Cloudinary: {post.featured_image.url}"
+                        )
 
-            messages.success(request, "Blog post created successfully!")
-            return redirect("blog:admin_post_list")
+                # Handle additional images
+                formset.instance = post
+                saved_images = formset.save()
+
+                if saved_images:
+                    logger.info(
+                        f"Additional images uploaded for post '{post.title}': {len(saved_images)} images"
+                    )
+                    for img in saved_images:
+                        logger.info(f"Image URL: {img.image.url}")
+
+                messages.success(
+                    request, f"Blog post '{post.title}' created successfully!"
+                )
+
+                # Add debug message in development
+                if settings.DEBUG:
+                    messages.info(request, "Images stored locally in development mode")
+                else:
+                    if (
+                        hasattr(settings, "DEFAULT_FILE_STORAGE")
+                        and "cloudinary" in settings.DEFAULT_FILE_STORAGE.lower()
+                    ):
+                        messages.info(
+                            request, "Images uploaded to Cloudinary cloud storage"
+                        )
+                    else:
+                        messages.warning(
+                            request,
+                            "Cloudinary not configured - images may not persist in production",
+                        )
+
+                return redirect("blog:admin_post_list")
+
+            except Exception as e:
+                logger.error(f"Error creating blog post: {str(e)}")
+                messages.error(request, f"Error creating blog post: {str(e)}")
+        else:
+            # Log form errors for debugging
+            if not form.is_valid():
+                logger.error(f"Blog post form errors: {form.errors}")
+            if not formset.is_valid():
+                logger.error(f"Image formset errors: {formset.errors}")
     else:
         form = BlogPostForm()
         formset = BlogImageFormSet()
@@ -292,6 +358,8 @@ def admin_create_post(request):
         "form": form,
         "formset": formset,
         "title": "Create New Post",
+        "debug_mode": settings.DEBUG,
+        "cloudinary_configured": _is_cloudinary_configured(),
     }
     return render(request, "blog/admin/post_form.html", context)
 
@@ -306,10 +374,55 @@ def admin_edit_post(request, slug):
         formset = BlogImageFormSet(request.POST, request.FILES, instance=post)
 
         if form.is_valid() and formset.is_valid():
-            form.save()
-            formset.save()
-            messages.success(request, "Blog post updated successfully!")
-            return redirect("blog:admin_post_list")
+            try:
+                updated_post = form.save()
+
+                # Handle featured image updates
+                if updated_post.featured_image:
+                    logger.info(
+                        f"Featured image updated for post '{updated_post.title}': {updated_post.featured_image.url}"
+                    )
+
+                # Handle additional images
+                saved_images = formset.save()
+
+                if saved_images:
+                    logger.info(
+                        f"Additional images updated for post '{updated_post.title}': {len(saved_images)} images"
+                    )
+                    for img in saved_images:
+                        if img.image:
+                            logger.info(f"Image URL: {img.image.url}")
+
+                messages.success(
+                    request, f"Blog post '{updated_post.title}' updated successfully!"
+                )
+
+                # Add debug message in development
+                if settings.DEBUG:
+                    messages.info(request, "Images stored locally in development mode")
+                else:
+                    if _is_cloudinary_configured():
+                        messages.info(
+                            request, "Images uploaded to Cloudinary cloud storage"
+                        )
+                    else:
+                        messages.warning(
+                            request,
+                            "Cloudinary not configured - images may not persist in production",
+                        )
+
+                return redirect("blog:admin_post_list")
+
+            except Exception as e:
+                logger.error(f"Error updating blog post: {str(e)}")
+                messages.error(request, f"Error updating blog post: {str(e)}")
+        else:
+            # Log form errors for debugging
+            if not form.is_valid():
+                logger.error(f"Blog post form errors: {form.errors}")
+            if not formset.is_valid():
+                logger.error(f"Image formset errors: {formset.errors}")
     else:
         form = BlogPostForm(instance=post)
         formset = BlogImageFormSet(instance=post)
@@ -319,6 +432,8 @@ def admin_edit_post(request, slug):
         "formset": formset,
         "post": post,
         "title": f"Edit: {post.title}",
+        "debug_mode": settings.DEBUG,
+        "cloudinary_configured": _is_cloudinary_configured(),
     }
     return render(request, "blog/admin/post_form.html", context)
 
@@ -414,3 +529,43 @@ def admin_manage_tags(request):
         "form": form,
     }
     return render(request, "blog/admin/manage_tags.html", context)
+
+
+@user_passes_test(is_admin_user)
+def admin_media_debug(request):
+    """Debug media configuration"""
+    import os
+
+    debug_info = {
+        "django_debug": settings.DEBUG,
+        "media_url": settings.MEDIA_URL,
+        "media_root": str(settings.MEDIA_ROOT),
+        "cloudinary_configured": _is_cloudinary_configured(),
+    }
+
+    # Check environment variables
+    env_vars = {
+        "CLOUDINARY_CLOUD_NAME": bool(os.getenv("CLOUDINARY_CLOUD_NAME")),
+        "CLOUDINARY_API_KEY": bool(os.getenv("CLOUDINARY_API_KEY")),
+        "CLOUDINARY_API_SECRET": bool(os.getenv("CLOUDINARY_API_SECRET")),
+    }
+
+    # Check storage backend
+    storage_info = {}
+    if hasattr(settings, "DEFAULT_FILE_STORAGE"):
+        storage_info["storage_backend"] = settings.DEFAULT_FILE_STORAGE
+    else:
+        storage_info["storage_backend"] = "Default Django Storage"
+
+    # Get recent posts with images for testing
+    recent_posts = BlogPost.objects.filter(featured_image__isnull=False).order_by(
+        "-created_at"
+    )[:5]
+
+    context = {
+        "debug_info": debug_info,
+        "env_vars": env_vars,
+        "storage_info": storage_info,
+        "recent_posts": recent_posts,
+    }
+    return render(request, "blog/admin/media_debug.html", context)

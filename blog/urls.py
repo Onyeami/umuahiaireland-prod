@@ -35,4 +35,5 @@ urlpatterns = [
         name="admin_manage_categories",
     ),
     path("admin/tags/", views.admin_manage_tags, name="admin_manage_tags"),
+    path("admin/media-debug/", views.admin_media_debug, name="admin_media_debug"),
 ]
