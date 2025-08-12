@@ -36,18 +36,6 @@ def upload_to_cloudinary(image_file):
 class BlogPostForm(forms.ModelForm):
     """Form for creating and editing blog posts"""
 
-    # Add a file field for uploading featured image
-    featured_image_file = forms.ImageField(
-        required=False,
-        help_text="Upload featured image (will be uploaded to Cloudinary)",
-        widget=forms.FileInput(
-            attrs={
-                "class": "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100",
-                "accept": "image/*",
-            }
-        ),
-    )
-
     class Meta:
         model = BlogPost
         fields = [
@@ -56,7 +44,7 @@ class BlogPostForm(forms.ModelForm):
             "tags",
             "excerpt",
             "content",
-            "featured_image_file",  # This will show the file upload field
+            "featured_image",  # This will show the file upload field
             "meta_title",
             "meta_description",
             "status",
@@ -89,6 +77,12 @@ class BlogPostForm(forms.ModelForm):
                 }
             ),
             "tags": forms.CheckboxSelectMultiple(attrs={"class": "space-y-2"}),
+            "featured_image": forms.FileInput(
+                attrs={
+                    "class": "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100",
+                    "accept": "image/*",
+                }
+            ),
             "meta_title": forms.TextInput(
                 attrs={
                     "class": "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
@@ -117,12 +111,11 @@ class BlogPostForm(forms.ModelForm):
     def save(self, commit=True):
         instance = super().save(commit=False)
 
-        # Handle featured image upload
-        featured_image_file = self.cleaned_data.get("featured_image_file")
-        if featured_image_file:
-            cloudinary_url = upload_to_cloudinary(featured_image_file)
+        # Handle featured image upload to Cloudinary
+        if instance.featured_image:
+            cloudinary_url = upload_to_cloudinary(instance.featured_image)
             if cloudinary_url:
-                instance.featured_image = cloudinary_url
+                instance.featured_image_url = cloudinary_url
 
         if commit:
             instance.save()
@@ -134,27 +127,16 @@ class BlogPostForm(forms.ModelForm):
 class BlogImageForm(forms.ModelForm):
     """Form for blog images"""
 
-    # Add a file field for uploading images
-    image_file = forms.ImageField(
-        required=False,
-        help_text="Upload image (will be uploaded to Cloudinary)",
-        widget=forms.FileInput(
-            attrs={
-                "class": "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100",
-                "accept": "image/*",
-            }
-        ),
-    )
-
     class Meta:
         model = BlogImage
-        fields = [
-            "image_file",
-            "caption",
-            "alt_text",
-            "order",
-        ]  # Include the file upload field
+        fields = ["image", "caption", "alt_text", "order"]
         widgets = {
+            "image": forms.FileInput(
+                attrs={
+                    "class": "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100",
+                    "accept": "image/*",
+                }
+            ),
             "caption": forms.TextInput(
                 attrs={
                     "class": "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
@@ -178,12 +160,11 @@ class BlogImageForm(forms.ModelForm):
     def save(self, commit=True):
         instance = super().save(commit=False)
 
-        # Handle image upload
-        image_file = self.cleaned_data.get("image_file")
-        if image_file:
-            cloudinary_url = upload_to_cloudinary(image_file)
+        # Handle image upload to Cloudinary
+        if instance.image:
+            cloudinary_url = upload_to_cloudinary(instance.image)
             if cloudinary_url:
-                instance.image = cloudinary_url
+                instance.image_url = cloudinary_url
 
         if commit:
             instance.save()
