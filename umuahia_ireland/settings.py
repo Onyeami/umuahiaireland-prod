@@ -143,13 +143,17 @@ if not DEBUG:
     # and renames the files with unique names for each version to support long-term caching
     STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
+    # Add media files to WhiteNoise configuration
+    WHITENOISE_USE_FINDERS = True
+    WHITENOISE_AUTOREFRESH = True
+
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
-# Production media file handling with Cloudinary
+# Production media file handling
 if not DEBUG:
-    # Cloudinary configuration for production media storage
+    # First, try Cloudinary if configured
     try:
         import cloudinary
         import cloudinary.uploader
@@ -180,16 +184,18 @@ if not DEBUG:
                 f"✅ Cloudinary configured for cloud: {CLOUDINARY_STORAGE['CLOUD_NAME']}"
             )
         else:
-            # Fallback: serve media through static files system
+            # Fallback: Use WhiteNoise to serve media files
             MEDIA_ROOT = os.path.join(BASE_DIR, "staticfiles", "media")
-            print("⚠️  Cloudinary not configured - using fallback media storage")
+            MEDIA_URL = "/media/"
+            print("⚠️  Cloudinary not configured - using WhiteNoise for media files")
             print(
                 "   Set CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET"
             )
     except ImportError:
         # Fallback if cloudinary packages not installed
         MEDIA_ROOT = os.path.join(BASE_DIR, "staticfiles", "media")
-        print("⚠️  Cloudinary packages not installed - using fallback media storage")
+        MEDIA_URL = "/media/"
+        print("⚠️  Cloudinary packages not installed - using WhiteNoise for media files")
 
 LOGIN_URL = "accounts:login"
 

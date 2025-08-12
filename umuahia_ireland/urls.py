@@ -4,6 +4,7 @@ from django.conf import settings
 from django.conf.urls import handler404, handler500
 from .errors import custom_error_404, custom_error_500
 from .views import send_email, privacy_statement
+from .media_debug import media_test_view
 
 
 handler404 = custom_error_404
@@ -18,6 +19,7 @@ urlpatterns = [
     path("auth/", include("accounts.urls", namespace="accounts")),
     path("auth/", include("django.contrib.auth.urls")),
     path("blog/", include("blog.urls", namespace="blog")),
+    path("debug/media-test/", media_test_view, name="media_test"),
 ]
 
 # Serve media files in development and production
