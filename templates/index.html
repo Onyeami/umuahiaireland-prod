@@ -526,11 +526,7 @@
                     <p class="text-gray-600 mb-4 leading-relaxed">{{ post.excerpt|truncatechars:120 }}</p>
 
                     <!-- Author and Read More -->
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center text-sm text-gray-500">
-                            <i class="fas fa-user mr-1"></i>
-                            {{ post.author.get_full_name|default:'Admin' }}
-                        </div>
+                    <div class="flex items-center justify-end">
                         <a href="{{ post.get_absolute_url }}"
                             class="text-blue-600 hover:text-blue-800 font-medium text-sm transition-colors duration-200 flex items-center">
                             Read More <i class="fas fa-arrow-right ml-1"></i>
@@ -586,7 +582,7 @@
             <p class="text-gray-500 mt-2" data-aos="fade-up" data-aos-delay="200">
                 Fill out the form below or contact us by email or phone
             </p>
-            <img src="{% static 'img/group1.JPG' %}" alt="Contact Us Image" class="mt-6 w-full h-auto"
+            <img src="{% static 'img/group1.jpg' %}" alt="Contact Us Image" class="mt-6 w-full h-auto"
                 data-aos="zoom-in" data-aos-delay="400" />
         </div>
 
