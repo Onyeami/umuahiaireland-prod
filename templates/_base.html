@@ -69,12 +69,30 @@
                     <li><a href="{% url 'accounts:logout' %}"
                             class="text-gray-700 hover:text-primary transition-all duration-300">Logout</a></li>
                     {% else %}
+
+                   
                     <li><a href="{% url 'accounts:login' %}"
                             class="text-gray-700 hover:text-primary transition-all duration-300">Login</a></li>
+
                     {% endif %}
+
+                     <li>
+                        <a href="https://www.paypal.com/ncp/payment/CBTLEW6PFH3MN" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        class="flex items-center gap-2 bg-yellow-400 text-gray-900 font-semibold px-5 py-2 rounded-md shadow-md hover:bg-yellow-500 transition duration-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 text-blue-700">
+                            <path d="M12 0C5.373 0 0 5.373 0 12c0 5.336 3.438 9.85 8.207 11.385.6.11.82-.26.82-.577 0-.286-.01-1.04-.016-2.04-3.338.726-4.042-1.61-4.042-1.61-.545-1.386-1.33-1.756-1.33-1.756-1.09-.744.083-.729.083-.729 1.205.085 1.84 1.236 1.84 1.236 1.07 1.834 2.81 1.304 3.495.997.107-.775.418-1.304.76-1.604-2.665-.303-5.466-1.333-5.466-5.931 0-1.31.468-2.381 1.236-3.221-.124-.304-.536-1.524.118-3.176 0 0 1.009-.323 3.301 1.23A11.51 11.51 0 0112 6.844c1.022.004 2.05.138 3.009.404 2.29-1.553 3.297-1.23 3.297-1.23.656 1.652.244 2.872.12 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.805 5.625-5.479 5.921.43.37.814 1.102.814 2.221 0 1.606-.015 2.901-.015 3.293 0 .319.217.694.826.576C20.565 21.848 24 17.336 24 12 24 5.373 18.627 0 12 0z"/>
+                        </svg>
+                        Donate with PayPal
+                        </a>
+
+                    </li>
                 </ul>
 
+                <!--
                 <div id="nav-paypal-button-container" class="inline-block"></div>
+                     -->
             </nav>
 
             <button class="md:hidden text-gray-600 focus:outline-none" id="menu-toggle">
@@ -82,6 +100,8 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
             </button>
+
+           
         </div>
 
         <div class="md:hidden bg-white shadow-md w-full p-5 space-y-4" id="mobile-menu" style="display: none;">
@@ -108,8 +128,23 @@
                 <li><a href="{% url 'accounts:login' %}"
                         class="text-gray-700 hover:text-primary transition-all duration-300">Login</a></li>
                 {% endif %}
+
+                <li>
+                   <a href="https://www.paypal.com/ncp/payment/CBTLEW6PFH3MN" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    class="flex items-center gap-2 bg-yellow-400 text-gray-900 font-semibold px-5 py-2 rounded-md shadow-md hover:bg-yellow-500 transition duration-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 text-blue-700">
+                        <path d="M12 0C5.373 0 0 5.373 0 12c0 5.336 3.438 9.85 8.207 11.385.6.11.82-.26.82-.577 0-.286-.01-1.04-.016-2.04-3.338.726-4.042-1.61-4.042-1.61-.545-1.386-1.33-1.756-1.33-1.756-1.09-.744.083-.729.083-.729 1.205.085 1.84 1.236 1.84 1.236 1.07 1.834 2.81 1.304 3.495.997.107-.775.418-1.304.76-1.604-2.665-.303-5.466-1.333-5.466-5.931 0-1.31.468-2.381 1.236-3.221-.124-.304-.536-1.524.118-3.176 0 0 1.009-.323 3.301 1.23A11.51 11.51 0 0112 6.844c1.022.004 2.05.138 3.009.404 2.29-1.553 3.297-1.23 3.297-1.23.656 1.652.244 2.872.12 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.805 5.625-5.479 5.921.43.37.814 1.102.814 2.221 0 1.606-.015 2.901-.015 3.293 0 .319.217.694.826.576C20.565 21.848 24 17.336 24 12 24 5.373 18.627 0 12 0z"/>
+                    </svg>
+                    Donate with PayPal
+                    </a>
+ 
+
+                </li>
             </ul>
-            <div id="nav-paypal-button-container" class="inline-block"></div>
+            
+
         </div>
     </header>
 
@@ -331,109 +366,6 @@
         });
 
 
-    </script>
-
-    <!-- PayPal Donation Button Configuration -->
-    <script>
-        // Check if PayPal SDK loaded successfully
-        if (typeof paypal !== 'undefined') {
-            // PayPal button for hero section
-            paypal.Buttons({
-                style: {
-                    layout: 'horizontal',
-                    color: 'gold',
-                    shape: 'rect',
-                    label: 'donate'
-                },
-                createOrder: function (data, actions) {
-                    return actions.order.create({
-                        purchase_units: [{
-                            amount: {
-                                value: '10.00' // Default donation amount in EUR
-                            },
-                            description: 'Donation to Umuahia Community Ireland'
-                        }]
-                    });
-                },
-                onApprove: function (data, actions) {
-                    return actions.order.capture().then(function (details) {
-                        // Handle successful donation
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Thank you for your donation!',
-                            text: 'Your donation has been processed successfully.',
-                            confirmButtonText: 'OK'
-                        });
-
-                        // You can send the donation details to your backend here
-                        console.log('Donation completed:', details);
-                    });
-                },
-                onError: function (err) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Donation Error',
-                        text: 'There was an error processing your donation. Please try again.',
-                        confirmButtonText: 'OK'
-                    });
-                    console.error('PayPal error:', err);
-                }
-            }).render('#paypal-button-container');
-
-            // PayPal button for navigation
-            paypal.Buttons({
-                style: {
-                    layout: 'horizontal',
-                    color: 'gold',
-                    shape: 'rect',
-                    label: 'donate'
-                },
-                createOrder: function (data, actions) {
-                    return actions.order.create({
-                        purchase_units: [{
-                            amount: {
-                                value: '10.00' // Default donation amount in EUR
-                            },
-                            description: 'Donation to Umuahia Community Ireland'
-                        }]
-                    });
-                },
-                onApprove: function (data, actions) {
-                    return actions.order.capture().then(function (details) {
-                        // Handle successful donation
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Thank you for your donation!',
-                            text: 'Your donation has been processed successfully.',
-                            confirmButtonText: 'OK'
-                        });
-
-                        // You can send the donation details to your backend here
-                        console.log('Donation completed:', details);
-                    });
-                },
-                onError: function (err) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Donation Error',
-                        text: 'There was an error processing your donation. Please try again.',
-                        confirmButtonText: 'OK'
-                    });
-                    console.error('PayPal error:', err);
-                }
-            }).render('#nav-paypal-button-container');
-        } else {
-            // Fallback if PayPal doesn't load
-            console.error('PayPal SDK failed to load');
-            document.getElementById('paypal-button-container').innerHTML = '<button class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition">Donate (PayPal Unavailable)</button>';
-            document.getElementById('nav-paypal-button-container').innerHTML = '<button class="bg-primary text-white px-4 py-2 rounded-md hover:bg-primary-dark transition">Donate (PayPal Unavailable)</button>';
-        }
-
-        // Debug: Check if PayPal client ID is loaded
-        console.log('PayPal Client ID:', '{{ paypal_client_id }}');
-        if (!'{{ paypal_client_id }}') {
-            console.warn('PayPal Client ID is not set. Please add PAYPAL_CLIENT_ID to your .env file.');
-        }
     </script>
 </body>
 
