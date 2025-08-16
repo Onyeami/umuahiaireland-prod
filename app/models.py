@@ -28,18 +28,23 @@ class FinancialCheckbook(models.Model):
 
 class Testimonial(models.Model):
     """Model for storing testimonials"""
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=100)
-    title = models.CharField(max_length=200, blank=True, help_text="e.g., 'Work Programmes Graduate'")
+    title = models.CharField(
+        max_length=200, blank=True, help_text="e.g., 'Work Programmes Graduate'"
+    )
     content = models.TextField()
     image = models.ImageField(upload_to="testimonials/", blank=True, null=True)
     is_active = models.BooleanField(default=True)
-    order = models.PositiveIntegerField(default=0, help_text="Order of display (lower numbers appear first)")
+    order = models.PositiveIntegerField(
+        default=0, help_text="Order of display (lower numbers appear first)"
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ['order', '-created_at']
+        ordering = ["order", "-created_at"]
         verbose_name = "Testimonial"
         verbose_name_plural = "Testimonials"
 

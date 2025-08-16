@@ -247,8 +247,6 @@ class CreateMinuitesView(AdminRequiredMixin, View):
         date = request.POST.get("date")
         minuites_file = request.FILES.get("minuites")
 
-        print(title, date, minuites_file)
-
         if not (title and date and minuites_file):
             messages.error(request, "All fields are required.")
             return redirect("admin:minuites")
@@ -328,14 +326,12 @@ class CreateFinancialCheckbookView(AdminRequiredMixin, View):
         subject = request.POST.get("subject")
         checkbook_file = request.FILES.get("checkbook")
 
-        print(subject, checkbook_file)
-
         if not (subject and checkbook_file):
             messages.error(request, "Subject and checkbook are required.")
             return redirect("admin:financial_checkbook")
 
         FinancialCheckbook.objects.create(
-            subject=subject,
+            title=subject,
             checkbook=checkbook_file,
         )
 
@@ -355,7 +351,7 @@ class EditFinancialCheckbookView(AdminRequiredMixin, View):
 
     def post(self, request, checkbook_id):
         checkbook_entry = get_object_or_404(FinancialCheckbook, id=checkbook_id)
-        checkbook_entry.subject = request.POST.get("subject", checkbook_entry.subject)
+        checkbook_entry.title = request.POST.get("subject", checkbook_entry.title)
         checkbook_entry.checkbook = request.POST.get(
             "checkbook", checkbook_entry.checkbook
         )
