@@ -26,7 +26,7 @@
     <table class="w-full border-collapse border border-gray-300">
         <thead>
             <tr class="bg-gray-100">
-                <th class="border border-gray-300 px-4 py-2">Subject</th>
+                <th class="border border-gray-300 px-4 py-2">Title</th>
                 <th class="border border-gray-300 px-4 py-2">Checkbook</th>
                 <th class="border border-gray-300 px-4 py-2">Created At</th>
                 <th class="border border-gray-300 px-4 py-2">Actions</th>
@@ -35,11 +35,20 @@
         <tbody>
             {% for checkbook in checkbook_list %}
             <tr>
-                <td class="border border-gray-300 px-4 py-2">{{ checkbook.subject }}</td>
-                <td class="py-2 px-4 border-b"><a
-                        href="{% if checkbook.checkbook %}{{ checkbook.checkbook.url }}{% else %}{% endif %}"
-                        class="hover:underline" target="_blank">
-                        {{ checkbook.checkbook|truncatewords:20 }}</a></td>
+                <td class="border border-gray-300 px-4 py-2">{{ checkbook.title }}</td>
+                <td class="py-2 px-4 border-b">
+                    {% if checkbook.checkbook_url %}
+                    <a href="{{ checkbook.checkbook_url }}" class="hover:underline" target="_blank">
+                        View Checkbook File
+                    </a>
+                    {% elif checkbook.checkbook %}
+                    <a href="{{ checkbook.checkbook.url }}" class="hover:underline" target="_blank">
+                        View Checkbook File
+                    </a>
+                    {% else %}
+                    No file available
+                    {% endif %}
+                </td>
                 <td class="border border-gray-300 px-4 py-2">{{ checkbook.created_at|date:"n/j/Y H:i A" }}</td>
                 <td class="border border-gray-300 px-4 py-2 flex space-x-2">
                     <a href="{% url 'admin:edit_checkbook' checkbook.id %}"
@@ -75,16 +84,24 @@
             {% csrf_token %}
 
             <div>
-                <label for="subject" class="block text-sm font-medium text-gray-700">Subject</label>
-                <input name="subject" id="subject"
+                <label for="title" class="block text-sm font-medium text-gray-700">Title</label>
+                <input name="title" id="title" type="text" placeholder="Enter checkbook title"
                     class="mt-1 w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
                     required />
             </div>
 
             <div>
-                <label for="checkbook" class="block text-sm font-medium text-gray-700">Checkbook</label>
-                <input type="file" id="minutesFile" name="checkbook" accept=".pdf,.doc,.docx"
-                    class="mt-1 w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <label for="date" class="block text-sm font-medium text-gray-700">Date</label>
+                <input name="date" id="date" type="date"
+                    class="mt-1 w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+                    required />
+            </div>
+
+            <div>
+                <label for="checkbook" class="block text-sm font-medium text-gray-700">Checkbook File</label>
+                <input type="file" id="checkbook" name="checkbook" accept=".pdf,.doc,.docx,.xlsx,.xls"
+                    class="mt-1 w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    required>
             </div>
 
             <div class="modal-footer flex justify-end space-x-4">
@@ -107,7 +124,8 @@
     <button class="close-btn" onclick="hideToast()">×</button>
 </div>
 
-<div id="deleteModal" class="modals fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+<div id="deleteModal" class="modals fixed inset-0 bg-black bg-opacity-50 items-center justify-center"
+    style="display: none;">
     <div class="bg-white p-6 rounded-lg shadow-lg w-96 relative">
         <span class="close absolute top-2 right-2 text-gray-600 hover:text-gray-800 cursor-pointer">&times;</span>
         <h3 class="text-lg font-semibold text-gray-800 mb-2">
@@ -133,7 +151,7 @@
     document.addEventListener("DOMContentLoaded", function () {
         const createButton = document.getElementById("openCreateMinutes");
         const modal = document.getElementById("createMinutesModal");
-        const form = document.getElementById("minutesForm");
+        const form = document.getElementById("checkbookForm");
         const toast = document.getElementById("toast");
 
         function showToast(title, message, isSuccess = true) {
@@ -192,7 +210,8 @@
         document.getElementById("deleteMemberName").textContent = userName;
         // Build the URL, e.g. "/user/123/delete/"
         document.getElementById("deleteForm").action = `${userId}/delete/`;
-        document.getElementById("deleteModal").style.display = "block";
+        const modal = document.getElementById("deleteModal");
+        modal.style.display = "flex";
     }
 
     // Generic function to close modals by id
