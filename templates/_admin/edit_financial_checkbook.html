@@ -22,7 +22,7 @@
                     {% if checkbook.checkbook %}
                     <p class="mt-1 text-sm text-gray-600">
                         Current File:
-                        <a href="{{ checkbook.checkbook.url }}" class="text-blue-600 underline" target="_blank">
+                        <a href="{{ checkbook.checkbook_url }}" class="text-blue-600 underline" target="_blank">
                             {{ checkbook.checkbook.name|slice:"10:" }}
                         </a>
                     </p>
