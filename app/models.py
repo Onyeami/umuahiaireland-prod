@@ -5,7 +5,7 @@ from django.utils import timezone
 
 # Create your models here.
 class Minuites(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4(), editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=100)
     date = models.DateField()
     minuites = models.FileField(upload_to="minuites/", blank=True, null=True)
@@ -19,7 +19,7 @@ class Minuites(models.Model):
 
 
 class FinancialCheckbook(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4(), editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=100, blank=True, default="")
     date = models.DateField(default=timezone.now)
     checkbook = models.FileField(upload_to="checkbooks/", blank=True, null=True)

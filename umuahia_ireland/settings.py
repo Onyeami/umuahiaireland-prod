@@ -17,7 +17,6 @@ from .config import (
     SUPERUSER_EMAIL,
     SUPERUSER_PASSWORD,
     PAYPAL_CLIENT_ID,
-    PAYPAL_CLIENT_SECRET,
 )
 
 APP_NAME = APP_NAME
@@ -78,6 +77,7 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
                 "_admin.context_processors.global_counts",
                 "umuahia_ireland.context_processors.paypal_settings",
+                "umuahia_ireland.title_context_processor.dynamic_page_title",
             ],
         },
     },
