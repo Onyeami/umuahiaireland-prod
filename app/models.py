@@ -5,10 +5,13 @@ from django.utils import timezone
 
 # Create your models here.
 class Minuites(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4(), editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=100)
     date = models.DateField()
-    minuites = models.FileField(upload_to="minuites/")
+    minuites = models.FileField(upload_to="minuites/", blank=True, null=True)
+    minuites_url = models.URLField(
+        blank=True, help_text="Cloudinary URL for the minutes file"
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -16,10 +19,13 @@ class Minuites(models.Model):
 
 
 class FinancialCheckbook(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4(), editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=100, blank=True, default="")
     date = models.DateField(default=timezone.now)
-    checkbook = models.FileField(upload_to="checkbooks/")
+    checkbook = models.FileField(upload_to="checkbooks/", blank=True, null=True)
+    checkbook_url = models.URLField(
+        blank=True, help_text="Cloudinary URL for the checkbook file"
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

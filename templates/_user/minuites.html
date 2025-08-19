@@ -33,16 +33,32 @@
             <tr>
                 <td class="py-2 px-4 border-b">{{ minute.title }}</td>
                 <td class="py-2 px-4 border-b">{{ minute.date|date:"n/j/Y" }}</td>
-                <td class="py-2 px-4 border-b"><a href="{{ minute.minuites.url }}" class="hover:underline"
-                        target="_blank">
-                        {{ minute.minuites|truncatewords:20 }}</a></td>
                 <td class="py-2 px-4 border-b">
+                    {% if minute.minuites_url %}
+                    <a href="{{ minute.minuites_url }}" class="hover:underline" target="_blank">
+                        View Minutes File
+                    </a>
+                    {% elif minute.minuites %}
+                    <a href="{{ minute.minuites.url }}" class="hover:underline" target="_blank">
+                        View Minutes File
+                    </a>
+                    {% else %}
+                    No file available
+                    {% endif %}
+                </td>
+                <td class="py-2 px-4 border-b">
+                    {% if minute.minuites_url %}
+                    <a href="{{ minute.minuites_url }}" download class="text-primary hover:text-blue-700">Download</a>
+                    {% elif minute.minuites %}
                     <form method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
                         <input type="hidden" name="minute_id" value="{{ minute.id }}">
                         <button type="submit" name="download_minute"
                             class="text-primary hover:text-blue-700">Download</button>
                     </form>
+                    {% else %}
+                    <span class="text-gray-400">No file</span>
+                    {% endif %}
                 </td>
             </tr>
             {% endfor %}

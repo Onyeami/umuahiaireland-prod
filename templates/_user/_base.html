@@ -5,8 +5,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Umuahia Ireland | {{ request.user.email }}</title>
+    <title>
+        {% if page_title and page_title != 'Page' %}
+        {{ page_title }} | User Portal | Umuahia Community Ireland
+        {% elif page_title %}
+        {% block page_title %}{{ page_title }}{% endblock page_title %} | User Portal | Umuahia Community Ireland
+        {% else %}
+        User Dashboard | Umuahia Community Ireland
+        {% endif %}
+    </title>
 
+    <link rel="shortcut icon" href="{% static 'img/logo.png' %}" type="image/x-icon">
     <link rel="stylesheet" href="{% static 'css/tabler-icons.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/user.css' %}">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
@@ -71,8 +80,6 @@
 
         <main class="content">
             <header class="flex justify-between items-center bg-white shadow-sm py-4 px-6 border-b">
-                <!-- Page Title -->
-                <h2 class="text-xl font-bold text-gray-800">{% block page_title %}{% endblock %}</h2>
 
                 <!-- User Profile Section -->
                 <div class="relative">
@@ -133,6 +140,8 @@
                 });
             </script>
 
+            <!-- Breadcrumb Navigation -->
+            {% include '_includes/breadcrumb.html' %}
 
             {% block content %}
             {% endblock %}

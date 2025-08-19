@@ -8,6 +8,7 @@ from django.core.paginator import Paginator
 from django.db.models import Q, Count
 from users.models import CustomUser
 from app.models import Minuites, FinancialCheckbook
+from app.forms import MinuitesForm, FinancialCheckbookForm
 from blog.models import BlogPost, Category, Tag, Comment, BlogSettings
 from blog.forms import BlogPostForm, BlogImageFormSet, CategoryForm, TagForm
 from django.core.exceptions import ValidationError
@@ -218,17 +219,19 @@ class MinuitesListView(AdminRequiredMixin, ListView):
 class EditMinuitesView(AdminRequiredMixin, View):
     def get(self, request, minuites_id):
         minuite = get_object_or_404(Minuites, id=minuites_id)
-        return render(request, "_admin/edit_minuites.html", {"minuite": minuite})
+        form = MinuitesForm(instance=minuite)
+        return render(
+            request, "_admin/edit_minuites.html", {"minuite": minuite, "form": form}
+        )
 
     def post(self, request, minuites_id):
         minuite = get_object_or_404(Minuites, id=minuites_id)
-        minuite.title = request.POST.get("title", minuite.title)
-        minuite.date = request.POST.get("date", minuite.date)
-        # If a new file is uploaded, update it; otherwise keep existing file
-        if "minuites" in request.FILES:
-            minuite.minuites = request.FILES.get("minuites")
-        minuite.save()
-        messages.success(request, "Minutes updated successfully.")
+        form = MinuitesForm(request.POST, request.FILES, instance=minuite)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Minutes updated successfully.")
+        else:
+            messages.error(request, "Error updating minutes. Please check your inputs.")
         return redirect("admin:minuites")
 
 
@@ -243,16 +246,12 @@ class DeleteMinuitesView(AdminRequiredMixin, View):
 
 class CreateMinuitesView(AdminRequiredMixin, View):
     def post(self, request):
-        title = request.POST.get("title")
-        date = request.POST.get("date")
-        minuites_file = request.FILES.get("minuites")
-
-        if not (title and date and minuites_file):
-            messages.error(request, "All fields are required.")
-            return redirect("admin:minuites")
-
-        Minuites.objects.create(title=title, date=date, minuites=minuites_file)
-        messages.success(request, "Minutes created successfully.")
+        form = MinuitesForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Minutes created successfully.")
+        else:
+            messages.error(request, "Error creating minutes. Please check your inputs.")
         return redirect("admin:minuites")
 
 
@@ -323,19 +322,15 @@ class FinancialCheckbookListView(AdminRequiredMixin, ListView):
 # Create Financial Checkbook Entry
 class CreateFinancialCheckbookView(AdminRequiredMixin, View):
     def post(self, request):
-        subject = request.POST.get("subject")
-        checkbook_file = request.FILES.get("checkbook")
-
-        if not (subject and checkbook_file):
-            messages.error(request, "Subject and checkbook are required.")
-            return redirect("admin:financial_checkbook")
-
-        FinancialCheckbook.objects.create(
-            title=subject,
-            checkbook=checkbook_file,
-        )
-
-        messages.success(request, "Financial checkbook entry added successfully.")
+        form = FinancialCheckbookForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Financial checkbook entry added successfully.")
+        else:
+            messages.error(
+                request,
+                "Error creating financial checkbook entry. Please check your inputs.",
+            )
         return redirect("admin:financial_checkbook")
 
 
@@ -343,20 +338,26 @@ class CreateFinancialCheckbookView(AdminRequiredMixin, View):
 class EditFinancialCheckbookView(AdminRequiredMixin, View):
     def get(self, request, checkbook_id):
         checkbook_entry = get_object_or_404(FinancialCheckbook, id=checkbook_id)
+        form = FinancialCheckbookForm(instance=checkbook_entry)
         return render(
             request,
             "_admin/edit_financial_checkbook.html",
-            {"checkbook": checkbook_entry},
+            {"checkbook": checkbook_entry, "form": form},
         )
 
     def post(self, request, checkbook_id):
         checkbook_entry = get_object_or_404(FinancialCheckbook, id=checkbook_id)
-        checkbook_entry.title = request.POST.get("subject", checkbook_entry.title)
-        checkbook_entry.checkbook = request.POST.get(
-            "checkbook", checkbook_entry.checkbook
+        form = FinancialCheckbookForm(
+            request.POST, request.FILES, instance=checkbook_entry
         )
-        checkbook_entry.save()
-        messages.success(request, "Financial checkbook entry updated successfully.")
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Financial checkbook entry updated successfully.")
+        else:
+            messages.error(
+                request,
+                "Error updating financial checkbook entry. Please check your inputs.",
+            )
         return redirect("admin:financial_checkbook")
 
 

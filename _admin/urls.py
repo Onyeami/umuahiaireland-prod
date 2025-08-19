@@ -33,6 +33,7 @@ from .views import (
     BlogCategoryListView,
     BlogTagListView,
 )
+from app.debug_views import debug_cloudinary_config
 
 app_name = "admin"
 
@@ -121,4 +122,6 @@ urlpatterns = [
     ),
     path("blog/categories/", BlogCategoryListView.as_view(), name="blog_categories"),
     path("blog/tags/", BlogTagListView.as_view(), name="blog_tags"),
+    # Debug URL (admin only)
+    path("debug/cloudinary/", debug_cloudinary_config, name="debug_cloudinary"),
 ]
