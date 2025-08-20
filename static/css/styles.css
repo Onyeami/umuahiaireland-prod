@@ -878,6 +878,10 @@ video {
   margin-top: auto;
 }
 
+.ml-0{
+  margin-left: 0px;
+}
+
 .block{
   display: block;
 }
@@ -2352,6 +2356,10 @@ video {
   transition-duration: 500ms;
 }
 
+.ease-in-out{
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 *::-webkit-scrollbar {
   width: 10px !important;
 }
@@ -2855,6 +2863,10 @@ video {
 }
 
 @media (min-width: 768px){
+  .md\:static{
+    position: static;
+  }
+
   .md\:col-span-2{
     grid-column: span 2 / span 2;
   }
