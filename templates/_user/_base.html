@@ -3,152 +3,176 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
-        {% if page_title and page_title != 'Page' %}
-        {{ page_title }} | User Portal | Umuahia Community Ireland
-        {% elif page_title %}
-        {% block page_title %}{{ page_title }}{% endblock page_title %} | User Portal | Umuahia Community Ireland
-        {% else %}
-        User Dashboard | Umuahia Community Ireland
-        {% endif %}
-    </title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>
+    {% if page_title and page_title != 'Page' %}
+    {{ page_title }} | User Portal | Umuahia Community Ireland
+    {% elif page_title %}
+    {% block page_title %}{{ page_title }}{% endblock page_title %} | User Portal | Umuahia Community Ireland
+    {% else %}
+    User Dashboard | Umuahia Community Ireland
+    {% endif %}
+  </title>
 
-    <link rel="shortcut icon" href="{% static 'img/logo.png' %}" type="image/x-icon">
-    <link rel="stylesheet" href="{% static 'css/tabler-icons.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/user.css' %}">
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+  <link rel="shortcut icon" href="{% static 'img/logo.png' %}" type="image/x-icon" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="{% static 'css/tabler-icons.min.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/user.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
 </head>
 
-<body>
-    <div class="flex md:flex-row">
-        <aside class="sidebar h-screen bg-gray-800 text-white flex flex-col justify-between p-4 shadow-lg">
-            <div>
-                <!-- Logo Section -->
-                <div class="flex justify-center mb-6">
-                    <img src="{% static 'img/logo.png' %}" alt="Logo" class="w-20">
-                </div>
+<body class="bg-gray-100 min-h-screen">
 
-                <!-- Navigation Links -->
-                <ul class="space-y-2">
-                    <li>
-                        <a href="{% url 'user:dashboard' %}"
-                            class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-700 hover:text-white transition duration-200 font-medium">
-                            <i class="fas fa-users"></i>
-                            <span>Profile</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{% url 'user:minuites' %}"
-                            class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-700 hover:text-white transition duration-200 font-medium">
-                            <i class="fas fa-users"></i>
-                            <span>Minuites</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{% url 'user:checkbooks' %}"
-                            class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-700 hover:text-white transition duration-200 font-medium">
-                            <i class="fas fa-users"></i>
-                            <span>Financial Checkbooks</span>
-                        </a>
-                    </li>
-                </ul>
+  <!-- Mobile Header -->
+  <div class="md:hidden bg-gray-800 text-white p-4 flex justify-between items-center">
+    <img src="{% static 'img/logo.png' %}" alt="Logo" class="w-12" />
+    <button id="mobileMenuBtn" class="text-white text-2xl focus:outline-none">
+      ☰
+    </button>
+  </div>
+
+  <div class="flex min-h-screen">
+    <!-- Sidebar -->
+    <aside id="sidebarMenu"
+      class="bg-gray-800 text-white w-64 fixed md:static top-0 left-0 h-full z-40 transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out overflow-y-auto">
+      <div class="p-4 flex flex-col justify-between h-full">
+        <!-- Logo -->
+        <div class="flex justify-center mb-6">
+          <img src="{% static 'img/logo.png' %}" alt="Logo" class="w-20" />
+        </div>
+
+        <!-- Navigation -->
+        <ul class="space-y-2">
+          <li>
+            <a href="{% url 'user:dashboard' %}"
+              class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-700 transition font-medium text-white nav-link">
+              <i class="fas fa-users"></i>
+              <span>Profile</span>
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'user:minuites' %}"
+              class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-700 transition font-medium text-white nav-link">
+              <i class="fas fa-users"></i>
+              <span>Minuites</span>
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'user:checkbooks' %}"
+              class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-700 transition font-medium text-white nav-link">
+              <i class="fas fa-users"></i>
+              <span>Financial Checkbooks</span>
+            </a>
+          </li>
+        </ul>
+
+        <!-- Bottom Links -->
+        <div class="mt-8">
+          <ul class="space-y-2">
+            <li>
+              <a href="{% url 'user:settings' %}"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-700 transition font-medium text-white nav-link">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+              </a>
+            </li>
+            <li>
+              <a href="{% url 'accounts:logout' %}"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg bg-red-700 hover:bg-red-800 text-white font-bold transition nav-link">
+                <i class="fas fa-door-open"></i>
+                <span>Logout</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 ml-0 md:ml-64 overflow-y-auto">
+      <header class="flex justify-between items-center bg-white shadow-sm py-4 px-6 border-b">
+        <!-- User Profile Section -->
+        <div class="relative">
+          <button id="profileDropdownBtn" class="flex items-center space-x-3 focus:outline-none group">
+            <img
+              src="https://media.istockphoto.com/id/2151669184/vector/vector-flat-illustration-in-grayscale-avatar-user-profile-person-icon-gender-neutral.jpg?s=612x612&w=0&k=20&c=UEa7oHoOL30ynvmJzSCIPrwwopJdfqzBs0q69ezQoM8="
+              alt="User" class="w-10 h-10 rounded-full border border-gray-300" />
+            <div class="text-left">
+              <p class="text-lg font-bold text-gray-800">
+                {% if request.user.first_name %}
+                {{ request.user.first_name }}
+                {% else %}
+                No Name
+                {% endif %}
+              </p>
+              <p class="text-xs text-green-700 font-semibold">Member</p>
             </div>
+            <i class="ti ti-chevron-down text-gray-600 group-hover:text-gray-900 transition"></i>
+          </button>
 
-            <!-- Bottom Links Section -->
-            <div class="mt-8">
-                <ul class="space-y-2">
-                    <li>
-                        <a href="{% url 'user:settings' %}"
-                            class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-700 hover:text-white transition duration-200 font-medium">
-                            <i class="fas fa-users"></i>
-                            <span>Settings</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{% url 'accounts:logout' %}"
-                            class="flex items-center gap-3 px-4 py-3 rounded-lg bg-red-700 hover:bg-red-800 text-white font-bold transition duration-200">
-                            <i class="fas fa-door-open"></i>
-                            <span>Logout</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </aside>
+          <!-- Dropdown Menu -->
+          <div id="profileDropdown"
+            class="absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg hidden z-50">
+            <ul class="py-2 text-gray-700">
+              <li>
+                <a href="{% url 'user:settings' %}" class="block px-4 py-2 hover:bg-gray-100">
+                  <i class="fas fa-cog mr-2"></i> Settings
+                </a>
+              </li>
+              <li class="border-t">
+                <a href="{% url 'accounts:logout' %}" class="block px-4 py-2 text-red-600 hover:bg-gray-100">
+                  <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </header>
 
+      {% include '_includes/breadcrumb.html' %}
+      {% block content %}{% endblock %}
+    </main>
+  </div>
 
-        <main class="content">
-            <header class="flex justify-between items-center bg-white shadow-sm py-4 px-6 border-b">
+  <!-- Scripts -->
+  <script>
+    // Profile dropdown toggle
+    const profileDropdownBtn = document.getElementById('profileDropdownBtn');
+    const profileDropdown = document.getElementById('profileDropdown');
 
-                <!-- User Profile Section -->
-                <div class="relative">
-                    <!-- Profile Button (User Info) -->
-                    <button id="profileDropdownBtn" class="flex items-center space-x-3 focus:outline-none group">
-                        <img src="https://media.istockphoto.com/id/2151669184/vector/vector-flat-illustration-in-grayscale-avatar-user-profile-person-icon-gender-neutral.jpg?s=612x612&w=0&k=20&c=UEa7oHoOL30ynvmJzSCIPrwwopJdfqzBs0q69ezQoM8="
-                            alt="User" class="w-10 h-10 rounded-full border border-gray-300">
-                        <div class="text-left">
-                            <p class="text-lg font-bold text-gray-800">
-                                {% if request.user.first_name %}
-                                {{ request.user.first_name }}
-                                {% else %}
-                                No Name
-                                {% endif %}
-                            </p>
-                            <p class="text-xs text-green-700 font-semibold">Member</p>
-                        </div>
-                        <i class="ti ti-chevron-down text-gray-600 group-hover:text-gray-900 transition"></i>
-                    </button>
+    profileDropdownBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      profileDropdown.classList.toggle('hidden');
+    });
 
-                    <!-- Dropdown Menu (Hidden by Default) -->
-                    <div id="profileDropdown"
-                        class="absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg hidden z-50">
-                        <ul class="py-2 text-gray-700">
-                            <li>
-                                <a href="{% url 'user:settings' %}" class="block px-4 py-2 hover:bg-gray-100">
-                                    <i class="fas fa-cog mr-2"></i> Settings
-                                </a>
-                            </li>
-                            <li class="border-t">
-                                <a href="{% url 'accounts:logout' %}"
-                                    class="block px-4 py-2 text-red-600 hover:bg-gray-100">
-                                    <i class="fas fa-sign-out-alt mr-2"></i> Logout
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </header>
+    window.addEventListener('click', () => {
+      profileDropdown.classList.add('hidden');
+    });
 
-            <!-- Dropdown Toggle Script -->
-            <script>
-                const profileDropdownBtn = document.getElementById('profileDropdownBtn');
-                const profileDropdown = document.getElementById('profileDropdown');
+    profileDropdown.addEventListener('click', (e) => {
+      e.stopPropagation();
+    });
 
-                profileDropdownBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    profileDropdown.classList.toggle('hidden');
-                });
+    // Mobile sidebar toggle
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const sidebarMenu = document.getElementById('sidebarMenu');
+    const navLinks = document.querySelectorAll('.nav-link');
 
-                // Hide dropdown when clicking outside
-                window.addEventListener('click', () => {
-                    profileDropdown.classList.add('hidden');
-                });
+    mobileMenuBtn.addEventListener('click', () => {
+      sidebarMenu.classList.toggle('-translate-x-full');
+    });
 
-                profileDropdown.addEventListener('click', (e) => {
-                    e.stopPropagation();  // Prevent dropdown close when clicking inside it
-                });
-            </script>
+    navLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth < 768) {
+          sidebarMenu.classList.add('-translate-x-full');
+        }
+      });
+    });
+  </script>
 
-            <!-- Breadcrumb Navigation -->
-            {% include '_includes/breadcrumb.html' %}
-
-            {% block content %}
-            {% endblock %}
-        </main>
-    </div>
-
-    <script src="{% static 'js/script.js' %}"></script>
+  <script src="{% static 'js/script.js' %}"></script>
 </body>
 
 </html>

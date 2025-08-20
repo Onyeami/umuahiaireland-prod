@@ -24,10 +24,27 @@
         <p class="mt-4 text-gray-700">If you believe this is a mistake, please request a new verification email or
             contact support.</p>
 
-        <a href="{% url 'accounts:resend_verification_email' %}"
-            class="mt-6 inline-block bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded transition">
-            Resend Verification Email
-        </a>
+        <div class="mt-6 space-y-3">
+            <a href="{% url 'accounts:resend_verification_email' %}"
+                class="block bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded transition">
+                Resend Verification Email
+            </a>
+
+            <a href="{% url 'accounts:register' role='user' %}"
+                class="block bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded transition">
+                Go Back to Sign Up
+            </a>
+
+            <a href="{% url 'accounts:login' %}"
+                class="block bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded transition">
+                Login
+            </a>
+
+            <a href="{% url 'app:home_page' %}"
+                class="block bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded transition">
+                Home
+            </a>
+        </div>
     </div>
 </div>
 {% endblock %}
