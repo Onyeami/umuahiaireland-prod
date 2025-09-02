@@ -31,7 +31,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Lato&family=Montserrat&family=Open+Sans&family=Roboto&display=swap"
         rel="stylesheet">
-    <script src="https://www.paypal.com/sdk/js?client-id={{ paypal_client_id }}&currency=EUR"></script>
+    <!-- Stripe will be loaded on donation page when needed -->
     <style>
         html {
             scroll-behavior: smooth;
@@ -85,16 +85,15 @@
                     {% endif %}
 
                     <li>
-                        <a href="https://www.paypal.com/ncp/payment/CBTLEW6PFH3MN" target="_blank"
-                            rel="noopener noreferrer"
-                            class="flex items-center gap-2 bg-yellow-400 text-gray-900 font-semibold px-5 py-2 rounded-md shadow-md hover:bg-yellow-500 transition duration-200">
+                        <button onclick="openDonationModal()"
+                            class="flex items-center gap-2 bg-primary text-white font-semibold px-5 py-2 rounded-md shadow-md hover:bg-primary-dark transition duration-200">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                                class="w-5 h-5 text-blue-700">
+                                class="w-5 h-5">
                                 <path
-                                    d="M12 0C5.373 0 0 5.373 0 12c0 5.336 3.438 9.85 8.207 11.385.6.11.82-.26.82-.577 0-.286-.01-1.04-.016-2.04-3.338.726-4.042-1.61-4.042-1.61-.545-1.386-1.33-1.756-1.33-1.756-1.09-.744.083-.729.083-.729 1.205.085 1.84 1.236 1.84 1.236 1.07 1.834 2.81 1.304 3.495.997.107-.775.418-1.304.76-1.604-2.665-.303-5.466-1.333-5.466-5.931 0-1.31.468-2.381 1.236-3.221-.124-.304-.536-1.524.118-3.176 0 0 1.009-.323 3.301 1.23A11.51 11.51 0 0112 6.844c1.022.004 2.05.138 3.009.404 2.29-1.553 3.297-1.23 3.297-1.23.656 1.652.244 2.872.12 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.805 5.625-5.479 5.921.43.37.814 1.102.814 2.221 0 1.606-.015 2.901-.015 3.293 0 .319.217.694.826.576C20.565 21.848 24 17.336 24 12 24 5.373 18.627 0 12 0z" />
+                                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                             </svg>
-                            Donate with PayPal
-                        </a>
+                            Donate with Stripe
+                        </button>
 
                     </li>
                 </ul>
@@ -139,15 +138,14 @@
                 {% endif %}
 
                 <li>
-                    <a href="https://www.paypal.com/ncp/payment/CBTLEW6PFH3MN" target="_blank" rel="noopener noreferrer"
-                        class="flex items-center gap-2 bg-yellow-400 text-gray-900 font-semibold px-5 py-2 rounded-md shadow-md hover:bg-yellow-500 transition duration-200">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                            class="w-5 h-5 text-blue-700">
+                    <button onclick="openDonationModal()"
+                        class="flex items-center gap-2 bg-primary text-white font-semibold px-5 py-2 rounded-md shadow-md hover:bg-primary-dark transition duration-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
                             <path
-                                d="M12 0C5.373 0 0 5.373 0 12c0 5.336 3.438 9.85 8.207 11.385.6.11.82-.26.82-.577 0-.286-.01-1.04-.016-2.04-3.338.726-4.042-1.61-4.042-1.61-.545-1.386-1.33-1.756-1.33-1.756-1.09-.744.083-.729.083-.729 1.205.085 1.84 1.236 1.84 1.236 1.07 1.834 2.81 1.304 3.495.997.107-.775.418-1.304.76-1.604-2.665-.303-5.466-1.333-5.466-5.931 0-1.31.468-2.381 1.236-3.221-.124-.304-.536-1.524.118-3.176 0 0 1.009-.323 3.301 1.23A11.51 11.51 0 0112 6.844c1.022.004 2.05.138 3.009.404 2.29-1.553 3.297-1.23 3.297-1.23.656 1.652.244 2.872.12 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.805 5.625-5.479 5.921.43.37.814 1.102.814 2.221 0 1.606-.015 2.901-.015 3.293 0 .319.217.694.826.576C20.565 21.848 24 17.336 24 12 24 5.373 18.627 0 12 0z" />
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                         </svg>
-                        Donate with PayPal
-                    </a>
+                        Donate with Stripe
+                    </button>
 
 
                 </li>
@@ -376,6 +374,200 @@
 
 
     </script>
+
+    <!-- Stripe Donation Modal -->
+    <div id="donationModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden p-4"
+        style="align-items: center; justify-content: center;">
+        <div class="bg-white rounded-xl shadow-2xl max-w-md w-full mx-auto relative">
+            <!-- Modal Header -->
+            <div class="flex justify-between items-center p-6 border-b border-gray-200">
+                <h3 class="text-xl font-semibold text-gray-900">Support Our Community</h3>
+                <button onclick="closeDonationModal()" class="text-gray-400 hover:text-gray-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                        </path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="p-6">
+                <!-- Quick Amount Selection -->
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-3">Choose amount (EUR):</label>
+                    <div class="grid grid-cols-3 gap-3 mb-4">
+                        <button onclick="setDonationAmount(10)"
+                            class="donation-amount-btn bg-gray-100 hover:bg-primary hover:text-white border border-gray-300 rounded-lg px-3 py-2 text-center font-medium transition-colors">
+                            €10
+                        </button>
+                        <button onclick="setDonationAmount(25)"
+                            class="donation-amount-btn bg-gray-100 hover:bg-primary hover:text-white border border-gray-300 rounded-lg px-3 py-2 text-center font-medium transition-colors">
+                            €25
+                        </button>
+                        <button onclick="setDonationAmount(50)"
+                            class="donation-amount-btn bg-gray-100 hover:bg-primary hover:text-white border border-gray-300 rounded-lg px-3 py-2 text-center font-medium transition-colors">
+                            €50
+                        </button>
+                        <button onclick="setDonationAmount(100)"
+                            class="donation-amount-btn bg-gray-100 hover:bg-primary hover:text-white border border-gray-300 rounded-lg px-3 py-2 text-center font-medium transition-colors">
+                            €100
+                        </button>
+                        <button onclick="setDonationAmount(250)"
+                            class="donation-amount-btn bg-gray-100 hover:bg-primary hover:text-white border border-gray-300 rounded-lg px-3 py-2 text-center font-medium transition-colors">
+                            €250
+                        </button>
+                        <button onclick="setDonationAmount(500)"
+                            class="donation-amount-btn bg-gray-100 hover:bg-primary hover:text-white border border-gray-300 rounded-lg px-3 py-2 text-center font-medium transition-colors">
+                            €500
+                        </button>
+                    </div>
+
+                    <!-- Custom Amount Input -->
+                    <div class="mb-4">
+                        <label for="customDonationAmount" class="block text-sm font-medium text-gray-700 mb-2">
+                            Or enter custom amount:
+                        </label>
+                        <div class="relative">
+                            <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">€</span>
+                            <input type="number" id="customDonationAmount" min="1" step="0.01"
+                                class="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                                placeholder="Enter amount">
+                        </div>
+                    </div>
+
+                    <!-- Process Donation Button -->
+                    <button id="processDonationBtn" onclick="processDonation()"
+                        class="w-full bg-primary hover:bg-primary-dark text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z">
+                            </path>
+                        </svg>
+                        Donate Now
+                    </button>
+                </div>
+
+                <!-- Stripe Embedded Checkout Container (hidden initially) -->
+                <div id="checkout-container" class="hidden">
+                    <div id="checkout"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+        const stripe = Stripe('{{ stripe_publishable_key }}');
+        let checkoutSession = null;
+
+        function openDonationModal() {
+            const modal = document.getElementById('donationModal');
+            modal.classList.remove('hidden');
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeDonationModal() {
+            const modal = document.getElementById('donationModal');
+            modal.classList.add('hidden');
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+
+            // Reset modal state
+            document.getElementById('checkout-container').classList.add('hidden');
+            document.getElementById('customDonationAmount').value = '';
+            document.querySelectorAll('.donation-amount-btn').forEach(btn => {
+                btn.classList.remove('bg-primary', 'text-white');
+                btn.classList.add('bg-gray-100');
+            });
+        }
+
+        function setDonationAmount(amount) {
+            document.getElementById('customDonationAmount').value = amount;
+
+            // Update button states
+            document.querySelectorAll('.donation-amount-btn').forEach(btn => {
+                btn.classList.remove('bg-primary', 'text-white');
+                btn.classList.add('bg-gray-100');
+            });
+
+            event.target.classList.remove('bg-gray-100');
+            event.target.classList.add('bg-primary', 'text-white');
+        }
+
+        async function processDonation() {
+            const amount = document.getElementById('customDonationAmount').value;
+
+            if (!amount || amount <= 0) {
+                alert('Please enter a valid donation amount.');
+                return;
+            }
+
+            const processDonationBtn = document.getElementById('processDonationBtn');
+            processDonationBtn.disabled = true;
+            processDonationBtn.innerHTML = '<svg class="animate-spin w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Processing...';
+
+            try {
+                const response = await fetch('/donate/create-session/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                    },
+                    body: JSON.stringify({
+                        amount: amount
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.client_secret) {
+                    // Show checkout container and hide amount selection
+                    document.querySelector('.mb-6').style.display = 'none';
+                    document.getElementById('checkout-container').classList.remove('hidden');
+
+                    // Initialize Stripe embedded checkout
+                    checkoutSession = await stripe.initEmbeddedCheckout({
+                        clientSecret: data.client_secret
+                    });
+
+                    checkoutSession.mount('#checkout');
+                } else {
+                    throw new Error(data.error || 'Something went wrong');
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+                processDonationBtn.disabled = false;
+                processDonationBtn.innerHTML = '<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>Donate Now';
+            }
+        }
+
+        // Handle donation success from URL parameter
+        document.addEventListener('DOMContentLoaded', function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('donation') === 'success') {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Thank You!',
+                    text: 'Your generous donation has been successfully processed. Your support means the world to our community.',
+                    confirmButtonColor: '#3B82F6'
+                });
+
+                // Clean up URL
+                if (history.replaceState) {
+                    history.replaceState(null, null, window.location.pathname);
+                }
+            }
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('donationModal').addEventListener('click', function (e) {
+            if (e.target === this) {
+                closeDonationModal();
+            }
+        });
+    </script>
+
 </body>
 
 </html>

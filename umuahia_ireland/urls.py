@@ -5,6 +5,10 @@ from django.conf.urls import handler404, handler500
 from .errors import custom_error_404, custom_error_500
 from .views import send_email, privacy_statement
 from .media_debug import media_test_view
+from .stripe_views import (
+    create_checkout_session,
+    stripe_webhook,
+)
 
 
 handler404 = custom_error_404
@@ -20,6 +24,13 @@ urlpatterns = [
     path("auth/", include("django.contrib.auth.urls")),
     path("blog/", include("blog.urls", namespace="blog")),
     path("debug/media-test/", media_test_view, name="media_test"),
+    # Stripe Donation URLs
+    path(
+        "donate/create-session/",
+        create_checkout_session,
+        name="create_checkout_session",
+    ),
+    path("stripe/webhook/", stripe_webhook, name="stripe_webhook"),
 ]
 
 # Serve media files in development and production
