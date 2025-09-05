@@ -9,6 +9,10 @@ module.exports = {
         secondary: "#D4A53F",
         menu: "#EAF6EC",
         border: "#3A0E13",
+        stripe: {
+          blue: "#635BFF",
+          "blue-dark": "#564fe0", // A slightly darker shade for the hover effect
+        },
       },
     },
   },
