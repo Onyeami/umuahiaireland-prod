@@ -96,14 +96,13 @@
             </p>
 
             <div class="flex items-center justify-between space-x-5" data-aos="fade-up" data-aos-delay="600">
-                <a href="#contact" class="bg-primary text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">
+                <a href="#contact" class="bg-white border border-primary text-primary font-semibold px-4 py-2 rounded-md hover:bg-primary hover:text-white transition">
                     Register
                 </a>
                 <a href="https://donate.stripe.com/5kQfZh1Yj7GybmV7qjbAs00" class="flex items-center justify-center gap-2
-          bg-stripe-blue text-white font-semibold
-          px-6 py-3 rounded-lg shadow-lg
-          hover:bg-stripe-blue-dark
-          transition duration-200" target="_blank">
+                          bg-white border border-primary text-primary font-semibold
+                          px-6 py-3 rounded-lg shadow-lg
+                          hover:bg-primary hover:text-white transition duration-200" target="_blank">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
                         <path
                             d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5A5.4 5.4 0 017.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 21 3 22 8.5 16.5 13c-3.13 3.49-5.46 5.82-6 6.35z">
@@ -130,7 +129,7 @@
 
 <section id='about' class="scroll-section h-fit flex items-center justify-center mt-10" data-aos="fade-left"
     data-aos-duration="1200">
-    <div class="container flex sm:flex-row flex-col-reverse">
+    <div class="container px-4 md:px-8 flex sm:flex-row flex-col-reverse">
         <div class="w-full md:w-1/2 space-y-2 p-10 flex items-center justify-center" data-aos="fade-right"
             data-aos-delay="400">
             <div class="w-full md:w-3/4 space-y-6">
@@ -173,7 +172,7 @@
 <!-- Founder's Vision Section -->
 <section id="founder" class="h-fit flex items-center justify-center bg-gray-50 py-16" data-aos="fade-left"
     data-aos-duration="1200">
-    <div class="container flex md:flex-row flex-col">
+    <div class="container px-4 md:px-8 flex md:flex-row flex-col">
         <!-- Founder's Image -->
         <div class="w-full md:w-1/2 flex items-center justify-center" data-aos="zoom-in" data-aos-delay="200">
             <img src="{% static 'img/accnmpic.JPG' %}" alt="Founder"
@@ -221,7 +220,7 @@
 <!-- Testimonials Section -->
 <section id="testimonials" class="h-fit flex items-center justify-center bg-white py-16" data-aos="fade-right"
     data-aos-duration="1200">
-    <div class="container">
+    <div class="container px-4 md:px-8">
         <!-- Section Header -->
         <div class="text-center mb-12" data-aos="fade-up">
             <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Testimonials</h2>
@@ -312,7 +311,7 @@
 
 <section id="change" class="h-fit flex items-center justify-center p-10 bg-red-50" data-aos="fade-up"
     data-aos-duration="1000">
-    <div class="container flex md:flex-row flex-col">
+    <div class="container px-4 md:px-8 flex md:flex-row flex-col">
         <div class="w-full md:w-1/2 space-y-2 md:p-10 flex items-center justify-center" data-aos="fade-right"
             data-aos-delay="200">
             <div class="w-full md:w-3/4">
@@ -363,10 +362,9 @@
                 </div>
 
                 <a href="https://donate.stripe.com/5kQfZh1Yj7GybmV7qjbAs00" class="flex items-center justify-center gap-2
-          bg-stripe-blue text-white font-semibold
-          px-6 py-3 rounded-lg
-          hover:bg-stripe-blue-dark
-          transition duration-200" target="_blank">
+                          bg-white border border-primary text-primary font-semibold
+                          px-6 py-3 rounded-lg
+                          hover:bg-primary hover:text-white transition duration-200" target="_blank">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
                         <path
                             d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5A5.4 5.4 0 017.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 21 3 22 8.5 16.5 13c-3.13 3.49-5.46 5.82-6 6.35z">
@@ -384,7 +382,7 @@
 </section>
 
 <section id="gallery" class="scroll-section flex items-center justify-center bg-white py-16" data-aos="fade-up">
-    <div class="container">
+    <div class="container px-4 md:px-8">
         <!-- ... Title and description ... -->
         <!-- Swiper Container -->
         <div class="swiper gallerySwiper">
@@ -472,13 +470,17 @@
 </section>
 
 <!-- Latest Blog Posts Section -->
-<section id="latest-blogs" class="h-fit flex items-center justify-center bg-white py-16" data-aos="fade-up"
-    data-aos-duration="1000">
-    <div class="container">
+<section id="latest-blogs"
+    class="h-fit flex items-center justify-center bg-red-50 py-12 sm:py-16 px-4"
+    data-aos="fade-up" data-aos-duration="1000">
+
+    <div class="container mx-auto">
         <!-- Section Header -->
-        <div class="text-center mb-12" data-aos="fade-up">
-            <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Latest from Our Blog</h2>
-            <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+        <div class="text-center mb-10 sm:mb-12" data-aos="fade-up">
+            <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+                Latest from Our Blog
+            </h2>
+            <p class="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto px-2 mb-4">
                 Stay updated with the latest news, stories, and insights from our community. Discover inspiring
                 journeys and valuable resources for immigrants in Ireland.
             </p>
@@ -486,28 +488,29 @@
 
         <!-- Blog Posts Grid -->
         {% if latest_posts %}
-        <div
-            class="{% if latest_posts|length == 1 %}flex justify-center{% elif latest_posts|length == 2 %}flex justify-center gap-8{% else %}grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8{% endif %} mb-12">
+        
+    <div class="flex flex-col md:flex-row md:flex-wrap md:justify-center gap-6 md:gap-8 mb-12 mt-2 items-center">
             {% for post in latest_posts %}
             <article
-                class="{% if latest_posts|length == 1 %}max-w-md w-full{% elif latest_posts|length == 2 %}max-w-md w-full{% endif %} bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2"
+                class="  bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 flex flex-col"
                 data-aos="fade-up" data-aos-delay="{{ forloop.counter }}">
+                
                 <!-- Post Image -->
-                <div class="relative overflow-hidden">
+                <div class="relative overflow-hidden h-2/5 h-[200px] ">
                     {% if post.featured_image_url %}
                     <img src="{{ post.featured_image_url }}" alt="{{ post.title }}"
-                        class="w-full h-48 object-cover transition-transform duration-300 hover:scale-105">
+                        class="w-full h-40 sm:h-48 md:h-56 object-cover transition-transform duration-300 hover:scale-105">
                     {% else %}
                     <div
-                        class="w-full h-48 bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center">
-                        <i class="fas fa-newspaper text-4xl text-white"></i>
+                        class="w-full h-40 sm:h-48 bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center">
+                        <i class="fas fa-newspaper text-3xl sm:text-4xl text-white"></i>
                     </div>
                     {% endif %}
 
                     <!-- Category Badge -->
                     {% if post.category %}
-                    <div class="absolute top-4 left-4">
-                        <span class="bg-blue-600 text-white px-3 py-1 rounded-full text-xs font-semibold">
+                    <div class="absolute top-3 left-3 sm:top-4 sm:left-4">
+                        <span class="bg-blue-600 text-white px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-semibold">
                             {{ post.category.name }}
                         </span>
                     </div>
@@ -515,9 +518,9 @@
 
                     <!-- Featured Badge -->
                     {% if post.is_featured %}
-                    <div class="absolute top-4 right-4">
+                    <div class="absolute top-3 right-3 sm:top-4 sm:right-4">
                         <span
-                            class="bg-yellow-500 text-white px-2 py-1 rounded-full text-xs font-semibold flex items-center">
+                            class="bg-yellow-500 text-white px-2 py-1 rounded-full text-xs sm:text-sm font-semibold flex items-center">
                             <i class="fas fa-star mr-1"></i>Featured
                         </span>
                     </div>
@@ -525,10 +528,10 @@
                 </div>
 
                 <!-- Post Content -->
-                <div class="p-6">
+                <div class="p-4 sm:p-6 flex flex-col flex-1 min-h-0">
                     <!-- Meta Information -->
-                    <div class="flex items-center text-sm text-gray-500 mb-3">
-                        <div class="flex items-center mr-4">
+                    <div class="flex flex-wrap items-center text-xs sm:text-sm text-gray-500 mb-3">
+                        <div class="flex items-center mr-4 mb-1 sm:mb-0">
                             <i class="fas fa-calendar mr-1"></i>
                             {{ post.published_at|date:"M d, Y" }}
                         </div>
@@ -539,17 +542,19 @@
                     </div>
 
                     <!-- Post Title -->
-                    <h3 class="text-xl font-bold text-gray-900 mb-3 hover:text-blue-600 transition-colors duration-200">
+                    <h3 class="text-lg sm:text-xl font-bold text-gray-900 mb-2 hover:text-blue-600 transition-colors duration-200">
                         <a href="{{ post.get_absolute_url }}">{{ post.title|truncatechars:60 }}</a>
                     </h3>
 
                     <!-- Post Excerpt -->
-                    <p class="text-gray-600 mb-4 leading-relaxed">{{ post.excerpt|truncatechars:120 }}</p>
+                    <p class="text-gray-600 mb-4 text-sm sm:text-base leading-relaxed">
+                        {{ post.excerpt|truncatechars:120 }}
+                    </p>
 
-                    <!-- Author and Read More -->
-                    <div class="flex items-center justify-end">
+                    <!-- Read More -->
+                    <div class="flex justify-end">
                         <a href="{{ post.get_absolute_url }}"
-                            class="text-blue-600 hover:text-blue-800 font-medium text-sm transition-colors duration-200 flex items-center">
+                            class="bg-white border border-primary text-primary font-semibold text-xs sm:text-sm px-3 sm:px-4 py-2 rounded-md flex items-center transition-all duration-200 hover:bg-primary hover:text-white">
                             Read More <i class="fas fa-arrow-right ml-1"></i>
                         </a>
                     </div>
@@ -557,7 +562,7 @@
                     <!-- Tags -->
                     {% if post.tags.all %}
                     <div class="mt-4 pt-4 border-t border-gray-100">
-                        <div class="flex flex-wrap gap-1">
+                        <div class="flex flex-wrap gap-2">
                             {% for tag in post.tags.all|slice:":3" %}
                             <span class="bg-gray-100 text-gray-600 px-2 py-1 rounded-full text-xs">
                                 #{{ tag.name }}
@@ -571,33 +576,39 @@
             {% endfor %}
         </div>
 
-        <!-- View All Blogs Button -->
-        <div class="text-center" data-aos="fade-up" data-aos-delay="600">
+        <!-- View All Blogs Button (Centered) -->
+        <div class="w-full flex justify-center mt-6 sm:mt-10" data-aos="fade-up" data-aos-delay="600">
             <a href="{% url 'blog:post_list' %}"
-                class="inline-flex items-center px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+                class="inline-flex items-center px-6 sm:px-8 py-3 bg-white border border-primary text-primary font-semibold rounded-lg transition-all duration-300 transform hover:bg-primary hover:text-white hover:scale-105 shadow-lg hover:shadow-xl text-sm sm:text-base">
                 <i class="fas fa-th-large mr-2"></i>
                 View All Blog Posts
                 <i class="fas fa-arrow-right ml-2"></i>
             </a>
         </div>
+
         {% else %}
         <!-- No Posts Available -->
-        <div class="text-center py-12" data-aos="fade-up">
-            <i class="fas fa-blog text-6xl text-gray-300 mb-4"></i>
-            <h3 class="text-xl text-gray-600 mb-2">No blog posts yet</h3>
-            <p class="text-gray-500 mb-6">We're working on creating amazing content for you. Check back soon!</p>
-            <a href="{% url 'blog:post_list' %}"
-                class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200">
-                <i class="fas fa-plus mr-2"></i>Explore Blog
-            </a>
+        <div class="text-center py-10 sm:py-12" data-aos="fade-up">
+            <i class="fas fa-blog text-5xl sm:text-6xl text-gray-300 mb-4"></i>
+            <h3 class="text-lg sm:text-xl text-gray-600 mb-2">No blog posts yet</h3>
+            <p class="text-gray-500 mb-6 text-sm sm:text-base">We're working on creating amazing content for you. Check back soon!</p>
+            <div class="w-full flex justify-center">
+                <a href="{% url 'blog:post_list' %}"
+                    class="inline-flex items-center px-5 sm:px-6 py-2 sm:py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200 text-sm sm:text-base">
+                    <i class="fas fa-plus mr-2"></i>Explore Blog
+                </a>
+            </div>
         </div>
         {% endif %}
     </div>
 </section>
 
-<section class="scroll-section h-fit flex items-center justify-center bg-red-50" id="contact" data-aos="fade-up"
+
+
+
+<section class="scroll-section h-fit flex items-center justify-center bg-white py-10" id="contact" data-aos="fade-up"
     data-aos-duration="1000">
-    <div class="container flex flex-col md:flex-row items-center justify-center min-h-screen">
+    <div class="container px-4 md:px-8 flex flex-col md:flex-row items-center justify-center">
         <div class="md:w-1/2 w-full flex flex-col items-start md:p-10" data-aos="fade-right">
             <h2 class="text-4xl font-bold text-[#99414A]" data-aos="fade-up">Get in Touch</h2>
             <p class="text-gray-500 mt-2" data-aos="fade-up" data-aos-delay="200">
@@ -636,7 +647,7 @@
                 </div>
 
                 <button type="submit"
-                    class="w-full bg-primary text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
+                    class="w-full bg-white border border-primary text-primary font-semibold px-4 py-2 rounded-md hover:bg-primary hover:text-white transition"
                     data-aos="fade-up" data-aos-delay="800">
                     Send
                 </button>

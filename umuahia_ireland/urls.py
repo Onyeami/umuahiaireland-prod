@@ -4,6 +4,7 @@ from django.conf import settings
 from django.conf.urls import handler404, handler500
 from .errors import custom_error_404, custom_error_500
 from .views import send_email, privacy_statement
+from django.views.generic import TemplateView
 from .media_debug import media_test_view
 from .stripe_views import (
     create_checkout_session,
@@ -31,6 +32,7 @@ urlpatterns = [
         name="create_checkout_session",
     ),
     path("stripe/webhook/", stripe_webhook, name="stripe_webhook"),
+    path("cookies-policy/", TemplateView.as_view(template_name="cookies_policy.html"), name="cookies_policy"),
 ]
 
 # Serve media files in development and production

@@ -44,6 +44,13 @@
 </head>
 
 <body>
+    <!-- Cookie Consent Banner -->
+    <div id="cookie-consent-banner" class="fixed bottom-0 left-0 w-full bg-gray-900 text-white p-4 shadow-lg flex flex-col md:flex-row items-center justify-between z-50" style="display: none;">
+        <div class="mb-2 md:mb-0">
+            We use cookies to improve your experience. By using our site, you agree to our <a href="{% url 'cookies_policy' %}" class="underline text-blue-300 hover:text-blue-400">Cookies Policy</a>.
+        </div>
+        <button id="accept-cookies-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded transition-all duration-200">Accept</button>
+    </div>
     <header class="w-full bg-white h-30 sticky top-0 z-50 shadow-md" id="header">
         <div class="container mx-auto flex justify-between items-center px-6 py-4">
             <a href="#" id="logo-link" class="flex flex-col items-center space-y-2">
@@ -65,7 +72,9 @@
                             class="text-gray-700 hover:text-primary transition-all duration-300">Contact
                             Us</a></li>
                     <li><a href="{% url 'blog:post_list' %}"
-                            class="text-gray-700 hover:text-primary transition-all duration-300">Blog</a></li>
+                class="text-gray-700 hover:text-primary transition-all duration-300">Blog</a></li>
+            <li><a href="{% url 'cookies_policy' %}"
+
                     {% if request.user.is_authenticated %}
                     {% if request.user.is_superuser %}
                     <li><a href="{% url 'admin:dashboard' %}"
@@ -86,10 +95,9 @@
 
                     <li>
                         <a href="https://donate.stripe.com/5kQfZh1Yj7GybmV7qjbAs00" class="flex items-center justify-center gap-2
-          bg-stripe-blue text-white font-semibold
+          bg-white border border-primary text-primary font-semibold
           px-6 py-3 rounded-lg shadow-lg
-          hover:bg-stripe-blue-dark
-          transition duration-200" target="_blank">
+          hover:bg-primary hover:text-white transition duration-200" target="_blank">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
                                 class="w-5 h-5">
                                 <path
@@ -118,6 +126,8 @@
         <div class="md:hidden bg-white shadow-md w-full p-5 space-y-4" id="mobile-menu" style="display: none;">
             <ul class="flex flex-col items-start space-y-4 text-lg font-medium text-gray-700">
                 <li><a href="#" id="mobile-home-link" class="hover:text-primary transition-all duration-300">Home</a>
+                <li><a href="{% url 'cookies_policy' %}" class="hover:text-primary transition-all duration-300">Cookies Policy</a></li>
+
                 </li>
                 <li><a href="#" id="mobile-about-link" class="hover:text-primary transition-all duration-300">About
                         Us</a></li>
@@ -188,6 +198,8 @@
                         <p>Dublin City PPN Number: DCCPPN-01429</p>
                         <a href="{% url 'privacy_statement' %}"
                             class="text-blue-500 hover:text-blue-400 transition-colors">Privacy Statement</a>
+                        <a href="{% url 'cookies_policy' %}"
+                            class="text-blue-500 hover:text-blue-400 transition-colors ml-4">Cookies Policy</a>
                     </div>
                 </div>
 
@@ -574,6 +586,39 @@
         });
     </script>
 
+    <script>
+        // Cookie Consent Banner Logic
+        function setCookie(name, value, days) {
+            var expires = "";
+            if (days) {
+                var date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                expires = "; expires=" + date.toUTCString();
+            }
+            document.cookie = name + "=" + (value || "") + expires + "; path=/";
+        }
+
+        function getCookie(name) {
+            var nameEQ = name + "=";
+            var ca = document.cookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            if (!getCookie('cookie_consent')) {
+                document.getElementById('cookie-consent-banner').style.display = 'flex';
+            }
+            document.getElementById('accept-cookies-btn').addEventListener('click', function () {
+                setCookie('cookie_consent', 'accepted', 365);
+                document.getElementById('cookie-consent-banner').style.display = 'none';
+            });
+        });
+    </script>
 </body>
 
 </html>

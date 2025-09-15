@@ -12,6 +12,9 @@ except ImportError:
 # Create your views here.
 def home(request):
     context = {}
+    # Read cookie consent value
+    cookie_consent = request.COOKIES.get('cookie_consent', None)
+    context['cookie_consent'] = cookie_consent
 
     # Get active testimonials
     try:
