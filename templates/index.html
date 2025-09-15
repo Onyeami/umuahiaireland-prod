@@ -96,13 +96,13 @@
             </p>
 
             <div class="flex items-center justify-between space-x-5" data-aos="fade-up" data-aos-delay="600">
-                <a href="#contact" class="bg-white border border-primary text-primary font-semibold px-4 py-2 rounded-md hover:bg-primary hover:text-white transition">
+                <a href="#contact" class="bg-white border border-primary-700 text-primary-700 font-semibold px-4 py-2 rounded-md hover:bg-primary-700 hover:text-white transition">
                     Register
                 </a>
                 <a href="https://donate.stripe.com/5kQfZh1Yj7GybmV7qjbAs00" class="flex items-center justify-center gap-2
-                          bg-white border border-primary text-primary font-semibold
+                          bg-white border border-primary-700 text-primary-700 font-semibold
                           px-6 py-3 rounded-lg shadow-lg
-                          hover:bg-primary hover:text-white transition duration-200" target="_blank">
+                          hover:bg-primary-700 hover:text-white transition duration-200" target="_blank">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
                         <path
                             d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5A5.4 5.4 0 017.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 21 3 22 8.5 16.5 13c-3.13 3.49-5.46 5.82-6 6.35z">
@@ -157,7 +157,7 @@
                     Join us in building a stronger community—together, we thrive!
                 </p>
                 <a href="#contact"
-                    class="px-10 py-2 rounded-sm border-2 border-primary duration-300 hover:bg-primary text-primary hover:text-white font-semibold text-sm block w-fit uppercase"
+                    class="px-10 py-2 rounded-sm border-2 border-primary-700 duration-300 hover:bg-primary-700 text-primary-700 hover:text-white font-semibold text-sm block w-fit uppercase"
                     data-aos="fade-up" data-aos-delay="400">Join Us Today</a>
             </div>
         </div>
@@ -256,7 +256,7 @@
                                 <blockquote class="text-lg text-gray-600 italic leading-relaxed">
                                     "{{ testimonial.content }}"
                                 </blockquote>
-                                <div class="border-l-4 border-primary pl-4">
+                                <div class="border-l-4 border-primary-700 pl-4">
                                     <p class="text-lg font-semibold text-gray-800">{{ testimonial.name }}</p>
                                     {% if testimonial.title %}
                                     <p class="text-sm text-gray-600">{{ testimonial.title }}</p>
@@ -270,8 +270,8 @@
             </div>
 
             <!-- Navigation Arrows -->
-            <div class="swiper-button-next text-primary"></div>
-            <div class="swiper-button-prev text-primary"></div>
+            <div class="swiper-button-next text-primary-700"></div>
+            <div class="swiper-button-prev text-primary-700"></div>
 
             <!-- Pagination -->
             <div class="swiper-pagination"></div>
@@ -295,7 +295,7 @@
                             you all help others. It has been an
                             absolute honour!"
                         </blockquote>
-                        <div class="border-l-4 border-primary pl-4">
+                        <div class="border-l-4 border-primary-700 pl-4">
                             <p class="text-lg font-semibold text-gray-800">Work Programmes Graduate</p>
                             <p class="text-sm text-gray-600">Now working full-time with a law firm</p>
                         </div>
@@ -362,9 +362,9 @@
                 </div>
 
                 <a href="https://donate.stripe.com/5kQfZh1Yj7GybmV7qjbAs00" class="flex items-center justify-center gap-2
-                          bg-white border border-primary text-primary font-semibold
+                          bg-white border border-primary-700 text-primary-700 font-semibold
                           px-6 py-3 rounded-lg
-                          hover:bg-primary hover:text-white transition duration-200" target="_blank">
+                          hover:bg-primary-700 hover:text-white transition duration-200" target="_blank">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
                         <path
                             d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5A5.4 5.4 0 017.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 21 3 22 8.5 16.5 13c-3.13 3.49-5.46 5.82-6 6.35z">
@@ -554,7 +554,7 @@
                     <!-- Read More -->
                     <div class="flex justify-end">
                         <a href="{{ post.get_absolute_url }}"
-                            class="bg-white border border-primary text-primary font-semibold text-xs sm:text-sm px-3 sm:px-4 py-2 rounded-md flex items-center transition-all duration-200 hover:bg-primary hover:text-white">
+                            class="bg-white border border-primary-700 text-primary-700 font-semibold text-xs sm:text-sm px-3 sm:px-4 py-2 rounded-md flex items-center transition-all duration-200 hover:bg-primary-700 hover:text-white">
                             Read More <i class="fas fa-arrow-right ml-1"></i>
                         </a>
                     </div>
@@ -579,7 +579,7 @@
         <!-- View All Blogs Button (Centered) -->
         <div class="w-full flex justify-center mt-6 sm:mt-10" data-aos="fade-up" data-aos-delay="600">
             <a href="{% url 'blog:post_list' %}"
-                class="inline-flex items-center px-6 sm:px-8 py-3 bg-white border border-primary text-primary font-semibold rounded-lg transition-all duration-300 transform hover:bg-primary hover:text-white hover:scale-105 shadow-lg hover:shadow-xl text-sm sm:text-base">
+                class="inline-flex items-center px-6 sm:px-8 py-3 bg-white border border-primary-700 text-primary-700 font-semibold rounded-lg transition-all duration-300 transform hover:bg-primary-700 hover:text-white hover:scale-105 shadow-lg hover:shadow-xl text-sm sm:text-base">
                 <i class="fas fa-th-large mr-2"></i>
                 View All Blog Posts
                 <i class="fas fa-arrow-right ml-2"></i>
@@ -647,7 +647,7 @@
                 </div>
 
                 <button type="submit"
-                    class="w-full bg-white border border-primary text-primary font-semibold px-4 py-2 rounded-md hover:bg-primary hover:text-white transition"
+                    class="w-full bg-white border border-primary-700 text-primary-700 font-semibold px-4 py-2 rounded-md hover:bg-primary-700 hover:text-white transition"
                     data-aos="fade-up" data-aos-delay="800">
                     Send
                 </button>

@@ -1,22 +1,240 @@
 {% extends "_base.html" %}
 {% block title %}Cookies Policy{% endblock %}
+
 {% block content %}
-<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;">
-  <div class="container max-w-2xl mx-auto p-6 bg-white rounded shadow-md flex flex-col items-center text-center">
-    <h1 class="mb-4">Cookies Policy</h1>
-    <p>This Cookies Policy explains how we use cookies and similar technologies on our website. By using our site, you consent to the use of cookies as described in this policy.</p>
-    <h2 class="mt-4">What Are Cookies?</h2>
-    <p>Cookies are small text files stored on your device by your web browser. They help us improve your experience, remember your preferences, and analyze site usage.</p>
-    <h2 class="mt-4">How We Use Cookies</h2>
-    <ul class="list-disc list-inside text-left mx-auto" style="max-width:400px;">
-      <li>Essential cookies: Necessary for the website to function properly.</li>
-      <li>Analytics cookies: Help us understand how visitors interact with our site.</li>
-      <li>Preference cookies: Remember your settings and preferences.</li>
-    </ul>
-    <h2 class="mt-4">Managing Cookies</h2>
-    <p>You can control and delete cookies through your browser settings. However, disabling cookies may affect your experience on our site.</p>
-    <h2 class="mt-4">Contact Us</h2>
-    <p>If you have any questions about our Cookies Policy, please contact us using the information on our Contact page.</p>
+<div class="min-h-screen bg-gradient-to-br from-gray-50 to-primary-50 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-4xl mx-auto">
+    <!-- Header Section -->
+    <div class="text-center mb-12">
+      <div class="inline-flex items-center justify-center w-16 h-16 bg-primary-500 rounded-full mb-6">
+        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.031 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+        </svg>
+      </div>
+      <h1 class="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
+        Cookies Policy
+      </h1>
+      <div class="inline-flex items-center px-4 py-2 bg-white rounded-full shadow-sm border border-gray-200">
+        <div class="w-2 h-2 bg-green-400 rounded-full mr-3"></div>
+        <span class="text-sm font-medium text-gray-600">Last updated: 02 September 2025</span>
+      </div>
+    </div>
+
+    <!-- Main Content Card -->
+    <div class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+      <!-- Introduction -->
+      <div class="px-8 py-8 border-b border-gray-100">
+        <p class="text-lg text-gray-700 leading-relaxed mb-6">
+          The Umuahia Community Ireland website uses cookies to enhance your browsing experience, provide essential site functionality, and help us understand how our website is used.
+        </p>
+        <div class="inline-flex items-center px-4 py-2 bg-primary-50 rounded-lg">
+          <svg class="w-5 h-5 text-primary-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          <span class="text-sm font-medium text-primary-700">
+            Please review our full 
+            <a href="/privacy" class="underline hover:no-underline transition-all duration-200">Privacy Statement</a>
+          </span>
+        </div>
+      </div>
+
+      <!-- Cookie Types Section -->
+      <div class="px-8 py-8">
+        <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+          <div class="w-8 h-8 bg-primary-100 rounded-lg flex items-center justify-center mr-3">
+            <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
+          What are cookies?
+        </h2>
+        <div class="bg-gray-50 rounded-xl p-6 mb-8">
+          <p class="text-gray-700 leading-relaxed">
+            Cookies are small text files stored on your device when you visit a website. They help the website remember your actions and preferences (such as login details, language, and display settings) for a certain period, so you don't have to re-enter them whenever you return to the site.
+          </p>
+        </div>
+
+        <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+          <div class="w-8 h-8 bg-primary-100 rounded-lg flex items-center justify-center mr-3">
+            <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+            </svg>
+          </div>
+          How we use cookies
+        </h2>
+        
+        <div class="grid md:grid-cols-1 gap-4 mb-8">
+          <div class="border border-gray-200 rounded-xl p-6 hover:shadow-md transition-all duration-200">
+            <div class="flex items-start">
+              <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0 mr-4">
+                <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+              </div>
+              <div>
+                <h3 class="font-semibold text-gray-900 mb-2">Essential Cookies</h3>
+                <p class="text-gray-600 text-sm leading-relaxed">
+                  These are necessary for the website to function properly (e.g., navigation, security, and accessibility).
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="border border-gray-200 rounded-xl p-6 hover:shadow-md transition-all duration-200">
+            <div class="flex items-start">
+              <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0 mr-4">
+                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                </svg>
+              </div>
+              <div>
+                <h3 class="font-semibold text-gray-900 mb-2">Performance & Analytics Cookies</h3>
+                <p class="text-gray-600 text-sm leading-relaxed">
+                  These help us understand how visitors use our site so we can improve its content and user experience.
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="border border-gray-200 rounded-xl p-6 hover:shadow-md transition-all duration-200">
+            <div class="flex items-start">
+              <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0 mr-4">
+                <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4"/>
+                </svg>
+              </div>
+              <div>
+                <h3 class="font-semibold text-gray-900 mb-2">Preference Cookies</h3>
+                <p class="text-gray-600 text-sm leading-relaxed">
+                  These remember your settings and preferences, such as language selection.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-primary-50 rounded-xl p-6 mb-8 border border-primary-100">
+          <div class="flex items-start">
+            <div class="w-6 h-6 text-primary-600 flex-shrink-0 mr-3 mt-0.5">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+              </svg>
+            </div>
+            <div>
+              <h4 class="font-semibold text-primary-900 mb-2">Your Privacy Matters</h4>
+              <p class="text-primary-800 text-sm leading-relaxed">
+                We do not use cookies to collect personal data without your consent, nor do we sell your information to third parties.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cookie Management Section -->
+      <div class="px-8 py-8 bg-gray-50 border-t border-gray-100">
+        <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+          <div class="w-8 h-8 bg-primary-100 rounded-lg flex items-center justify-center mr-3">
+            <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4"/>
+            </svg>
+          </div>
+          Managing cookies
+        </h2>
+        
+        <p class="text-gray-700 leading-relaxed mb-6">
+          When you visit our site for the first time, you will see a cookies consent banner allowing you to:
+        </p>
+        
+        <div class="grid sm:grid-cols-2 gap-6 mb-8 max-w-md mx-auto">
+          <div class="bg-white rounded-lg p-4 border border-gray-200 text-center hover:shadow-md transition-all duration-200">
+            <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+              <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+              </svg>
+            </div>
+            <h3 class="font-semibold text-gray-900 mb-1">Accept All</h3>
+            <p class="text-xs text-gray-600">Allow all cookies</p>
+          </div>
+          
+          <div class="bg-white rounded-lg p-4 border border-gray-200 text-center hover:shadow-md transition-all duration-200">
+            <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3">
+              <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </div>
+            <h3 class="font-semibold text-gray-900 mb-1">Decline</h3>
+            <p class="text-xs text-gray-600">Reject all cookies</p>
+          </div>
+        </div>
+        
+        <div class="bg-white rounded-xl p-6 border border-gray-200">
+          <div class="flex items-start">
+            <div class="w-6 h-6 text-gray-500 flex-shrink-0 mr-3 mt-0.5">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+            </div>
+            <p class="text-gray-700 text-sm leading-relaxed">
+              You can also control and delete cookies at any time by adjusting your browser settings. Please note that disabling certain cookies may affect website functionality.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Additional Information -->
+      <div class="px-8 py-8 border-t border-gray-100">
+        <div class="space-y-8">
+          <div>
+            <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center">
+              <div class="w-8 h-8 bg-primary-100 rounded-lg flex items-center justify-center mr-3">
+                <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/>
+                </svg>
+              </div>
+              Third-party cookies
+            </h2>
+            <div class="bg-orange-50 rounded-xl p-6 border border-orange-100">
+              <p class="text-gray-700 leading-relaxed">
+                Some of our pages may contain embedded content from third-party services (such as social media links or videos), which may set their own cookies. We do not control these cookies; please review their privacy policies for more information.
+              </p>
+            </div>
+          </div>
+
+          <div>
+            <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center">
+              <div class="w-8 h-8 bg-primary-100 rounded-lg flex items-center justify-center mr-3">
+                <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                </svg>
+              </div>
+              Updates to this policy
+            </h2>
+            <p class="text-gray-700 leading-relaxed">
+              We may update this Cookies Policy from time to time to reflect changes in technology, legislation, or our practices. Please check this page regularly for updates.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer Call-to-Action -->
+    <div class="text-center mt-12">
+      <div class="inline-flex items-center space-x-4">
+        <a href="/privacy" class="inline-flex items-center px-6 py-3 bg-primary-600 text-white rounded-lg font-semibold hover:bg-primary-700 transition-colors duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-transform">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+          </svg>
+          View Privacy Policy
+        </a>
+        <a href="/" class="inline-flex items-center px-6 py-3 bg-white text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition-colors duration-200 shadow-md border border-gray-200">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+          </svg>
+          Back to Home
+        </a>
+      </div>
+    </div>
   </div>
 </div>
 {% endblock %}

@@ -22,16 +22,45 @@
     {% endblock %}
 
     <link rel="shortcut icon" href="{% static 'img/logo.png' %}" type="image/x-icon">
-
-    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+    
+    <!-- Modern CSS Framework -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f7eaea',
+                            100: '#f0d6d8',
+                            500: '#99414A',
+                            600: '#99414A',
+                            700: '#99414A'
+                        },
+                        secondary: {
+                            500: '#f0d6d8',
+                            600: '#99414A',
+                            700: '#99414A'
+                        }
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'system-ui', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Modern Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    
+    <!-- Additional Libraries -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-    <link rel="stylesheet" href="{% static 'css/tabler-icons.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Lato&family=Montserrat&family=Open+Sans&family=Roboto&display=swap"
-        rel="stylesheet">
-    <!-- Stripe will be loaded on donation page when needed -->
+    
     <style>
         html {
             scroll-behavior: smooth;
@@ -40,284 +69,453 @@
         .scroll-section {
             scroll-margin-top: 120px;
         }
+
+        /* Custom animations */
+        @keyframes blob {
+            0% { transform: translate(0px, 0px) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+            100% { transform: translate(0px, 0px) scale(1); }
+        }
+
+        .animate-blob {
+            animation: blob 7s infinite;
+        }
+
+        .animation-delay-2000 {
+            animation-delay: 2s;
+        }
+
+        .animation-delay-4000 {
+            animation-delay: 4s;
+        }
+
+        /* Smooth transitions */
+        * {
+            transition: all 0.2s ease-in-out;
+        }
+
+        /* Focus styles for accessibility */
+        .focus-ring:focus {
+            outline: 2px solid #99414A;
+            outline-offset: 2px;
+        }
     </style>
 </head>
 
-<body>
+<body class="font-sans bg-gray-50">
     <!-- Cookie Consent Banner -->
-    <div id="cookie-consent-banner" class="fixed bottom-0 left-0 w-full bg-gray-900 text-white p-4 shadow-lg flex flex-col md:flex-row items-center justify-between z-50" style="display: none;">
-        <div class="mb-2 md:mb-0">
-            We use cookies to improve your experience. By using our site, you agree to our <a href="{% url 'cookies_policy' %}" class="underline text-blue-300 hover:text-blue-400">Cookies Policy</a>.
+    <div id="cookie-consent-banner" class="fixed bottom-0 left-0 right-0 z-50 p-4 animate-slide-up" style="display: none;">
+        <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-2xl border border-gray-200 p-6">
+            <div class="flex items-start space-x-4">
+                <div class="flex-shrink-0">
+                    <i class="fas fa-cookie-bite text-amber-600 text-2xl"></i>
+                </div>
+                
+                <div class="flex-1 min-w-0">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Cookie Preferences</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed mb-4">
+                        We use cookies to improve your browsing experience, analyze site traffic, 
+                        and personalize content. By clicking "Accept All", you consent to our use of cookies. 
+                        Learn more in our 
+                        <a href="{% url 'cookies_policy' %}" class="text-primary-600 hover:text-primary-700 underline">
+                            Cookies Policy
+                        </a>.
+                    </p>
+                    
+                    <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
+                        <button id="accept-cookies-btn" 
+                                class="px-6 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors focus-ring">
+                            Accept All
+                        </button>
+                        <button id="decline-cookies-btn"
+                                class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors focus-ring">
+                            Decline
+                        </button>
+                    </div>
+                </div>
+                
+                <button id="close-cookies-btn" 
+                        class="flex-shrink-0 text-gray-400 hover:text-gray-600 transition-colors focus-ring"
+                        aria-label="Close cookie banner">
+                    <i class="fas fa-times text-lg"></i>
+                </button>
+            </div>
         </div>
-        <button id="accept-cookies-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded transition-all duration-200">Accept</button>
     </div>
-    <header class="w-full bg-white h-30 sticky top-0 z-50 shadow-md" id="header">
-        <div class="container mx-auto flex justify-between items-center px-6 py-4">
-            <a href="#" id="logo-link" class="flex flex-col items-center space-y-2">
-                <img class="object-cover" src="{% static 'img/logo.png' %}" alt="Logo" width="90" height="90">
-                <h1 class='display-2'>Togetherness is power</h1>
-            </a>
 
-            <nav class="hidden md:flex items-center space-x-8">
-                <ul class="flex items-center space-x-6 font-medium text-lg">
-                    <li><a href="#" id="home-link"
-                            class="text-gray-700 hover:text-primary transition-all duration-300">Home</a>
-                    </li>
-                    <li><a href="#" id="about-link"
-                            class="text-gray-700 hover:text-primary transition-all duration-300">About
-                            Us</a></li>
-                    <li><a href="#" id="gallery-link"
-                            class="text-gray-700 hover:text-primary transition-all duration-300">Gallery</a></li>
-                    <li><a href="#" id="contact-link"
-                            class="text-gray-700 hover:text-primary transition-all duration-300">Contact
-                            Us</a></li>
-                    <li><a href="{% url 'blog:post_list' %}"
-                class="text-gray-700 hover:text-primary transition-all duration-300">Blog</a></li>
-            <li><a href="{% url 'cookies_policy' %}"
+    <!-- Header -->
+    <header class="fixed top-0 w-full z-40 transition-all duration-300 bg-white/95 backdrop-blur-sm shadow-lg" id="header">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <!-- Logo -->
+                <a href="#" id="logo-link" class="flex items-center space-x-3 hover:opacity-80 transition-opacity focus-ring rounded-lg p-2">
+                    <img src="{% static 'img/logo.png' %}" alt="Logo" class="h-12 w-12 rounded-full shadow-md">
+                    <div class="hidden sm:block">
+                        <h1 class="text-xl font-bold text-gray-900">Umuahia Community</h1>
+                        <p class="text-sm text-primary-700 font-medium">Togetherness is power</p>
+                    </div>
+                </a>
 
+                <!-- Desktop Navigation -->
+                <nav class="hidden lg:flex items-center space-x-8">
+                    <a href="#" id="home-link" 
+                       class="flex items-center space-x-1 text-gray-700 hover:text-primary-700 transition-colors font-medium focus-ring rounded px-3 py-2">
+                        <i class="fas fa-home text-sm"></i>
+                        <span>Home</span>
+                    </a>
+                    <a href="#" id="about-link" 
+                       class="flex items-center space-x-1 text-gray-700 hover:text-primary-700 transition-colors font-medium focus-ring rounded px-3 py-2">
+                        <i class="fas fa-users text-sm"></i>
+                        <span>About</span>
+                    </a>
+                    <a href="#" id="gallery-link" 
+                       class="flex items-center space-x-1 text-gray-700 hover:text-primary-700 transition-colors font-medium focus-ring rounded px-3 py-2">
+                        <i class="fas fa-images text-sm"></i>
+                        <span>Gallery</span>
+                    </a>
+                    <a href="#" id="contact-link" 
+                       class="flex items-center space-x-1 text-gray-700 hover:text-primary-700 transition-colors font-medium focus-ring rounded px-3 py-2">
+                        <i class="fas fa-envelope text-sm"></i>
+                        <span>Contact</span>
+                    </a>
+                    <a href="{% url 'blog:post_list' %}" 
+                       class="flex items-center space-x-1 text-gray-700 hover:text-primary-700 transition-colors font-medium focus-ring rounded px-3 py-2">
+                        <i class="fas fa-blog text-sm"></i>
+                        <span>Blog</span>
+                    </a>
+                </nav>
+
+                <!-- Auth & Donate Section -->
+                <div class="hidden lg:flex items-center space-x-4">
                     {% if request.user.is_authenticated %}
-                    {% if request.user.is_superuser %}
-                    <li><a href="{% url 'admin:dashboard' %}"
-                            class="text-gray-700 hover:text-primary transition-all duration-300">Dashboard</a></li>
-                    {% else %}
-                    <li><a href="{% url 'user:dashboard' %}"
-                            class="text-gray-700 hover:text-primary transition-all duration-300">Dashboard</a></li>
-                    {% endif %}
-                    <li><a href="{% url 'accounts:logout' %}"
-                            class="text-gray-700 hover:text-primary transition-all duration-300">Logout</a></li>
-                    {% else %}
-
-
-                    <li><a href="{% url 'accounts:login' %}"
-                            class="text-gray-700 hover:text-primary transition-all duration-300">Login</a></li>
-
-                    {% endif %}
-
-                    <li>
-                        <a href="https://donate.stripe.com/5kQfZh1Yj7GybmV7qjbAs00" class="flex items-center justify-center gap-2
-          bg-white border border-primary text-primary font-semibold
-          px-6 py-3 rounded-lg shadow-lg
-          hover:bg-primary hover:text-white transition duration-200" target="_blank">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                                class="w-5 h-5">
-                                <path
-                                    d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5A5.4 5.4 0 017.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 21 3 22 8.5 16.5 13c-3.13 3.49-5.46 5.82-6 6.35z">
-                                </path>
-                            </svg>
-                            Donate with Stripe
+                        {% if request.user.is_superuser %}
+                            <a href="{% url 'admin:dashboard' %}" 
+                               class="flex items-center space-x-1 text-gray-700 hover:text-primary-700 transition-colors focus-ring rounded px-3 py-2">
+                                <i class="fas fa-user-shield text-sm"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        {% else %}
+                            <a href="{% url 'user:dashboard' %}" 
+                               class="flex items-center space-x-1 text-gray-700 hover:text-primary-700 transition-colors focus-ring rounded px-3 py-2">
+                                <i class="fas fa-user text-sm"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        {% endif %}
+                        <a href="{% url 'accounts:logout' %}" 
+                           class="flex items-center space-x-1 text-gray-700 hover:text-primary-700 transition-colors focus-ring rounded px-3 py-2">
+                            <i class="fas fa-sign-out-alt text-sm"></i>
+                            <span>Logout</span>
                         </a>
-                    </li>
-                </ul>
+                    {% else %}
+                        <a href="{% url 'accounts:login' %}" 
+                           class="flex items-center space-x-1 text-gray-700 hover:text-primary-700 transition-colors focus-ring rounded px-3 py-2">
+                            <i class="fas fa-sign-in-alt text-sm"></i>
+                            <span>Login</span>
+                        </a>
+                    {% endif %}
+                    
+                    <a href="https://donate.stripe.com/5kQfZh1Yj7GybmV7qjbAs00" 
+                       target="_blank" rel="noopener noreferrer"
+                       class="inline-flex items-center space-x-2 bg-secondary-600 text-white px-6 py-2.5 rounded-full font-semibold hover:bg-secondary-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 focus-ring">
+                        <i class="fas fa-heart text-sm"></i>
+                        <span>Donate</span>
+                    </a>
+                </div>
 
-                <!--
-                <div id="nav-paypal-button-container" class="inline-block"></div>
-                     -->
-            </nav>
-
-            <button class="md:hidden text-gray-600 focus:outline-none" id="menu-toggle">
-                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-            </button>
-
-
+                <!-- Mobile menu button -->
+                <button id="menu-toggle" 
+                        class="lg:hidden p-2 rounded-md text-gray-700 hover:text-primary-700 hover:bg-gray-100 transition-colors focus-ring"
+                        aria-label="Toggle mobile menu">
+                    <i class="fas fa-bars text-xl" id="menu-icon"></i>
+                </button>
+            </div>
         </div>
 
-        <div class="md:hidden bg-white shadow-md w-full p-5 space-y-4" id="mobile-menu" style="display: none;">
-            <ul class="flex flex-col items-start space-y-4 text-lg font-medium text-gray-700">
-                <li><a href="#" id="mobile-home-link" class="hover:text-primary transition-all duration-300">Home</a>
-                <li><a href="{% url 'cookies_policy' %}" class="hover:text-primary transition-all duration-300">Cookies Policy</a></li>
-
-                </li>
-                <li><a href="#" id="mobile-about-link" class="hover:text-primary transition-all duration-300">About
-                        Us</a></li>
-                <li><a href="#" id="mobile-gallery-link"
-                        class="hover:text-primary transition-all duration-300">Gallery</a></li>
-                <li><a href="#" id="mobile-contact-link" class="hover:text-primary transition-all duration-300">Contact
-                        Us</a></li>
-                {% if request.user.is_authenticated %}
-                <li><a href="{% url 'accounts:logout' %}"
-                        class="text-gray-700 hover:text-primary transition-all duration-300">Logout</a></li>
-                {% if request.user.is_superuser %}
-                <li><a href="{% url 'admin:dashboard' %}"
-                        class="text-gray-700 hover:text-primary transition-all duration-300">Dashboard</a></li>
-                {% else %}
-                <li><a href="{% url 'user:dashboard' %}"
-                        class="text-gray-700 hover:text-primary transition-all duration-300">Dashboard</a></li>
-                {% endif %}
-                {% else %}
-                <li><a href="{% url 'accounts:login' %}"
-                        class="text-gray-700 hover:text-primary transition-all duration-300">Login</a></li>
-                {% endif %}
-
-                <li>
-                    <a href="https://donate.stripe.com/5kQfZh1Yj7GybmV7qjbAs00" class="flex items-center justify-center gap-2
-          bg-stripe-blue text-white font-semibold
-          px-6 py-3 rounded-lg shadow-lg
-          hover:bg-stripe-blue-dark
-          transition duration-200" target="_blank">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
-                            <path
-                                d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5A5.4 5.4 0 017.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 21 3 22 8.5 16.5 13c-3.13 3.49-5.46 5.82-6 6.35z">
-                            </path>
-                        </svg>
-                        Donate with Stripe
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="lg:hidden bg-white border-t border-gray-200 shadow-lg" style="display: none;">
+            <div class="max-w-7xl mx-auto px-4 py-4 space-y-4">
+                <a href="#" id="mobile-home-link" 
+                   class="flex items-center space-x-2 w-full text-left text-gray-700 hover:text-primary-50 transition-colors py-2 focus-ring rounded px-2">
+                    <i class="fas fa-home text-sm"></i>
+                    <span>Home</span>
+                </a>
+                <a href="#" id="mobile-about-link" 
+                   class="flex items-center space-x-2 w-full text-left text-gray-700 hover:text-primary-700 transition-colors py-2 focus-ring rounded px-2">
+                    <i class="fas fa-users text-sm"></i>
+                    <span>About Us</span>
+                </a>
+                <a href="#" id="mobile-gallery-link" 
+                   class="flex items-center space-x-2 w-full text-left text-gray-700 hover:text-primary-50 transition-colors py-2 focus-ring rounded px-2">
+                    <i class="fas fa-images text-sm"></i>
+                    <span>Gallery</span>
+                </a>
+                <a href="#" id="mobile-contact-link" 
+                   class="flex items-center space-x-2 w-full text-left text-gray-700 hover:text-primary-700 transition-colors py-2 focus-ring rounded px-2">
+                    <i class="fas fa-envelope text-sm"></i>
+                    <span>Contact Us</span>
+                </a>
+                <a href="{% url 'blog:post_list' %}" 
+                   class="flex items-center space-x-2 text-gray-700 hover:text-primary-700 transition-colors py-2 focus-ring rounded px-2">
+                    <i class="fas fa-blog text-sm"></i>
+                    <span>Blog</span>
+                </a>
+                <a href="{% url 'cookies_policy' %}" 
+                   class="flex items-center space-x-2 text-gray-700 hover:text-primary-700 transition-colors py-2 focus-ring rounded px-2">
+                    <i class="fas fa-cookie-bite text-sm"></i>
+                    <span>Cookies Policy</span>
+                </a>
+                
+                <div class="border-t border-gray-200 pt-4 space-y-4">
+                    {% if request.user.is_authenticated %}
+                        {% if request.user.is_superuser %}
+                            <a href="{% url 'admin:dashboard' %}" 
+                               class="flex items-center space-x-2 text-gray-700 hover:text-primary-700 transition-colors py-2 focus-ring rounded px-2">
+                                <i class="fas fa-user-shield text-sm"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        {% else %}
+                            <a href="{% url 'user:dashboard' %}" 
+                               class="flex items-center space-x-2 text-gray-700 hover:text-primary-700 transition-colors py-2 focus-ring rounded px-2">
+                                <i class="fas fa-user text-sm"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        {% endif %}
+                        <a href="{% url 'accounts:logout' %}" 
+                           class="flex items-center space-x-2 text-gray-700 hover:text-primary-700 transition-colors py-2 focus-ring rounded px-2">
+                            <i class="fas fa-sign-out-alt text-sm"></i>
+                            <span>Logout</span>
+                        </a>
+                    {% else %}
+                        <a href="{% url 'accounts:login' %}" 
+                           class="flex items-center space-x-2 text-gray-700 hover:text-primary-700 transition-colors py-2 focus-ring rounded px-2">
+                            <i class="fas fa-sign-in-alt text-sm"></i>
+                            <span>Login</span>
+                        </a>
+                    {% endif %}
+                    
+                    <a href="https://donate.stripe.com/5kQfZh1Yj7GybmV7qjbAs00" 
+                       target="_blank" rel="noopener noreferrer"
+                       class="inline-flex items-center space-x-2 bg-secondary-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-secondary-700 transition-all duration-200 w-full justify-center focus-ring">
+                        <i class="fas fa-heart text-sm"></i>
+                        <span>Donate Now</span>
                     </a>
-                </li>
-            </ul>
-
-
+                </div>
+            </div>
         </div>
     </header>
 
-    {% block content %}{% endblock content %}
+    <!-- Main Content -->
+    <main class="pt-20">
+        {% block content %}{% endblock content %}
+    </main>
 
+    <!-- Footer -->
     <footer class="bg-gray-900 text-gray-300">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="space-y-4">
-                    <h3 class="text-white font-bold text-lg mb-4">Contact</h3>
-                    <div class="text-gray-400 space-y-2">
-                        <p>Umuahia Community Ireland</p>
-                        <p>15 Saint Donagh's Road</p>
-                        <p>Donaghmede</p>
-                        <p>Dublin 13</p>
-                        <p>D13 HC82</p>
-                        <p>+353 89 475 8457</p>
-                        <p><abbr title="Electronic Mail">Email</abbr>: umuahiacommunityireland@gmail.com</p>
-                    </div>
-                </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Main Footer Content -->
+            <div class="py-16">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <!-- Organization Info -->
+                    <div class="lg:col-span-2 space-y-6">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg--primary rounded-full flex items-center justify-center">
+                                <i class="fas fa-heart text-white"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-white">Umuahia Community Ireland</h3>
+                                <p class="text-blue-400 text-sm">Togetherness is power</p>
+                            </div>
+                        </div>
+                        
+                        <p class="text-gray-400 leading-relaxed max-w-md">
+                            Building bridges between communities and cultures, fostering connections 
+                            that transcend boundaries and create lasting positive impact.
+                        </p>
 
-                <div class="space-y-4">
-                    <h3 class="text-white font-bold text-lg mb-4">Legal</h3>
-                    <div class="text-gray-400 space-y-2">
-                        <p>© Umuahia Community 2025. All rights reserved.</p>
-                        <p>Umuahia Community Ireland Company Limited by Guarantee (CLG)</p>
-                        <p>Registration Number: 771112</p>
-                        <p>Registered Charity Number: 20206800</p>
-                        <p>Dublin City PPN Number: DCCPPN-01429</p>
-                        <a href="{% url 'privacy_statement' %}"
-                            class="text-blue-500 hover:text-blue-400 transition-colors">Privacy Statement</a>
-                        <a href="{% url 'cookies_policy' %}"
-                            class="text-blue-500 hover:text-blue-400 transition-colors ml-4">Cookies Policy</a>
+                        <!-- Legal Information -->
+                        <div class="space-y-2 text-sm text-gray-400">
+                            <p>Company Limited by Guarantee (CLG)</p>
+                            <p>Registration Number: <span class="text-gray-300">771112</span></p>
+                            <p>Charity Number: <span class="text-gray-300">20206800</span></p>
+                            <p>Dublin City PPN: <span class="text-gray-300">DCCPPN-01429</span></p>
+                        </div>
                     </div>
-                </div>
 
-                <div class="space-y-4">
-                    <h3 class="text-white font-bold text-lg mb-4">Follow Us</h3>
-                    <div class="flex space-x-4">
-                        <a href="https://www.facebook.com/profile.php?id=61561613840171" target="_blank"
-                            class="p-2 bg-gray-800 rounded-full hover:bg-[#1877F2] transition-colors group"
-                            aria-label="Facebook">
-                            <i class="fab fa-facebook text-lg w-6 h-6 text-center group-hover:text-white"></i>
-                        </a>
-                        <a href="https://x.com/UIreland66867" target="_blank"
-                            class="p-2 bg-gray-800 rounded-full hover:bg-black transition-colors group"
-                            aria-label="Twitter">
-                            <i class="fab fa-x-twitter text-lg w-6 h-6 text-center group-hover:text-[#1DA1F2]"></i>
-                        </a>
-                        <a href="https://www.instagram.com/umuahians/" target="_blank"
-                            class="p-2 bg-gray-800 rounded-full hover:bg-gradient-to-r from-[#833AB4] via-[#C13584] to-[#E1306C] transition-colors group relative overflow-hidden"
-                            aria-label="Instagram">
-                            <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                            <i
-                                class="fab fa-instagram text-lg w-6 h-6 text-center relative z-10 group-hover:text-white"></i>
-                        </a>
+                    <!-- Contact Information -->
+                    <div class="space-y-6">
+                        <h4 class="text-lg font-semibold text-white">Contact Us</h4>
+                        <div class="space-y-4">
+                            <div class="flex items-start space-x-3">
+                                <i class="fas fa-map-marker-alt text-blue-400 mt-1"></i>
+                                <div class="text-sm text-gray-400 leading-relaxed">
+                                    <p>15 Saint Donagh's Road</p>
+                                    <p>Donaghmede, Dublin 13</p>
+                                    <p>D13 HC82, Ireland</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center space-x-3">
+                                <i class="fas fa-phone text-blue-400"></i>
+                                <a href="tel:+353894758457" 
+                                   class="text-sm text-gray-400 hover:text-white transition-colors focus-ring rounded">
+                                    +353 89 475 8457
+                                </a>
+                            </div>
+                            
+                            <div class="flex items-center space-x-3">
+                                <i class="fas fa-envelope text-blue-400"></i>
+                                <a href="mailto:umuahiacommunityireland@gmail.com" 
+                                   class="text-sm text-gray-400 hover:text-white transition-colors break-all focus-ring rounded">
+                                    umuahiacommunityireland@gmail.com
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Links & Social -->
+                    <div class="space-y-6">
+                        <h4 class="text-lg font-semibold text-white">Connect</h4>
+                        
+                        <!-- Quick Links -->
+                        <div class="space-y-3">
+                            <a href="{% url 'privacy_statement' %}" 
+                               class="block text-sm text-gray-400 hover:text-white transition-colors focus-ring rounded">
+                                Privacy Statement
+                            </a>
+                            <a href="{% url 'cookies_policy' %}" 
+                               class="block text-sm text-gray-400 hover:text-white transition-colors focus-ring rounded">
+                                Cookies Policy
+                            </a>
+                            <a href="{% url 'blog:post_list' %}" 
+                               class="block text-sm text-gray-400 hover:text-white transition-colors focus-ring rounded">
+                                Blog
+                            </a>
+                        </div>
+
+                        <!-- Social Media -->
+                        <div>
+                            <p class="text-sm text-gray-400 mb-3">Follow us on social media</p>
+                            <div class="flex space-x-3">
+                                <a href="https://www.facebook.com/profile.php?id=61561613840171" 
+                                   target="_blank" rel="noopener noreferrer"
+                                   class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center text-gray-400 hover:text-white hover:bg--primary transition-all duration-200 focus-ring"
+                                   aria-label="Follow us on Facebook">
+                                    <i class="fab fa-facebook"></i>
+                                </a>
+                                <a href="https://x.com/UIreland66867" 
+                                   target="_blank" rel="noopener noreferrer"
+                                   class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center text-gray-400 hover:text-white hover:bg-gray-800 transition-all duration-200 focus-ring"
+                                   aria-label="Follow us on Twitter">
+                                    <i class="fab fa-x-twitter"></i>
+                                </a>
+                                <a href="https://www.instagram.com/umuahians/" 
+                                   target="_blank" rel="noopener noreferrer"
+                                   class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center text-gray-400 hover:text-white hover:bg-gradient-to-br hover:from-purple-500 hover:to-pink-500 transition-all duration-200 focus-ring"
+                                   aria-label="Follow us on Instagram">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="mt-12 pt-8 border-t border-gray-800 text-center text-gray-400 text-sm">
-                <p>© Umuahia Community Ireland {% now "Y" %}. All rights reserved.</p>
+            <!-- Bottom Bar -->
+            <div class="border-t border-gray-800 py-8">
+                <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+                    <p class="text-sm text-gray-400 text-center md:text-left">
+                        © {% now "Y" %} Umuahia Community Ireland. All rights reserved.
+                    </p>
+                    
+                    <a href="https://donate.stripe.com/5kQfZh1Yj7GybmV7qjbAs00" 
+                       target="_blank" rel="noopener noreferrer"
+                       class="inline-flex items-center space-x-2 bg-secondary-600 text-white px-6 py-2 rounded-full font-medium hover:bg-secondary-700 transition-all duration-200 transform hover:scale-105 focus-ring">
+                        <i class="fas fa-heart"></i>
+                        <span>Support Our Mission</span>
+                    </a>
+                </div>
             </div>
         </div>
     </footer>
 
-
     {% block extra_js %}
     {% endblock %}
+    
+    <!-- Scripts -->
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://js.stripe.com/v3/"></script>
 
     <script>
+        // Mobile menu toggle
         document.getElementById('menu-toggle').addEventListener('click', function () {
             const mobileMenu = document.getElementById('mobile-menu');
-            mobileMenu.style.display = mobileMenu.style.display === 'block' ? 'none' : 'block';
+            const menuIcon = document.getElementById('menu-icon');
+            
+            if (mobileMenu.style.display === 'block') {
+                mobileMenu.style.display = 'none';
+                menuIcon.className = 'fas fa-bars text-xl';
+            } else {
+                mobileMenu.style.display = 'block';
+                menuIcon.className = 'fas fa-times text-xl';
+            }
         });
 
-        // Handle Home link clicks to scroll to top without URL hash
+        // Smooth scrolling functions
         function scrollToTop(e) {
             e.preventDefault();
-            // If we're on the home page, just scroll to top
             if (window.location.pathname === '/' || window.location.pathname === '') {
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             } else {
-                // If we're on another page, navigate to home page
                 window.location.href = '/';
             }
         }
 
-        // Handle section scrolling with cross-page navigation support
         function scrollToSection(sectionId) {
             return function (e) {
                 e.preventDefault();
-
-                // If we're on the home page, scroll to the section
                 if (window.location.pathname === '/' || window.location.pathname === '') {
                     const section = document.getElementById(sectionId);
                     if (section) {
-                        section.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
+                        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     }
                 } else {
-                    // If we're on another page, navigate to home page with hash
-                    // We'll use sessionStorage to remember which section to scroll to
                     sessionStorage.setItem('scrollToSection', sectionId);
                     window.location.href = '/';
                 }
             };
         }
 
-        // Check if we need to scroll to a specific section after page load
+        // Navigation event listeners
+        document.getElementById('home-link').addEventListener('click', scrollToTop);
+        document.getElementById('mobile-home-link').addEventListener('click', scrollToTop);
+        document.getElementById('logo-link').addEventListener('click', scrollToTop);
+
+        document.getElementById('about-link').addEventListener('click', scrollToSection('about'));
+        document.getElementById('gallery-link').addEventListener('click', scrollToSection('gallery'));
+        document.getElementById('contact-link').addEventListener('click', scrollToSection('contact'));
+
+        document.getElementById('mobile-about-link').addEventListener('click', scrollToSection('about'));
+        document.getElementById('mobile-gallery-link').addEventListener('click', scrollToSection('gallery'));
+        document.getElementById('mobile-contact-link').addEventListener('click', scrollToSection('contact'));
+
+        // Check for section scrolling after page load
         document.addEventListener('DOMContentLoaded', function () {
             const sectionToScrollTo = sessionStorage.getItem('scrollToSection');
             if (sectionToScrollTo) {
                 sessionStorage.removeItem('scrollToSection');
-
-                // Wait a bit for the page to fully load, then scroll
                 setTimeout(function () {
                     const section = document.getElementById(sectionToScrollTo);
                     if (section) {
-                        section.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
+                        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     }
                 }, 100);
             }
         });
 
-        // Add event listeners for all navigation links
-        document.getElementById('home-link').addEventListener('click', scrollToTop);
-        document.getElementById('mobile-home-link').addEventListener('click', scrollToTop);
-        document.getElementById('logo-link').addEventListener('click', scrollToTop);
-
-        // Desktop navigation
-        document.getElementById('about-link').addEventListener('click', scrollToSection('about'));
-        document.getElementById('gallery-link').addEventListener('click', scrollToSection('gallery'));
-        document.getElementById('contact-link').addEventListener('click', scrollToSection('contact'));
-
-        // Mobile navigation
-        document.getElementById('mobile-about-link').addEventListener('click', scrollToSection('about'));
-        document.getElementById('mobile-gallery-link').addEventListener('click', scrollToSection('gallery'));
-        document.getElementById('mobile-contact-link').addEventListener('click', scrollToSection('contact'));
-
+        // Contact form submission
         $('#contactForm').on('submit', function (e) {
             e.preventDefault();
             $.ajax({
@@ -330,6 +528,7 @@
                             icon: 'success',
                             title: 'Success!',
                             text: 'Your message has been sent successfully.',
+                            confirmButtonColor: '#99414A'
                         });
                         $('#contactForm')[0].reset();
                     } else {
@@ -337,6 +536,7 @@
                             icon: 'error',
                             title: 'Oops...',
                             text: data.error || 'Something went wrong!',
+                            confirmButtonColor: '#99414A'
                         });
                     }
                 },
@@ -345,249 +545,13 @@
                         icon: 'error',
                         title: 'Error',
                         text: 'An error occurred. Please try again.',
+                        confirmButtonColor: '#99414A'
                     });
                 }
             });
         });
 
-        document.addEventListener('DOMContentLoaded', function () {
-            new Swiper('.gallerySwiper', {
-                loop: true,
-                spaceBetween: 20,
-                slidesPerView: 1,
-                autoplay: {
-                    delay: 3000,
-                    disableOnInteraction: false,
-                },
-                breakpoints: {
-                    640: { slidesPerView: 2 },
-                    1024: { slidesPerView: 3 },
-                }
-            });
-
-            // Testimonials Swiper
-            new Swiper('.testimonialsSwiper', {
-                loop: true,
-                spaceBetween: 30,
-                slidesPerView: 1,
-                autoplay: {
-                    delay: 5000,
-                    disableOnInteraction: false,
-                },
-                pagination: {
-                    el: '.swiper-pagination',
-                    clickable: true,
-                },
-                navigation: {
-                    nextEl: '.swiper-button-next',
-                    prevEl: '.swiper-button-prev',
-                },
-                breakpoints: {
-                    768: { slidesPerView: 1 },
-                    1024: { slidesPerView: 1 },
-                }
-            });
-        });
-
-
-    </script>
-
-    <!-- Stripe Donation Modal -->
-    <div id="donationModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden p-4"
-        style="align-items: center; justify-content: center;">
-        <div class="bg-white rounded-xl shadow-2xl max-w-md w-full mx-auto relative">
-            <!-- Modal Header -->
-            <div class="flex justify-between items-center p-6 border-b border-gray-200">
-                <h3 class="text-xl font-semibold text-gray-900">Support Our Community</h3>
-                <button onclick="closeDonationModal()" class="text-gray-400 hover:text-gray-600">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
-                        </path>
-                    </svg>
-                </button>
-            </div>
-
-            <!-- Modal Body -->
-            <div class="p-6">
-                <!-- Quick Amount Selection -->
-                <div class="mb-6">
-                    <label class="block text-sm font-medium text-gray-700 mb-3">Choose amount (EUR):</label>
-                    <div class="grid grid-cols-3 gap-3 mb-4">
-                        <button onclick="setDonationAmount(10)"
-                            class="donation-amount-btn bg-gray-100 hover:bg-primary hover:text-white border border-gray-300 rounded-lg px-3 py-2 text-center font-medium transition-colors">
-                            €10
-                        </button>
-                        <button onclick="setDonationAmount(25)"
-                            class="donation-amount-btn bg-gray-100 hover:bg-primary hover:text-white border border-gray-300 rounded-lg px-3 py-2 text-center font-medium transition-colors">
-                            €25
-                        </button>
-                        <button onclick="setDonationAmount(50)"
-                            class="donation-amount-btn bg-gray-100 hover:bg-primary hover:text-white border border-gray-300 rounded-lg px-3 py-2 text-center font-medium transition-colors">
-                            €50
-                        </button>
-                        <button onclick="setDonationAmount(100)"
-                            class="donation-amount-btn bg-gray-100 hover:bg-primary hover:text-white border border-gray-300 rounded-lg px-3 py-2 text-center font-medium transition-colors">
-                            €100
-                        </button>
-                        <button onclick="setDonationAmount(250)"
-                            class="donation-amount-btn bg-gray-100 hover:bg-primary hover:text-white border border-gray-300 rounded-lg px-3 py-2 text-center font-medium transition-colors">
-                            €250
-                        </button>
-                        <button onclick="setDonationAmount(500)"
-                            class="donation-amount-btn bg-gray-100 hover:bg-primary hover:text-white border border-gray-300 rounded-lg px-3 py-2 text-center font-medium transition-colors">
-                            €500
-                        </button>
-                    </div>
-
-                    <!-- Custom Amount Input -->
-                    <div class="mb-4">
-                        <label for="customDonationAmount" class="block text-sm font-medium text-gray-700 mb-2">
-                            Or enter custom amount:
-                        </label>
-                        <div class="relative">
-                            <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">€</span>
-                            <input type="number" id="customDonationAmount" min="1" step="0.01"
-                                class="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                                placeholder="Enter amount">
-                        </div>
-                    </div>
-
-                    <!-- Process Donation Button -->
-                    <button id="processDonationBtn" onclick="processDonation()"
-                        class="w-full bg-primary hover:bg-primary-dark text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z">
-                            </path>
-                        </svg>
-                        Donate Now
-                    </button>
-                </div>
-
-                <!-- Stripe Embedded Checkout Container (hidden initially) -->
-                <div id="checkout-container" class="hidden">
-                    <div id="checkout"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script src="https://js.stripe.com/v3/"></script>
-    <script async src="https://js.stripe.com/v3/buy-button.js"></script>
-    <script>
-        const stripe = Stripe('{{ stripe_publishable_key }}');
-        let checkoutSession = null;
-
-        function openDonationModal() {
-            const modal = document.getElementById('donationModal');
-            modal.classList.remove('hidden');
-            modal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeDonationModal() {
-            const modal = document.getElementById('donationModal');
-            modal.classList.add('hidden');
-            modal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-
-            // Reset modal state
-            document.getElementById('checkout-container').classList.add('hidden');
-            document.getElementById('customDonationAmount').value = '';
-            document.querySelectorAll('.donation-amount-btn').forEach(btn => {
-                btn.classList.remove('bg-primary', 'text-white');
-                btn.classList.add('bg-gray-100');
-            });
-        }
-
-        function setDonationAmount(amount) {
-            document.getElementById('customDonationAmount').value = amount;
-
-            // Update button states
-            document.querySelectorAll('.donation-amount-btn').forEach(btn => {
-                btn.classList.remove('bg-primary', 'text-white');
-                btn.classList.add('bg-gray-100');
-            });
-
-            event.target.classList.remove('bg-gray-100');
-            event.target.classList.add('bg-primary', 'text-white');
-        }
-
-        async function processDonation() {
-            const amount = document.getElementById('customDonationAmount').value;
-
-            if (!amount || amount <= 0) {
-                alert('Please enter a valid donation amount.');
-                return;
-            }
-
-            const processDonationBtn = document.getElementById('processDonationBtn');
-            processDonationBtn.disabled = true;
-            processDonationBtn.innerHTML = '<svg class="animate-spin w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Processing...';
-
-            try {
-                const response = await fetch('/donate/create-session/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-                    },
-                    body: JSON.stringify({
-                        amount: amount
-                    })
-                });
-
-                const data = await response.json();
-
-                if (data.client_secret) {
-                    // Show checkout container and hide amount selection
-                    document.querySelector('.mb-6').style.display = 'none';
-                    document.getElementById('checkout-container').classList.remove('hidden');
-
-                    // Initialize Stripe embedded checkout
-                    checkoutSession = await stripe.initEmbeddedCheckout({
-                        clientSecret: data.client_secret
-                    });
-
-                    checkoutSession.mount('#checkout');
-                } else {
-                    throw new Error(data.error || 'Something went wrong');
-                }
-            } catch (error) {
-                alert('Error: ' + error.message);
-                processDonationBtn.disabled = false;
-                processDonationBtn.innerHTML = '<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>Donate Now';
-            }
-        }
-
-        // Handle donation success from URL parameter
-        document.addEventListener('DOMContentLoaded', function () {
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get('donation') === 'success') {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Thank You!',
-                    text: 'Your generous donation has been successfully processed. Your support means the world to our community.',
-                    confirmButtonColor: '#3B82F6'
-                });
-
-                // Clean up URL
-                if (history.replaceState) {
-                    history.replaceState(null, null, window.location.pathname);
-                }
-            }
-        });
-
-        // Close modal when clicking outside
-        document.getElementById('donationModal').addEventListener('click', function (e) {
-            if (e.target === this) {
-                closeDonationModal();
-            }
-        });
-    </script>
-
-    <script>
-        // Cookie Consent Banner Logic
+        // Cookie consent functionality
         function setCookie(name, value, days) {
             var expires = "";
             if (days) {
@@ -609,14 +573,85 @@
             return null;
         }
 
+        function hideCookieBanner() {
+            document.getElementById('cookie-consent-banner').style.display = 'none';
+        }
+
         document.addEventListener('DOMContentLoaded', function () {
             if (!getCookie('cookie_consent')) {
-                document.getElementById('cookie-consent-banner').style.display = 'flex';
+                setTimeout(() => {
+                    document.getElementById('cookie-consent-banner').style.display = 'block';
+                }, 1000);
             }
+
             document.getElementById('accept-cookies-btn').addEventListener('click', function () {
                 setCookie('cookie_consent', 'accepted', 365);
-                document.getElementById('cookie-consent-banner').style.display = 'none';
+                hideCookieBanner();
             });
+
+            document.getElementById('decline-cookies-btn').addEventListener('click', function () {
+                setCookie('cookie_consent', 'declined', 365);
+                hideCookieBanner();
+            });
+
+            document.getElementById('close-cookies-btn').addEventListener('click', function () {
+                setCookie('cookie_consent', 'declined', 365);
+                hideCookieBanner();
+            });
+
+            // Handle donation success
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('donation') === 'success') {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Thank You!',
+                    text: 'Your generous donation has been successfully processed. Your support means the world to our community.',
+                    confirmButtonColor: '#99414A'
+                });
+
+                if (history.replaceState) {
+                    history.replaceState(null, null, window.location.pathname);
+                }
+            }
+        });
+
+        // Initialize Swiper for gallery and testimonials
+        document.addEventListener('DOMContentLoaded', function () {
+            if (document.querySelector('.gallerySwiper')) {
+                new Swiper('.gallerySwiper', {
+                    loop: true,
+                    spaceBetween: 20,
+                    slidesPerView: 1,
+                    autoplay: {
+                        delay: 3000,
+                        disableOnInteraction: false,
+                    },
+                    breakpoints: {
+                        640: { slidesPerView: 2 },
+                        1024: { slidesPerView: 3 },
+                    }
+                });
+            }
+
+            if (document.querySelector('.testimonialsSwiper')) {
+                new Swiper('.testimonialsSwiper', {
+                    loop: true,
+                    spaceBetween: 30,
+                    slidesPerView: 1,
+                    autoplay: {
+                        delay: 5000,
+                        disableOnInteraction: false,
+                    },
+                    pagination: {
+                        el: '.swiper-pagination',
+                        clickable: true,
+                    },
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev',
+                    }
+                });
+            }
         });
     </script>
 </body>
