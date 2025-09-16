@@ -365,10 +365,7 @@
                             
                             <div class="flex items-center space-x-3">
                                 <i class="fas fa-envelope text-blue-400"></i>
-                                <a href="mailto:umuahiacommunityireland@gmail.com" 
-                                   class="text-sm text-gray-400 hover:text-white transition-colors break-all focus-ring rounded">
-                                    umuahiacommunityireland@gmail.com
-                                </a>
+                                <a href="mailto:umuahiacommunityireland@gmail.com" class="text-sm text-gray-400 hover:text-white transition-colors whitespace-nowrap focus-ring rounded">umuahiacommunityireland@gmail.com</a>
                             </div>
                         </div>
                     </div>
@@ -399,7 +396,7 @@
                             <div class="flex space-x-3">
                                 <a href="https://www.facebook.com/profile.php?id=61561613840171" 
                                    target="_blank" rel="noopener noreferrer"
-                                   class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center text-gray-400 hover:text-white hover:bg--primary transition-all duration-200 focus-ring"
+                                   class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center text-gray-400 hover:text-white hover:bg-blue-700 transition-all duration-200 focus-ring"
                                    aria-label="Follow us on Facebook">
                                     <i class="fab fa-facebook"></i>
                                 </a>
@@ -488,18 +485,41 @@
             };
         }
 
+
         // Navigation event listeners
         document.getElementById('home-link').addEventListener('click', scrollToTop);
-        document.getElementById('mobile-home-link').addEventListener('click', scrollToTop);
         document.getElementById('logo-link').addEventListener('click', scrollToTop);
-
         document.getElementById('about-link').addEventListener('click', scrollToSection('about'));
         document.getElementById('gallery-link').addEventListener('click', scrollToSection('gallery'));
         document.getElementById('contact-link').addEventListener('click', scrollToSection('contact'));
 
-        document.getElementById('mobile-about-link').addEventListener('click', scrollToSection('about'));
-        document.getElementById('mobile-gallery-link').addEventListener('click', scrollToSection('gallery'));
-        document.getElementById('mobile-contact-link').addEventListener('click', scrollToSection('contact'));
+        // Helper to close mobile menu
+        function closeMobileMenu() {
+            var mobileMenu = document.getElementById('mobile-menu');
+            var menuIcon = document.getElementById('menu-icon');
+            if (mobileMenu && menuIcon) {
+                mobileMenu.style.display = 'none';
+                menuIcon.className = 'fas fa-bars text-xl';
+            }
+        }
+
+        // Mobile nav links: close menu on click
+        document.getElementById('mobile-home-link').addEventListener('click', function(e) {
+            scrollToTop(e);
+            closeMobileMenu();
+        });
+        document.getElementById('mobile-about-link').addEventListener('click', function(e) {
+            scrollToSection('about')(e);
+            closeMobileMenu();
+        });
+        document.getElementById('mobile-gallery-link').addEventListener('click', function(e) {
+            scrollToSection('gallery')(e);
+            closeMobileMenu();
+        });
+        document.getElementById('mobile-contact-link').addEventListener('click', function(e) {
+            scrollToSection('contact')(e);
+            closeMobileMenu();
+        });
 
         // Check for section scrolling after page load
         document.addEventListener('DOMContentLoaded', function () {

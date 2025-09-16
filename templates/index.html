@@ -73,7 +73,7 @@
 <section class="scroll-section relative overflow-hidden" id="hero" style="height:70vh; min-height:350px;">
     <!-- Background Images -->
     <div class="slider-bg z-[1]">
-        <img src="{% static 'img/back5a.png' %}" class="slider-image" />
+    <img src="{% static 'img/back5a.png' %}" class="slider-image active" />
         <img src="{% static 'img/back7.jpg' %}" class="slider-image" />
         <img src="{% static 'img/back8.jpg' %}" class="slider-image" />
     </div>
@@ -112,7 +112,7 @@
                     <svg class="w-5 h-5 mr-2 inline" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5A5.4 5.4 0 017.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 21 3 22 8.5 16.5 13c-3.13 3.49-5.46 5.82-6 6.35z"/>
                     </svg>
-                    Donate with Stripe
+                    Donate   
                 </a>
             </div>
         </div>
@@ -285,8 +285,8 @@
                             </div>
 
                             <!-- Testimonial Content -->
-                            <div class="w-full md:w-2/3 space-y-4">
-                                <blockquote class="text-lg text-gray-600 italic leading-relaxed relative">
+                            <div class="w-full md:w-2/3 space-y-4 ">
+                                <blockquote class="text-lg text-gray-600 italic leading-relaxed relative p-5">
                                     <svg class="w-8 h-8 text-primary-200 absolute -top-2 -left-2" fill="currentColor" viewBox="0 0 24 24">
                                         <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
                                     </svg>
@@ -437,7 +437,7 @@
             <div class="swiper-wrapper">
                 <div class="swiper-slide">
                     <div class="relative group overflow-hidden rounded-2xl shadow-lg">
-                        <img src="{% static 'img/cross1.jpg' %}" alt="Gallery 1" class="w-full h-80 object-cover transition-transform duration-300 group-hover:scale-110">
+                        <img src="{% static 'img/cross1.jpg' %}" alt="Gallery 1" class="w-full h-60 md:h-80 object-contain bg-transparent transition-transform duration-300 group-hover:scale-105">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
                             <div class="text-white">
                                 <h3 class="text-xl font-bold mb-2">February 2025 Monthly Meeting</h3>
@@ -449,7 +449,7 @@
 
                 <div class="swiper-slide">
                     <div class="relative group overflow-hidden rounded-2xl shadow-lg">
-                        <img src="{% static 'img/cross2.jpg' %}" alt="Gallery 2" class="w-full h-80 object-cover transition-transform duration-300 group-hover:scale-110">
+                        <img src="{% static 'img/cross2.jpg' %}" alt="Gallery 2" class="w-full h-60 md:h-80 object-contain bg-transparent transition-transform duration-300 group-hover:scale-105">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
                             <div class="text-white">
                                 <h3 class="text-xl font-bold mb-2">March 2025 Monthly Meeting</h3>
@@ -461,7 +461,7 @@
 
                 <div class="swiper-slide">
                     <div class="relative group overflow-hidden rounded-2xl shadow-lg">
-                        <img src="{% static 'img/cross3.jpg' %}" alt="Gallery 3" class="w-full h-80 object-cover transition-transform duration-300 group-hover:scale-110">
+                        <img src="{% static 'img/cross3.jpg' %}" alt="Gallery 3" class="w-full h-60 md:h-80 object-contain bg-transparent transition-transform duration-300 group-hover:scale-105">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
                             <div class="text-white">
                                 <h3 class="text-xl font-bold mb-2">Monthly Meeting</h3>
@@ -473,7 +473,7 @@
 
                 <div class="swiper-slide">
                     <div class="relative group overflow-hidden rounded-2xl shadow-lg">
-                        <img src="{% static 'img/OnuzMartins.jpg' %}" alt="Gallery 4" class="w-full h-80 object-cover transition-transform duration-300 group-hover:scale-110">
+                        <img src="{% static 'img/OnuzMartins.jpg' %}" alt="Gallery 4" class="w-full h-60 md:h-80 object-contain bg-transparent transition-transform duration-300 group-hover:scale-105">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
                             <div class="text-white">
                                 <h3 class="text-xl font-bold mb-2">Pastor Chris Onuzurike and Martins</h3>
@@ -485,7 +485,7 @@
 
                 <div class="swiper-slide">
                     <div class="relative group overflow-hidden rounded-2xl shadow-lg">
-                        <img src="{% static 'img/founding1.jpg' %}" alt="Gallery 5" class="w-full h-80 object-cover transition-transform duration-300 group-hover:scale-110">
+                        <img src="{% static 'img/founding1.jpg' %}" alt="Gallery 5" class="w-full h-60 md:h-80 object-contain bg-transparent transition-transform duration-300 group-hover:scale-105">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
                             <div class="text-white">
                                 <h3 class="text-xl font-bold mb-2">Members Group Photo</h3>
@@ -497,7 +497,7 @@
 
                 <div class="swiper-slide">
                     <div class="relative group overflow-hidden rounded-2xl shadow-lg">
-                        <img src="{% static 'img/group1.jpg' %}" alt="Gallery 6" class="w-full h-80 object-cover transition-transform duration-300 group-hover:scale-110">
+                        <img src="{% static 'img/group1.jpg' %}" alt="Gallery 6" class="w-full h-60 md:h-80 object-contain bg-transparent transition-transform duration-300 group-hover:scale-105">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
                             <div class="text-white">
                                 <h3 class="text-xl font-bold mb-2">Members Group Photo</h3>
@@ -676,9 +676,9 @@
                         <p class="text-gray-600 text-lg" data-aos="fade-up" data-aos-delay="200">
                             Ready to join our community? Contact us by email or phone, or fill out the form to get started.
                         </p>
-                        <div class="relative overflow-hidden rounded-2xl shadow-lg" data-aos="zoom-in" data-aos-delay="400">
-                            <img src="{% static 'img/group1.jpg' %}" alt="Contact Us" class="w-full h-64 object-cover">
-                            <div class="absolute inset-0 bg-gradient-to-t from-primary-600/30 to-transparent"></div>
+                        <div class="relative overflow-hidden rounded-2xl " data-aos="zoom-in" data-aos-delay="400">
+                            <img src="{% static 'img/group1.jpg' %}" alt="Contact Us" class="w-full h-60 md:h-80 object-contain bg-transparent">
+                            <div class="absolute  bg-transparent"></div>
                         </div>
                     </div>
                 </div>
