@@ -1,0 +1,87 @@
+{% extends '_base.html' %}
+{% load static %}
+
+{% block title %}Gallery{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="bg-gradient-to-r from-primary-50 to-primary-100 pt-24 pb-16">
+    <div class="container mx-auto px-4">
+        <div class="text-center">
+            <h1 class="text-4xl md:text-5xl font-bold text-primary-700 mb-4">
+                Photo Gallery
+            </h1>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                Browse through our collection of memories from events, activities, and moments that define our community.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Gallery Folders -->
+<section class="py-16">
+    <div class="container mx-auto px-4">
+        {% if folders %}
+            <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {% for folder in folders %}
+                    <div class="group bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+                        <!-- Folder Cover Image -->
+                        <div class="relative h-48 bg-gradient-to-br from-primary-100 to-primary-200 overflow-hidden">
+                            {% with folder.get_cover_image_url as cover_url %}
+                                {% if cover_url %}
+                                    <img src="{{ cover_url }}" 
+                                         alt="{{ folder.name }}"
+                                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
+                                {% else %}
+                                    <div class="w-full h-full flex items-center justify-center">
+                                        <i class="fas fa-images text-6xl text-primary-300"></i>
+                                    </div>
+                                {% endif %}
+                            {% endwith %}
+                            
+                            <!-- Image Count Badge -->
+                            <div class="absolute top-3 right-3 bg-primary-600 text-white px-2 py-1 rounded-full text-sm font-medium">
+                                {{ folder.image_count }} {% if folder.image_count == 1 %}photo{% else %}photos{% endif %}
+                            </div>
+                        </div>
+                        
+                        <!-- Folder Info -->
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold text-gray-800 mb-2 group-hover:text-primary-600 transition-colors">
+                                {{ folder.name }}
+                            </h3>
+                            
+                            {% if folder.description %}
+                                <p class="text-gray-600 text-sm mb-4 line-clamp-3">
+                                    {{ folder.description }}
+                                </p>
+                            {% endif %}
+                            
+                            <a href="{% url 'app:gallery_folder_detail' folder.slug %}" 
+                               class="inline-flex items-center space-x-2 text-primary-600 font-medium hover:text-primary-700 transition-colors">
+                                <span>View Photos</span>
+                                <i class="fas fa-arrow-right text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <!-- Empty State -->
+            <div class="text-center py-16">
+                <div class="max-w-md mx-auto">
+                    <div class="mb-6">
+                        <i class="fas fa-images text-6xl text-gray-300"></i>
+                    </div>
+                    <h3 class="text-2xl font-semibold text-gray-600 mb-4">No Photo Albums Yet</h3>
+                    <p class="text-gray-500">
+                        Our photo galleries are being organized. Check back soon to see our community memories!
+                    </p>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+
+{% endblock %}

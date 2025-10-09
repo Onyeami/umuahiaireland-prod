@@ -1,6 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+from django.core.paginator import Paginator
 from umuahia_ireland.config import APP_NAME
-from .models import Testimonial
+from .models import Testimonial, GalleryFolder, GalleryImage
 
 # Import blog models
 try:
@@ -41,3 +42,38 @@ def home(request):
         context["latest_posts"] = []
 
     return render(request, "index.html", context)
+
+
+def gallery_folders(request):
+    """Display all active gallery folders."""
+    folders = GalleryFolder.objects.filter(is_active=True).order_by('order', 'name')
+    
+    # Add image count for each folder
+    for folder in folders:
+        folder.image_count = folder.images.filter(is_active=True).count()
+    
+    context = {
+        'folders': folders,
+        'page_title': 'Gallery'
+    }
+    return render(request, "gallery/folders.html", context)
+
+
+def gallery_folder_detail(request, folder_slug):
+    """Display images in a specific gallery folder."""
+    folder = get_object_or_404(GalleryFolder, slug=folder_slug, is_active=True)
+    
+    # Get active images for this folder
+    images_list = folder.images.filter(is_active=True).order_by('order', 'created_at')
+    
+    # Paginate images (12 images per page)
+    paginator = Paginator(images_list, 12)
+    page_number = request.GET.get('page')
+    images = paginator.get_page(page_number)
+    
+    context = {
+        'folder': folder,
+        'images': images,
+        'page_title': f'Gallery - {folder.name}'
+    }
+    return render(request, "gallery/folder_detail.html", context)

@@ -1,0 +1,397 @@
+{% extends '../_base.html' %}
+{% load static %}
+
+{% block page_title %}{{ folder.name }} - Image Management{% endblock page_title %}
+
+{% block content %}
+<div class="p-4 md:p-6 lg:p-8">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+        <div class="space-y-1">
+            <div class="flex items-center space-x-2">
+                <a href="{% url 'admin:gallery_dashboard' %}" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <h1 class="text-2xl md:text-3xl font-bold text-gray-900">{{ folder.name }}</h1>
+            </div>
+            <p class="text-gray-600">Manage images in this folder</p>
+        </div>
+        
+        <div class="flex flex-col sm:flex-row gap-3">
+            <button onclick="openUploadModal()"
+                class="inline-flex items-center px-4 py-2 bg-primary hover:bg-primary-dark duration-300 text-white font-semibold text-sm rounded-lg">
+                <i class="fas fa-upload mr-2"></i>
+                Upload Images
+            </button>
+            <button onclick="toggleBulkMode()"
+                class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 duration-300 text-white font-semibold text-sm rounded-lg">
+                <i class="fas fa-sort mr-2"></i>
+                Reorder Images
+            </button>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-images text-purple-600 text-xl"></i>
+                    </div>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600">Total Images</p>
+                    <p class="text-2xl font-bold text-gray-900">{{ total_images }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-eye text-green-600 text-xl"></i>
+                    </div>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600">Active Images</p>
+                    <p class="text-2xl font-bold text-gray-900">{{ active_images }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <div class="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-crown text-primary-600 text-xl"></i>
+                    </div>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600">Cover Image</p>
+                    <p class="text-lg font-bold text-gray-900">
+                        {% if folder.get_cover_image %}
+                            Order {{ folder.get_cover_image.order }}
+                        {% else %}
+                            None
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Images Grid -->
+    {% if images %}
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="p-6 border-b border-gray-200">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-xl font-bold text-gray-900">Images</h2>
+                    <div id="bulkActions" class="hidden space-x-3">
+                        <button onclick="saveBulkOrder()" 
+                            class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded">
+                            <i class="fas fa-save mr-1"></i> Save Order
+                        </button>
+                        <button onclick="cancelBulkMode()" 
+                            class="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white text-sm font-medium rounded">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="imageGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-6">
+                {% for image in images %}
+                <div class="image-item border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow" 
+                     data-image-id="{{ image.id }}" data-order="{{ image.order }}">
+                    
+                    <!-- Image Preview -->
+                    <div class="relative h-48 bg-gray-100">
+                        <img src="{{ image.image.url }}" alt="{{ image.alt_text }}" 
+                             class="w-full h-full object-cover">
+                        
+                        <!-- Status Badges -->
+                        <div class="absolute top-2 left-2 flex space-x-1">
+                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-black bg-opacity-70 text-white">
+                                #{{ image.order }}
+                            </span>
+                            {% if not image.is_active %}
+                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-500 text-white">
+                                    Hidden
+                                </span>
+                            {% endif %}
+                            {% if forloop.first %}
+                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-500 text-white">
+                                    <i class="fas fa-crown mr-1"></i>Cover
+                                </span>
+                            {% endif %}
+                        </div>
+
+                        <!-- Drag Handle (hidden by default) -->
+                        <div class="drag-handle absolute top-2 right-2 hidden bg-blue-600 text-white p-2 rounded cursor-move">
+                            <i class="fas fa-grip-vertical"></i>
+                        </div>
+                    </div>
+
+                    <!-- Image Info -->
+                    <div class="p-4">
+                        <div class="mb-2">
+                            {% if image.title %}
+                                <h4 class="font-medium text-gray-900 mb-1">{{ image.title }}</h4>
+                            {% endif %}
+                            {% if image.alt_text %}
+                                <p class="text-sm text-gray-600 mb-2">{{ image.alt_text }}</p>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="text-xs text-gray-500 mb-3">
+                            <div>Order: {{ image.order }}</div>
+                            <div>Uploaded: {{ image.created_at|date:"M d, Y" }}</div>
+                            {% if image.uploaded_by %}
+                                <div>By: {{ image.uploaded_by }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="image-actions flex space-x-2">
+                            <button onclick="openEditImageModal('{{ image.id }}', '{{ image.title }}', '{{ image.alt_text }}', {{ image.order }}, {{ image.is_active|yesno:'true,false' }})"
+                                class="flex-1 px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded transition-colors">
+                                <i class="fas fa-edit mr-1"></i> Edit
+                            </button>
+                            <button onclick="confirmDeleteImage('{{ image.id }}', '{{ image.title|default:'this image' }}')"
+                                class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-xs font-medium rounded transition-colors">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        <!-- Empty State -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
+            <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-image text-4xl text-gray-400"></i>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">No Images</h3>
+            <p class="text-gray-600 mb-6">Upload your first images to this folder to get started.</p>
+            <button onclick="openUploadModal()"
+                class="inline-flex items-center px-6 py-3 bg-primary hover:bg-primary-dark text-white font-medium rounded-lg transition-colors">
+                <i class="fas fa-upload mr-2"></i>
+                Upload Images
+            </button>
+        </div>
+    {% endif %}
+</div>
+
+<!-- Upload Images Modal -->
+<div id="uploadModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center">
+    <div class="bg-white rounded-lg p-6 w-full max-w-lg mx-4">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-semibold">Upload Images to {{ folder.name }}</h3>
+            <button onclick="closeUploadModal()" class="text-gray-400 hover:text-gray-600">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <form method="post" action="{% url 'admin:gallery_upload_images' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="hidden" name="folder" value="{{ folder.id }}">
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Images</label>
+                    <input type="file" name="images" multiple accept="image/*" required 
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary">
+                    <p class="text-xs text-gray-500 mt-1">Select multiple images (JPG, PNG, GIF)</p>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Title (optional)</label>
+                    <input type="text" name="title" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Alt Text (optional)</label>
+                    <input type="text" name="alt_text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Starting Order</label>
+                    <input type="number" name="order" value="{{ images|length }}" min="0" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary">
+                </div>
+            </div>
+            
+            <div class="flex justify-end space-x-3 mt-6">
+                <button type="button" onclick="closeUploadModal()" class="px-4 py-2 text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50">Cancel</button>
+                <button type="submit" class="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-dark">Upload Images</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Edit Image Modal -->
+<div id="editImageModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center">
+    <div class="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-semibold">Edit Image</h3>
+            <button onclick="closeEditImageModal()" class="text-gray-400 hover:text-gray-600">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <form method="post" id="editImageForm">
+            {% csrf_token %}
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Title</label>
+                    <input type="text" name="title" id="editImageTitle" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Alt Text</label>
+                    <input type="text" name="alt_text" id="editImageAltText" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Display Order</label>
+                    <input type="number" name="order" id="editImageOrder" min="0" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary">
+                </div>
+                
+                <div class="flex items-center">
+                    <input type="checkbox" name="is_active" id="editImageActive" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
+                    <label class="ml-2 text-sm text-gray-700">Active (visible to public)</label>
+                </div>
+            </div>
+            
+            <div class="flex justify-end space-x-3 mt-6">
+                <button type="button" onclick="closeEditImageModal()" class="px-4 py-2 text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50">Cancel</button>
+                <button type="submit" class="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-dark">Update Image</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+<script>
+    let isBulkMode = false;
+    let sortable = null;
+
+    // Modal Functions
+    function openUploadModal() {
+        document.getElementById('uploadModal').classList.remove('hidden');
+    }
+
+    function closeUploadModal() {
+        document.getElementById('uploadModal').classList.add('hidden');
+    }
+
+    function openEditImageModal(imageId, title, altText, order, isActive) {
+        document.getElementById('editImageForm').action = `/dashboard/gallery/image/${imageId}/edit/`;
+        document.getElementById('editImageTitle').value = title;
+        document.getElementById('editImageAltText').value = altText;
+        document.getElementById('editImageOrder').value = order;
+        document.getElementById('editImageActive').checked = isActive;
+        document.getElementById('editImageModal').classList.remove('hidden');
+    }
+
+    function closeEditImageModal() {
+        document.getElementById('editImageModal').classList.add('hidden');
+    }
+
+    function confirmDeleteImage(imageId, imageName) {
+        if (confirm(`Are you sure you want to delete "${imageName}"?`)) {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = `/dashboard/gallery/image/${imageId}/delete/`;
+            
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            const csrfInput = document.createElement('input');
+            csrfInput.type = 'hidden';
+            csrfInput.name = 'csrfmiddlewaretoken';
+            csrfInput.value = csrfToken;
+            
+            form.appendChild(csrfInput);
+            document.body.appendChild(form);
+            form.submit();
+        }
+    }
+
+    // Bulk Reorder Functions
+    function toggleBulkMode() {
+        isBulkMode = !isBulkMode;
+        const dragHandles = document.querySelectorAll('.drag-handle');
+        const imageActions = document.querySelectorAll('.image-actions');
+        const bulkActions = document.getElementById('bulkActions');
+
+        if (isBulkMode) {
+            // Enable bulk mode
+            dragHandles.forEach(handle => handle.classList.remove('hidden'));
+            imageActions.forEach(actions => actions.classList.add('hidden'));
+            bulkActions.classList.remove('hidden');
+            
+            // Initialize sortable
+            const imageGrid = document.getElementById('imageGrid');
+            sortable = new Sortable(imageGrid, {
+                animation: 150,
+                handle: '.drag-handle',
+                ghostClass: 'opacity-50',
+            });
+        } else {
+            cancelBulkMode();
+        }
+    }
+
+    function cancelBulkMode() {
+        isBulkMode = false;
+        const dragHandles = document.querySelectorAll('.drag-handle');
+        const imageActions = document.querySelectorAll('.image-actions');
+        const bulkActions = document.getElementById('bulkActions');
+
+        dragHandles.forEach(handle => handle.classList.add('hidden'));
+        imageActions.forEach(actions => actions.classList.remove('hidden'));
+        bulkActions.classList.add('hidden');
+        
+        if (sortable) {
+            sortable.destroy();
+            sortable = null;
+        }
+    }
+
+    function saveBulkOrder() {
+        const imageItems = document.querySelectorAll('.image-item');
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = `/dashboard/gallery/folder/{{ folder.id }}/bulk-order/`;
+        
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        const csrfInput = document.createElement('input');
+        csrfInput.type = 'hidden';
+        csrfInput.name = 'csrfmiddlewaretoken';
+        csrfInput.value = csrfToken;
+        form.appendChild(csrfInput);
+
+        imageItems.forEach((item, index) => {
+            const imageId = item.dataset.imageId;
+            const orderInput = document.createElement('input');
+            orderInput.type = 'hidden';
+            orderInput.name = 'image_orders';
+            orderInput.value = `${imageId}:${index}`;
+            form.appendChild(orderInput);
+        });
+
+        document.body.appendChild(form);
+        form.submit();
+    }
+
+    // Close modals when clicking outside
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('bg-black')) {
+            closeUploadModal();
+            closeEditImageModal();
+        }
+    });
+</script>
+{% endblock content %}

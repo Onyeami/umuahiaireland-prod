@@ -169,7 +169,7 @@
                         <i class="fas fa-users text-sm"></i>
                         <span>About</span>
                     </a>
-                    <a href="#" id="gallery-link" 
+                    <a href="{% url 'app:gallery_folders' %}" id="gallery-link" 
                        class="flex items-center space-x-1 text-gray-700 hover:text-primary-700 transition-colors font-medium focus-ring rounded px-3 py-2">
                         <i class="fas fa-images text-sm"></i>
                         <span>Gallery</span>
@@ -245,7 +245,7 @@
                     <i class="fas fa-users text-sm"></i>
                     <span>About Us</span>
                 </a>
-                <a href="#" id="mobile-gallery-link" 
+                <a href="{% url 'app:gallery_folders' %}" id="mobile-gallery-link" 
                    class="flex items-center space-x-2 w-full text-left text-gray-700 hover:text-primary-50 transition-colors py-2 focus-ring rounded px-2">
                     <i class="fas fa-images text-sm"></i>
                     <span>Gallery</span>
@@ -490,7 +490,7 @@
         document.getElementById('home-link').addEventListener('click', scrollToTop);
         document.getElementById('logo-link').addEventListener('click', scrollToTop);
         document.getElementById('about-link').addEventListener('click', scrollToSection('about'));
-        document.getElementById('gallery-link').addEventListener('click', scrollToSection('gallery'));
+        // Gallery link removed - now uses normal navigation to /gallery/
         document.getElementById('contact-link').addEventListener('click', scrollToSection('contact'));
 
         // Helper to close mobile menu
@@ -512,10 +512,7 @@
             scrollToSection('about')(e);
             closeMobileMenu();
         });
-        document.getElementById('mobile-gallery-link').addEventListener('click', function(e) {
-            scrollToSection('gallery')(e);
-            closeMobileMenu();
-        });
+        // Mobile gallery link removed - now uses normal navigation to /gallery/
         document.getElementById('mobile-contact-link').addEventListener('click', function(e) {
             scrollToSection('contact')(e);
             closeMobileMenu();
