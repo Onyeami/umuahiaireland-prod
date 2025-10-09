@@ -1,0 +1,46 @@
+<div class="flex space-x-2">
+  {% if user.is_verified and not user.is_approved %}
+  <button
+    class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200"
+    onclick="openApproveModal('{{ user.id }}', '{{ user.first_name }} {{ user.last_name }}')">
+    <i class="ti ti-check mr-1"></i>
+    Approve
+  </button>
+  {% elif user.is_verified and user.is_approved %}
+  <button
+    class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200"
+    onclick="openRejectModal('{{ user.id }}', '{{ user.first_name }} {{ user.last_name }}')">
+    <i class="ti ti-x mr-1"></i>
+    Reject
+  </button>
+  {% endif %}
+
+  {% if user.is_active %}
+  <button
+    class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-yellow-700 bg-yellow-100 hover:bg-yellow-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 transition-colors duration-200"
+    onclick="openStatusModal('{{ user.id }}', '{{ user.first_name }} {{ user.last_name }}')">
+    <i class="ti ti-user-x mr-1"></i>
+    Deactivate
+  </button>
+  {% else %}
+  <button
+    class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-green-700 bg-green-100 hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200"
+    onclick="openActivateModal('{{ user.id }}', '{{ user.first_name }} {{ user.last_name }}')">
+    <i class="ti ti-user-check mr-1"></i>
+    Activate
+  </button>
+  {% endif %}
+
+  <button
+    class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200"
+    onclick="openDeleteModal('{{ user.id }}', '{{ user.first_name }} {{ user.last_name }}')">
+    <i class="ti ti-trash mr-1"></i>
+    Delete
+  </button>
+
+  <a href="{% url 'admin:edit_user' user.id %}"
+    class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+    <i class="ti ti-edit mr-1"></i>
+    Edit
+  </a>
+</div>

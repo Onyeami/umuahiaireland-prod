@@ -8,7 +8,9 @@
     {% csrf_token %}
 
     <div class="flex items-center flex-col space-y-3 w-full md:w-3/4 text-center mx-auto">
-        <a href="{% url 'app:home_page' %}"><img src="{% static 'img/logo.png' %}" alt="Logo" class="w-24"></a>
+          <a href="{% url 'app:home_page' %}" class="inline-block mb-6">
+                    <img src="{% static 'img/logo.png' %}" alt="Logo" class="w-20 h-20 mx-auto">
+                </a>
         <h2 class="text-3xl font-semibold">Log in into your account</h2>
         <p class="text-sm">Enter your account log in details correctly</p>
     </div>

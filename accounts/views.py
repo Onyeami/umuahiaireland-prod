@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from functools import wraps
 from django.urls import reverse
 from django.contrib.auth import login, get_user_model, logout
+from django.contrib.auth import views as auth_views
 from django.contrib.auth.hashers import make_password
 from users.models import CustomUser
 from django.contrib import messages
@@ -11,6 +12,7 @@ from django.template.loader import render_to_string
 from django.http import Http404
 from django.contrib.auth.decorators import login_required
 from .utils import send_verification_email, send_admin_notification_email
+from .forms import HTMLPasswordResetForm
 from django.db import transaction
 from django.utils.timezone import now
 from datetime import timedelta
@@ -214,7 +216,7 @@ def user_login(request):
                         message="Account has been deactivated! Reach out to support.",
                     )
                     return render(request, "registration/login.html")
-                
+
                 # Check if user is verified
                 if not user.is_verified:
                     messages.error(
@@ -222,7 +224,7 @@ def user_login(request):
                         message="Please verify your email address before logging in.",
                     )
                     return render(request, "registration/login.html")
-                
+
                 # Check if user is approved by admin
                 if not user.is_approved:
                     messages.error(
@@ -230,7 +232,7 @@ def user_login(request):
                         message="Your account is pending admin approval. You will be notified once approved.",
                     )
                     return render(request, "registration/login.html")
-                
+
                 # Otherwise, log the user in
                 login(request, user)
                 if user.is_superuser or user.is_staff:
@@ -261,3 +263,31 @@ def user_logout(request):
     """
     logout(request)  # Log the user out
     return redirect(reverse("app:home_page"))
+
+
+class CustomPasswordResetView(auth_views.PasswordResetView):
+    """
+    Custom password reset view that sends both HTML and plain text emails.
+    """
+
+    form_class = HTMLPasswordResetForm
+    template_name = "registration/password_reset_form.html"
+    email_template_name = "registration/password_reset_email.html"
+    html_email_template_name = "registration/password_reset_email_html.html"
+    subject_template_name = "registration/password_reset_subject.txt"
+    success_url = reverse_lazy("password_reset_done")
+
+    def form_valid(self, form):
+        # Override to ensure HTML email template is used
+        opts = {
+            "use_https": self.request.is_secure(),
+            "token_generator": self.token_generator,
+            "from_email": self.from_email,
+            "email_template_name": self.email_template_name,
+            "subject_template_name": self.subject_template_name,
+            "request": self.request,
+            "html_email_template_name": self.html_email_template_name,
+            "extra_email_context": self.extra_email_context,
+        }
+        form.save(**opts)
+        return super().form_valid(form)

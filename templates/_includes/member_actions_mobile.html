@@ -1,0 +1,41 @@
+{% if user.is_verified and not user.is_approved %}
+<button class="w-full text-left px-4 py-2 text-sm text-green-700 hover:bg-green-50 flex items-center"
+  onclick="openApproveModal('{{ user.id }}', '{{ user.first_name }} {{ user.last_name }}')">
+  <i class="ti ti-check mr-2"></i>
+  Approve Member
+</button>
+{% elif user.is_verified and user.is_approved %}
+<button class="w-full text-left px-4 py-2 text-sm text-red-700 hover:bg-red-50 flex items-center"
+  onclick="openRejectModal('{{ user.id }}', '{{ user.first_name }} {{ user.last_name }}')">
+  <i class="ti ti-x mr-2"></i>
+  Reject Member
+</button>
+{% endif %}
+
+{% if user.is_active %}
+<button class="w-full text-left px-4 py-2 text-sm text-yellow-700 hover:bg-yellow-50 flex items-center"
+  onclick="openStatusModal('{{ user.id }}', '{{ user.first_name }} {{ user.last_name }}')">
+  <i class="ti ti-user-x mr-2"></i>
+  Deactivate
+</button>
+{% else %}
+<button class="w-full text-left px-4 py-2 text-sm text-green-700 hover:bg-green-50 flex items-center"
+  onclick="openActivateModal('{{ user.id }}', '{{ user.first_name }} {{ user.last_name }}')">
+  <i class="ti ti-user-check mr-2"></i>
+  Activate
+</button>
+{% endif %}
+
+<a href="{% url 'admin:edit_user' user.id %}"
+  class="w-full text-left px-4 py-2 text-sm text-blue-700 hover:bg-blue-50 flex items-center">
+  <i class="ti ti-edit mr-2"></i>
+  Edit Member
+</a>
+
+<div class="border-t border-gray-100"></div>
+
+<button class="w-full text-left px-4 py-2 text-sm text-red-700 hover:bg-red-50 flex items-center"
+  onclick="openDeleteModal('{{ user.id }}', '{{ user.first_name }} {{ user.last_name }}')">
+  <i class="ti ti-trash mr-2"></i>
+  Delete Member
+</button>

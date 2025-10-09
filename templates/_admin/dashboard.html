@@ -1,120 +1,199 @@
 {% extends './_base.html' %}
 {% load static %}
 
-{% block page_title %}Member Management{% endblock page_title %}
+{% block page_title %}Dashboard - Member Management{% endblock page_title %}
 
 {% block content %}
 
-<div class="under">
-    <div class="space-y-1">
-        <h3 class="text-3xl font-semibold">
-            Hi,
-            {% if request.user.first_name %}
-            {{request.user.first_name}}
-            {% else%}
-            Admin
-            {% endif %}</h3>
+<div class="p-4 md:p-6 lg:p-8">
+    <!-- Welcome Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+        <div class="space-y-1">
+            <h1 class="text-2xl md:text-3xl font-bold text-gray-900">
+                Hi,
+                {% if request.user.first_name %}
+                {{request.user.first_name}}
+                {% else%}
+                Admin
+                {% endif %}
+            </h1>
+            <p class="text-gray-600">Welcome back to your dashboard</p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-3">
+            <a href="#"
+                class="inline-flex items-center px-4 py-2 bg-secondary hover:bg-primary duration-300 text-white font-semibold text-sm rounded-lg"
+                id="openCreateMember">
+                <i class="ti ti-plus mr-2"></i>
+                Create Member
+            </a>
+        </div>
     </div>
-    <a href="afterCreate.html"></a>
-    <a href="#" class="px-7 py-3 bg-secondary hover:bg-primary duration-300 text-white font-semibold text-sm rounded-md"
-        id="openCreateMember">Create
-        Member</a>
-</div>
 
-<!-- Stats Cards -->
-{% include './_stats.html' %}
+    <!-- Stats Cards -->
+    {% include './_stats.html' %}
 
-<!-- Members Section -->
-<section class="p-0">
-    {% include './_dash-menu-tabs.html' %}
+    <!-- Members Section -->
+    <section class="mt-8">
+        {% include './_dash-menu-tabs.html' %}
 
-    {% if users %}
-    <div class="flex items-center justify-between my-2">
-        <h3 class="text-xl font-bold">Members</h3>
-        <a href="{% url 'admin:members' %}">View All</a>
-    </div>
-    <table>
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Email Address</th>
-                <th>Position</th>
-                <th>Date Registered</th>
-                <th>Status</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for user in users reversed %}
-            <tr>
-                <td>
-                    <div class="member-info">
-                        <span>{{ user.first_name }} {{ user.last_name }}</span>
+        {% if users %}
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mt-6">
+            <!-- Section Header -->
+            <div class="flex items-center justify-between p-4 md:p-6 border-b border-gray-200">
+                <div class="flex items-center space-x-3">
+                    <h2 class="text-xl font-bold text-gray-900">Recent Members</h2>
+                    <span
+                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary text-white">
+                        {{users|length}}
+                    </span>
+                </div>
+                <a href="{% url 'admin:members' %}"
+                    class="inline-flex items-center text-sm font-medium text-primary hover:text-primary-dark">
+                    View All
+                    <i class="ti ti-chevron-right ml-1"></i>
+                </a>
+            </div>
+
+            <!-- Desktop Table View (hidden on mobile) -->
+            <div class="hidden lg:block overflow-x-auto">
+                <table class="w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Member</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Position</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Registered</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Status</th>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        {% for user in users reversed %}
+                        <tr class="hover:bg-gray-50 transition-colors duration-200">
+                            <td class="px-6 py-4">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0 h-10 w-10">
+                                        <div
+                                            class="h-10 w-10 rounded-full bg-gradient-to-r from-primary to-blue-600 flex items-center justify-center">
+                                            <span class="text-white font-semibold text-sm">
+                                                {{ user.first_name|first|upper }}{{ user.last_name|first|upper }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="ml-4">
+                                        <div class="text-sm font-medium text-gray-900">
+                                            {{ user.first_name }} {{ user.last_name }}
+                                        </div>
+                                        <div class="text-sm text-gray-500 truncate max-w-xs">
+                                            {{ user.email }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span
+                                    class="inline-flex px-2 py-1 text-xs font-semibold rounded-full
+                                    {% if user.is_staff %}bg-purple-100 text-purple-800{% else %}bg-blue-100 text-blue-800{% endif %}">
+                                    {% if user.is_staff %}Administrator{% else %}Member{% endif %}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-900">
+                                {{ user.date_joined|date:"M j, Y" }}
+                            </td>
+                            <td class="px-6 py-4">
+                                {% include '_includes/status_badge.html' with user=user %}
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                {% include '_includes/member_actions.html' with user=user %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Mobile/Tablet Card View (visible on mobile/tablet) -->
+            <div class="lg:hidden divide-y divide-gray-200">
+                {% for user in users reversed %}
+                <div class="p-4 hover:bg-gray-50 transition-colors duration-200">
+                    <div class="flex items-start space-x-4">
+                        <!-- Avatar -->
+                        <div class="flex-shrink-0">
+                            <div
+                                class="h-12 w-12 rounded-full bg-gradient-to-r from-primary to-blue-600 flex items-center justify-center">
+                                <span class="text-white font-semibold">
+                                    {{ user.first_name|first|upper }}{{ user.last_name|first|upper }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Content -->
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-start justify-between">
+                                <div class="flex-1">
+                                    <h3 class="text-base font-medium text-gray-900 truncate">
+                                        {{ user.first_name }} {{ user.last_name }}
+                                    </h3>
+                                    <p class="text-sm text-gray-500 truncate">{{ user.email }}</p>
+
+                                    <div class="mt-2 flex flex-wrap items-center gap-2">
+                                        <!-- Position Badge -->
+                                        <span
+                                            class="inline-flex px-2 py-1 text-xs font-semibold rounded-full
+                                            {% if user.is_staff %}bg-purple-100 text-purple-800{% else %}bg-blue-100 text-blue-800{% endif %}">
+                                            {% if user.is_staff %}Admin{% else %}Member{% endif %}
+                                        </span>
+
+                                        <!-- Status Badge -->
+                                        {% include '_includes/status_badge.html' with user=user %}
+                                    </div>
+
+                                    <p class="text-xs text-gray-400 mt-1">
+                                        Registered {{ user.date_joined|date:"M j, Y" }}
+                                    </p>
+                                </div>
+
+                                <!-- Actions Dropdown -->
+                                <div class="relative ml-2">
+                                    <button class="p-2 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100"
+                                        onclick="toggleDropdown('dropdown-{{ user.id }}')">
+                                        <i class="ti ti-dots-vertical"></i>
+                                    </button>
+
+                                    <div id="dropdown-{{ user.id }}"
+                                        class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-10">
+                                        <div class="py-1">
+                                            {% include '_includes/member_actions_mobile.html' with user=user %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </td>
-                <td>{{ user.email }}</td>
-                <td>{% if user.is_staff %}Administrator{% else %}Member{% endif %}</td>
-                <td>{{ user.date_joined|date:"n/j/Y" }}</td>
-                <td>
-                    {% if user.is_active %}
-                        {% if user.is_verified and user.is_approved %}
-                            <span class="p-2 rounded-full text-green-700 font-bold text-sm bg-menu">● Active & Approved</span>
-                        {% elif user.is_verified and not user.is_approved %}
-                            <span class="p-2 rounded-full text-yellow-700 font-bold text-sm bg-menu">● Verified, Pending Approval</span>
-                        {% else %}
-                            <span class="p-2 rounded-full text-orange-700 font-bold text-sm bg-menu">● Pending Verification</span>
-                        {% endif %}
-                    {% else %}
-                        <span class="p-2 rounded-full text-red-700 font-bold text-sm bg-menu">● Inactive</span>
-                    {% endif %}
-                </td>
-                <td class="flex space-x-1">
-                    {% if user.is_verified and not user.is_approved %}
-                        <button
-                            class="approve-btn text-sm text-white font-semibold bg-green-600 hover:bg-green-700 px-2 py-1 rounded-sm"
-                            onclick="openApproveModal('{{ user.id }}', '{{ user.first_name }} {{ user.last_name }}')">
-                            <i class="ti ti-check"></i>
-                            Approve
-                        </button>
-                    {% elif user.is_verified and user.is_approved %}
-                        <button
-                            class="reject-btn text-sm text-white font-semibold bg-red-600 hover:bg-red-700 px-2 py-1 rounded-sm"
-                            onclick="openRejectModal('{{ user.id }}', '{{ user.first_name }} {{ user.last_name }}')">
-                            <i class="ti ti-x"></i>
-                            Reject
-                        </button>
-                    {% endif %}
-                    
-                    <button
-                        class="deactivate-btn text-sm text-white font-semibold bg-yellow-500 hover:bg-yellow-600 px-2 py-1 rounded-sm"
-                        onclick="openStatusModal('{{ user.id }}', '{{ user.first_name }} {{ user.last_name }}')">
-                        <i class="ti ti-user-x"></i>
-                        Deactivate
-                    </button>
-                    <button
-                        class="delete-btn text-sm text-white font-semibold bg-red-600 hover:bg-red-700 px-2 py-1 rounded-sm"
-                        onclick="openDeleteModal('{{ user.id }}', '{{ user.first_name }} {{ user.last_name }}')">
-                        <i class="ti ti-trash"></i>
-                        Delete
-                    </button>
-                    <a href="{% url 'admin:edit_user' user.id %}"
-                        class="reset-btn text-sm text-white font-semibold bg-blue-600 hover:bg-blue-700 px-2 py-1 rounded-sm">
-                        <i class="ti ti-key"></i>
-                        Reset Password
-                    </a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% else %}
-    <div class="flex items-center justify-center space-y-2 flex-col">
-        <img src="{% static 'img/user.png' %}" alt="No Members" class="w-24">
-        <h2>No Members Registered</h2>
-        <p>Currently, there are no Members in the system.</p>
-    </div>
-    {% endif %}
-</section>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% else %}
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8 text-center mt-6">
+            <img src="{% static 'img/user.png' %}" alt="No Members" class="w-16 h-16 mx-auto mb-4 opacity-50">
+            <h3 class="text-lg font-medium text-gray-900 mb-2">No Members Registered</h3>
+            <p class="text-gray-500 mb-4">Currently, there are no members in the system.</p>
+            <button
+                class="inline-flex items-center px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-dark focus:ring-2 focus:ring-primary"
+                id="openCreateMemberFromEmpty">
+                <i class="ti ti-plus mr-2"></i>
+                Create First Member
+            </button>
+        </div>
+        {% endif %}
+    </section>
+</div>
 
 <div id="createMinutesModal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
     style="display: none;">
@@ -282,8 +361,35 @@
 </div>
 
 <script>
+    // Toggle dropdown for mobile actions
+    function toggleDropdown(dropdownId) {
+        const dropdown = document.getElementById(dropdownId);
+        const allDropdowns = document.querySelectorAll('[id^="dropdown-"]');
+
+        // Close all other dropdowns
+        allDropdowns.forEach(dd => {
+            if (dd.id !== dropdownId) {
+                dd.classList.add('hidden');
+            }
+        });
+
+        // Toggle current dropdown
+        dropdown.classList.toggle('hidden');
+    }
+
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function (event) {
+        const dropdowns = document.querySelectorAll('[id^="dropdown-"]');
+        dropdowns.forEach(dropdown => {
+            if (!dropdown.contains(event.target) && !event.target.closest('[onclick*="toggleDropdown"]')) {
+                dropdown.classList.add('hidden');
+            }
+        });
+    });
+
     document.addEventListener("DOMContentLoaded", function () {
         const createButton = document.getElementById("openCreateMember");
+        const createButtonFromEmpty = document.getElementById("openCreateMemberFromEmpty");
         const modal = document.getElementById("createMinutesModal");
         const form = document.getElementById("minutesForm");
         const toast = document.getElementById("toast");
@@ -327,6 +433,7 @@
         }
 
         createButton?.addEventListener("click", openModal);
+        createButtonFromEmpty?.addEventListener("click", openModal);
         document.querySelector(".close")?.addEventListener("click", closeModal);
 
         window.addEventListener("click", function (event) {
