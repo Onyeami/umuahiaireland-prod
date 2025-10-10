@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import Minuites, FinancialCheckbook, Testimonial, GalleryFolder, GalleryImage
+from .models import Minuites, FinancialCheckbook, Testimonial, GalleryFolder, GalleryImage, GalleryVideo
 
 # Register your models here.
 @admin.register(Minuites)
@@ -57,6 +57,33 @@ class GalleryImageInline(admin.TabularInline):
     image_preview.short_description = "Preview"
 
 
+class GalleryVideoInline(admin.TabularInline):
+    """Inline admin for gallery videos within folder admin"""
+    model = GalleryVideo
+    extra = 0
+    fields = ('title', 'video', 'thumbnail', 'is_active', 'order')
+    readonly_fields = ('video_preview', 'file_size_display')
+    
+    def video_preview(self, obj):
+        if obj.thumbnail:
+            return format_html(
+                '<img src="{}" style="max-height: 50px; max-width: 50px;" />',
+                obj.thumbnail.url if hasattr(obj.thumbnail, 'url') else ''
+            )
+        elif obj.video:
+            return format_html(
+                '<div style="background: #f8f9fa; border: 2px solid #dee2e6; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; border-radius: 4px;">'
+                '<span style="font-size: 16px;">🎥</span>'
+                '</div>'
+            )
+        return "No video"
+    video_preview.short_description = "Preview"
+    
+    def file_size_display(self, obj):
+        return obj.get_file_size_display() if obj.file_size else "Unknown"
+    file_size_display.short_description = "Size"
+
+
 @admin.register(GalleryFolder)
 class GalleryFolderAdmin(admin.ModelAdmin):
     list_display = ('name', 'slug', 'cover_image_display', 'image_count_display', 'is_active', 'order', 'created_at')
@@ -65,7 +92,7 @@ class GalleryFolderAdmin(admin.ModelAdmin):
     list_editable = ('is_active', 'order')
     ordering = ('order', '-created_at')
     prepopulated_fields = {'slug': ('name',)}
-    inlines = [GalleryImageInline]
+    inlines = [GalleryImageInline, GalleryVideoInline]
     
     fieldsets = (
         ('Basic Information', {
@@ -78,13 +105,18 @@ class GalleryFolderAdmin(admin.ModelAdmin):
     )
     
     def image_count_display(self, obj):
-        count = obj.get_image_count()
-        return format_html(
-            '<span style="color: {};">{} images</span>',
-            '#28a745' if count > 0 else '#dc3545',
-            count
-        )
-    image_count_display.short_description = "Images"
+        image_count = obj.get_image_count()
+        video_count = obj.get_video_count()
+        total_count = image_count + video_count
+        
+        if total_count > 0:
+            return format_html(
+                '<span style="color: #28a745;">{} images, {} videos</span>',
+                image_count, video_count
+            )
+        else:
+            return format_html('<span style="color: #dc3545;">No media</span>')
+    image_count_display.short_description = "Media Count"
     image_count_display.admin_order_field = 'images__count'
 
     def cover_image_display(self, obj):
@@ -142,3 +174,57 @@ class GalleryImageAdmin(admin.ModelAdmin):
             )
         return "No image"
     image_preview.short_description = "Preview"
+
+
+@admin.register(GalleryVideo)
+class GalleryVideoAdmin(admin.ModelAdmin):
+    list_display = ('title_display', 'folder', 'video_preview', 'file_size_display', 'is_active', 'order', 'created_at')
+    list_filter = ('folder', 'is_active', 'created_at', 'updated_at')
+    search_fields = ('title', 'folder__name')
+    list_editable = ('is_active', 'order')
+    ordering = ('folder', 'order', '-created_at')
+    
+    fieldsets = (
+        ('Basic Information', {
+            'fields': ('folder', 'title')
+        }),
+        ('Video', {
+            'fields': ('video', 'video_url', 'thumbnail', 'thumbnail_url'),
+            'description': 'Upload a video and optional custom thumbnail'
+        }),
+        ('Video Details', {
+            'fields': ('duration', 'file_size'),
+            'classes': ('collapse',),
+            'description': 'These fields can be auto-populated'
+        }),
+        ('Display Settings', {
+            'fields': ('is_active', 'order')
+        }),
+        ('Metadata', {
+            'fields': ('uploaded_by',),
+            'classes': ('collapse',)
+        }),
+    )
+    
+    def title_display(self, obj):
+        return obj.title or f"Video #{str(obj.id)[:8]}"
+    title_display.short_description = "Title"
+    
+    def video_preview(self, obj):
+        if obj.thumbnail:
+            return format_html(
+                '<img src="{}" style="max-height: 60px; max-width: 60px; border-radius: 4px;" />',
+                obj.thumbnail.url if hasattr(obj.thumbnail, 'url') else ''
+            )
+        elif obj.video:
+            return format_html(
+                '<div style="background: #f8f9fa; border: 2px solid #dee2e6; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; border-radius: 4px;">'
+                '<span style="font-size: 24px;">🎥</span>'
+                '</div>'
+            )
+        return "No video"
+    video_preview.short_description = "Preview"
+    
+    def file_size_display(self, obj):
+        return obj.get_file_size_display() if obj.file_size else "Unknown"
+    file_size_display.short_description = "File Size"

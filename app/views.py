@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator
 from umuahia_ireland.config import APP_NAME
-from .models import Testimonial, GalleryFolder, GalleryImage
+from .models import Testimonial, GalleryFolder, GalleryImage, GalleryVideo
 
 # Import blog models
 try:
@@ -48,9 +48,11 @@ def gallery_folders(request):
     """Display all active gallery folders."""
     folders = GalleryFolder.objects.filter(is_active=True).order_by('order', 'name')
     
-    # Add image count for each folder
+    # Add media counts for each folder
     for folder in folders:
         folder.image_count = folder.images.filter(is_active=True).count()
+        folder.video_count = folder.videos.filter(is_active=True).count()
+        folder.total_media_count = folder.image_count + folder.video_count
     
     context = {
         'folders': folders,
@@ -60,20 +62,21 @@ def gallery_folders(request):
 
 
 def gallery_folder_detail(request, folder_slug):
-    """Display images in a specific gallery folder."""
+    """Display mixed media (images and videos) in a specific gallery folder."""
     folder = get_object_or_404(GalleryFolder, slug=folder_slug, is_active=True)
     
-    # Get active images for this folder
-    images_list = folder.images.filter(is_active=True).order_by('order', 'created_at')
+    # Get active images and videos for this folder
+    images = folder.images.filter(is_active=True).order_by('order', 'created_at')
+    videos = folder.videos.filter(is_active=True).order_by('order', 'created_at')
     
-    # Paginate images (12 images per page)
-    paginator = Paginator(images_list, 12)
-    page_number = request.GET.get('page')
-    images = paginator.get_page(page_number)
+    # Get mixed media sorted by created_at
+    mixed_media = folder.get_latest_media(limit=None)  # Get all media, sorted
     
     context = {
         'folder': folder,
         'images': images,
+        'videos': videos,
+        'mixed_media': mixed_media,
         'page_title': f'Gallery - {folder.name}'
     }
     return render(request, "gallery/folder_detail.html", context)

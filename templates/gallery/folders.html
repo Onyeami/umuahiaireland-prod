@@ -39,10 +39,30 @@
                                 {% endif %}
                             {% endwith %}
                             
-                            <!-- Image Count Badge -->
+                            <!-- Media Count Badge -->
                             <div class="absolute top-3 right-3 bg-primary-600 text-white px-2 py-1 rounded-full text-sm font-medium">
-                                {{ folder.image_count }} {% if folder.image_count == 1 %}photo{% else %}photos{% endif %}
+                                {% if folder.total_media_count > 0 %}
+                                    {{ folder.total_media_count }} media
+                                {% else %}
+                                    0 media
+                                {% endif %}
                             </div>
+                            
+                            <!-- Media Type Indicators -->
+                            {% if folder.image_count > 0 or folder.video_count > 0 %}
+                                <div class="absolute bottom-3 left-3 flex space-x-1">
+                                    {% if folder.image_count > 0 %}
+                                        <span class="bg-blue-500 text-white px-2 py-1 rounded text-xs font-medium">
+                                            <i class="fas fa-image mr-1"></i>{{ folder.image_count }}
+                                        </span>
+                                    {% endif %}
+                                    {% if folder.video_count > 0 %}
+                                        <span class="bg-red-500 text-white px-2 py-1 rounded text-xs font-medium">
+                                            <i class="fas fa-video mr-1"></i>{{ folder.video_count }}
+                                        </span>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
                         </div>
                         
                         <!-- Folder Info -->
@@ -59,7 +79,7 @@
                             
                             <a href="{% url 'app:gallery_folder_detail' folder.slug %}" 
                                class="inline-flex items-center space-x-2 text-primary-600 font-medium hover:text-primary-700 transition-colors">
-                                <span>View Photos</span>
+                                <span>View Gallery</span>
                                 <i class="fas fa-arrow-right text-sm"></i>
                             </a>
                         </div>
@@ -73,9 +93,9 @@
                     <div class="mb-6">
                         <i class="fas fa-images text-6xl text-gray-300"></i>
                     </div>
-                    <h3 class="text-2xl font-semibold text-gray-600 mb-4">No Photo Albums Yet</h3>
+                    <h3 class="text-2xl font-semibold text-gray-600 mb-4">No Gallery Albums Yet</h3>
                     <p class="text-gray-500">
-                        Our photo galleries are being organized. Check back soon to see our community memories!
+                        Our photo and video galleries are being organized. Check back soon to see our community memories!
                     </p>
                 </div>
             </div>

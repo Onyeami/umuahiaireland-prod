@@ -7,7 +7,7 @@ from django.contrib.auth.mixins import UserPassesTestMixin
 from django.core.paginator import Paginator
 from django.db.models import Q, Count
 from users.models import CustomUser
-from app.models import Minuites, FinancialCheckbook, GalleryFolder, GalleryImage
+from app.models import Minuites, FinancialCheckbook, GalleryFolder, GalleryImage, GalleryVideo
 from app.forms import MinuitesForm, FinancialCheckbookForm
 from blog.models import BlogPost, Category, Tag, Comment, BlogSettings
 from blog.forms import BlogPostForm, BlogImageFormSet, CategoryForm, TagForm
@@ -598,8 +598,10 @@ class GalleryDashboardView(AdminRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         context["total_folders"] = GalleryFolder.objects.count()
         context["total_images"] = GalleryImage.objects.count()
+        context["total_videos"] = GalleryVideo.objects.count()
         context["active_folders"] = GalleryFolder.objects.filter(is_active=True).count()
         context["active_images"] = GalleryImage.objects.filter(is_active=True).count()
+        context["active_videos"] = GalleryVideo.objects.filter(is_active=True).count()
         return context
 
 
@@ -696,6 +698,90 @@ class GalleryImageUploadView(AdminRequiredMixin, View):
         return redirect("admin:gallery_dashboard")
 
 
+class GalleryVideoUploadView(AdminRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        folder_id = request.POST.get("folder")
+        title = request.POST.get("title", "")
+        order = request.POST.get("order", 0)
+        uploaded_files = request.FILES.getlist("videos")
+        
+        # Handle thumbnail upload
+        thumbnail = request.FILES.get("thumbnail")
+
+        folder = get_object_or_404(GalleryFolder, id=folder_id)
+        
+        success_count = 0
+        error_count = 0
+
+        for file in uploaded_files:
+            try:
+                # Get file size
+                file_size = file.size if hasattr(file, 'size') else None
+                
+                video = GalleryVideo.objects.create(
+                    folder=folder,
+                    title=title or f"Video in {folder.name}",
+                    video=file,
+                    thumbnail=thumbnail,
+                    file_size=file_size,
+                    order=int(order) if order else 0,
+                    uploaded_by=request.user.get_full_name() or request.user.email
+                )
+                success_count += 1
+            except Exception as e:
+                error_count += 1
+                print(f"Error uploading {file.name}: {str(e)}")
+
+        if success_count > 0:
+            messages.success(request, f"Successfully uploaded {success_count} video(s) to '{folder.name}'!")
+        
+        if error_count > 0:
+            messages.error(request, f"Failed to upload {error_count} video(s).")
+
+        return redirect("admin:gallery_dashboard")
+
+
+class GalleryVideoDeleteView(AdminRequiredMixin, View):
+    def post(self, request, video_id, *args, **kwargs):
+        video = get_object_or_404(GalleryVideo, id=video_id)
+        folder_name = video.folder.name
+        folder_id = video.folder.id
+        
+        try:
+            video.delete()
+            messages.success(request, f"Video deleted from '{folder_name}' successfully!")
+        except Exception as e:
+            messages.error(request, f"Error deleting video: {str(e)}")
+        
+        # Check if we came from folder detail view
+        if 'folder_detail' in request.META.get('HTTP_REFERER', ''):
+            return redirect("admin:gallery_folder_detail", folder_id=folder_id)
+        else:
+            return redirect("admin:gallery_dashboard")
+
+
+class GalleryVideoUpdateView(AdminRequiredMixin, View):
+    def post(self, request, video_id, *args, **kwargs):
+        video = get_object_or_404(GalleryVideo, id=video_id)
+        
+        # Update video fields
+        video.title = request.POST.get("title", video.title)
+        video.order = int(request.POST.get("order", video.order))
+        video.is_active = request.POST.get("is_active") == "on"
+        
+        # Handle thumbnail update if provided
+        if 'thumbnail' in request.FILES:
+            video.thumbnail = request.FILES['thumbnail']
+        
+        try:
+            video.save()
+            messages.success(request, f"Video updated successfully!")
+        except Exception as e:
+            messages.error(request, f"Error updating video: {str(e)}")
+        
+        return redirect("admin:gallery_folder_detail", folder_id=video.folder.id)
+
+
 class GalleryImageDeleteView(AdminRequiredMixin, View):
     def post(self, request, image_id, *args, **kwargs):
         image = get_object_or_404(GalleryImage, id=image_id)
@@ -723,14 +809,23 @@ class GalleryFolderDetailView(AdminRequiredMixin, TemplateView):
         folder_id = kwargs['folder_id']
         folder = get_object_or_404(GalleryFolder, id=folder_id)
         
-        # Get images ordered by order field, then created_at
+        # Get images and videos ordered by order field, then created_at
         images = folder.images.all().order_by('order', 'created_at')
+        videos = folder.videos.all().order_by('order', 'created_at')
+        
+        # Get mixed media for display
+        mixed_media = folder.get_latest_media(limit=None)  # Get all media
         
         context.update({
             'folder': folder,
             'images': images,
+            'videos': videos,
+            'mixed_media': mixed_media,
             'total_images': images.count(),
+            'total_videos': videos.count(),
+            'total_media': images.count() + videos.count(),
             'active_images': images.filter(is_active=True).count(),
+            'active_videos': videos.filter(is_active=True).count(),
         })
         return context
 

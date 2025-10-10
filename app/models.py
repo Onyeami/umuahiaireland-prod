@@ -115,9 +115,38 @@ class GalleryFolder(models.Model):
         """Return the number of images in this folder"""
         return self.images.filter(is_active=True).count()
 
+    def get_video_count(self):
+        """Return the number of videos in this folder"""
+        return self.videos.filter(is_active=True).count()
+    
+    def get_total_media_count(self):
+        """Return the total number of images and videos in this folder"""
+        return self.get_image_count() + self.get_video_count()
+
     def get_latest_images(self, limit=4):
         """Get the latest images from this folder for preview"""
         return self.images.filter(is_active=True).order_by('-created_at')[:limit]
+    
+    def get_latest_videos(self, limit=4):
+        """Get the latest videos from this folder for preview"""
+        return self.videos.filter(is_active=True).order_by('-created_at')[:limit]
+    
+    def get_latest_media(self, limit=4):
+        """Get the latest mixed media (images and videos) from this folder"""
+        from django.db.models import Q
+        from itertools import chain
+        
+        images = list(self.images.filter(is_active=True).order_by('-created_at'))
+        videos = list(self.videos.filter(is_active=True).order_by('-created_at'))
+        
+        # Combine and sort by created_at
+        all_media = sorted(
+            chain(images, videos), 
+            key=lambda x: x.created_at, 
+            reverse=True
+        )
+        
+        return all_media[:limit]
 
     def get_cover_image(self):
         """Get the cover image - uses the image with lowest order number"""
@@ -189,3 +218,83 @@ class GalleryImage(models.Model):
 
     def __str__(self):
         return self.title or f"Image in {self.folder.name}"
+
+
+class GalleryVideo(models.Model):
+    """Model for individual gallery videos"""
+    
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    folder = models.ForeignKey(
+        GalleryFolder, 
+        on_delete=models.CASCADE, 
+        related_name='videos',
+        help_text="Which folder this video belongs to"
+    )
+    title = models.CharField(
+        max_length=200, 
+        blank=True,
+        help_text="Optional title/caption for the video"
+    )
+    video = models.FileField(
+        upload_to="gallery/videos/", 
+        help_text="The actual video file (MP4, MOV, AVI, etc.)"
+    )
+    video_url = models.URLField(
+        blank=True, 
+        help_text="Cloudinary URL for the video"
+    )
+    thumbnail = models.ImageField(
+        upload_to="gallery/video_thumbnails/", 
+        blank=True, 
+        null=True,
+        help_text="Custom thumbnail for the video preview"
+    )
+    thumbnail_url = models.URLField(
+        blank=True, 
+        help_text="Cloudinary URL for the video thumbnail"
+    )
+    duration = models.DurationField(
+        blank=True, 
+        null=True,
+        help_text="Video duration (auto-detected when possible)"
+    )
+    file_size = models.PositiveIntegerField(
+        blank=True, 
+        null=True,
+        help_text="File size in bytes"
+    )
+    is_active = models.BooleanField(
+        default=True, 
+        help_text="Whether this video should be visible to the public"
+    )
+    order = models.PositiveIntegerField(
+        default=0, 
+        help_text="Order of display within the folder"
+    )
+    uploaded_by = models.CharField(
+        max_length=100, 
+        blank=True,
+        help_text="Optional: Who uploaded this video"
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['order', '-created_at']
+        verbose_name = "Gallery Video"
+        verbose_name_plural = "Gallery Videos"
+
+    def __str__(self):
+        return self.title or f"Video in {self.folder.name}"
+    
+    def get_file_size_display(self):
+        """Return human readable file size"""
+        if not self.file_size:
+            return "Unknown size"
+        
+        # Convert bytes to MB
+        size_mb = self.file_size / (1024 * 1024)
+        if size_mb < 1:
+            return f"{self.file_size / 1024:.1f} KB"
+        else:
+            return f"{size_mb:.1f} MB"

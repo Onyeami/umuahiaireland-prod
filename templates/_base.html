@@ -149,75 +149,75 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center py-4">
                 <!-- Logo -->
-                <a href="#" id="logo-link" class="flex items-center space-x-3 hover:opacity-80 transition-opacity focus-ring rounded-lg p-2">
-                    <img src="{% static 'img/logo.png' %}" alt="Logo" class="h-12 w-12 rounded-full shadow-md">
-                    <div class="hidden sm:block">
-                        <h1 class="text-xl font-bold text-gray-900">Umuahia Community</h1>
-                        <p class="text-sm text-primary-700 font-medium">Togetherness is power</p>
+                <a href="#" id="logo-link" class="flex items-center space-x-3 hover:opacity-80 transition-opacity focus-ring rounded-lg p-2 flex-shrink-0">
+                    <img src="{% static 'img/logo.png' %}" alt="Logo" class="h-10 w-10 lg:h-12 lg:w-12 rounded-full shadow-md">
+                    <div class="hidden md:block">
+                        <h1 class="text-lg lg:text-xl font-bold text-gray-900 whitespace-nowrap">Umuahia Community</h1>
+                        <p class="text-xs lg:text-sm text-primary-700 font-medium">Togetherness is power</p>
                     </div>
                 </a>
 
                 <!-- Desktop Navigation -->
-                <nav class="hidden lg:flex items-center space-x-8">
+                <nav class="hidden lg:flex items-center space-x-4 xl:space-x-6 flex-1 justify-center max-w-2xl">
                     <a href="#" id="home-link" 
-                       class="flex items-center space-x-1 text-gray-700 hover:text-primary-700 transition-colors font-medium focus-ring rounded px-3 py-2">
+                       class="flex items-center space-x-1 text-gray-700 hover:text-primary-700 transition-colors font-medium focus-ring rounded px-2 xl:px-3 py-2">
                         <i class="fas fa-home text-sm"></i>
-                        <span>Home</span>
+                        <span class="text-sm xl:text-base">Home</span>
                     </a>
                     <a href="#" id="about-link" 
-                       class="flex items-center space-x-1 text-gray-700 hover:text-primary-700 transition-colors font-medium focus-ring rounded px-3 py-2">
+                       class="flex items-center space-x-1 text-gray-700 hover:text-primary-700 transition-colors font-medium focus-ring rounded px-2 xl:px-3 py-2">
                         <i class="fas fa-users text-sm"></i>
-                        <span>About</span>
+                        <span class="text-sm xl:text-base">About</span>
                     </a>
                     <a href="{% url 'app:gallery_folders' %}" id="gallery-link" 
-                       class="flex items-center space-x-1 text-gray-700 hover:text-primary-700 transition-colors font-medium focus-ring rounded px-3 py-2">
+                       class="flex items-center space-x-1 text-gray-700 hover:text-primary-700 transition-colors font-medium focus-ring rounded px-2 xl:px-3 py-2">
                         <i class="fas fa-images text-sm"></i>
-                        <span>Gallery</span>
+                        <span class="text-sm xl:text-base">Gallery</span>
                     </a>
                     <a href="#" id="contact-link" 
-                       class="flex items-center space-x-1 text-gray-700 hover:text-primary-700 transition-colors font-medium focus-ring rounded px-3 py-2">
+                       class="flex items-center space-x-1 text-gray-700 hover:text-primary-700 transition-colors font-medium focus-ring rounded px-2 xl:px-3 py-2">
                         <i class="fas fa-envelope text-sm"></i>
-                        <span>Contact</span>
+                        <span class="text-sm xl:text-base">Contact</span>
                     </a>
                     <a href="{% url 'blog:post_list' %}" 
-                       class="flex items-center space-x-1 text-gray-700 hover:text-primary-700 transition-colors font-medium focus-ring rounded px-3 py-2">
+                       class="flex items-center space-x-1 text-gray-700 hover:text-primary-700 transition-colors font-medium focus-ring rounded px-2 xl:px-3 py-2">
                         <i class="fas fa-blog text-sm"></i>
-                        <span>Blog</span>
+                        <span class="text-sm xl:text-base">Blog</span>
                     </a>
                 </nav>
 
                 <!-- Auth & Donate Section -->
-                <div class="hidden lg:flex items-center space-x-4">
+                <div class="hidden lg:flex items-center space-x-2 xl:space-x-4 flex-shrink-0">
                     {% if request.user.is_authenticated %}
                         {% if request.user.is_superuser %}
                             <a href="{% url 'admin:dashboard' %}" 
-                               class="flex items-center space-x-1 text-gray-700 hover:text-primary-700 transition-colors focus-ring rounded px-3 py-2">
+                               class="flex items-center space-x-1 text-gray-700 hover:text-primary-700 transition-colors focus-ring rounded px-2 xl:px-3 py-2">
                                 <i class="fas fa-user-shield text-sm"></i>
-                                <span>Dashboard</span>
+                                <span class="text-sm xl:text-base">Dashboard</span>
                             </a>
                         {% else %}
                             <a href="{% url 'user:dashboard' %}" 
-                               class="flex items-center space-x-1 text-gray-700 hover:text-primary-700 transition-colors focus-ring rounded px-3 py-2">
+                               class="flex items-center space-x-1 text-gray-700 hover:text-primary-700 transition-colors focus-ring rounded px-2 xl:px-3 py-2">
                                 <i class="fas fa-user text-sm"></i>
-                                <span>Dashboard</span>
+                                <span class="text-sm xl:text-base">Dashboard</span>
                             </a>
                         {% endif %}
                         <a href="{% url 'accounts:logout' %}" 
-                           class="flex items-center space-x-1 text-gray-700 hover:text-primary-700 transition-colors focus-ring rounded px-3 py-2">
+                           class="flex items-center space-x-1 text-gray-700 hover:text-primary-700 transition-colors focus-ring rounded px-2 xl:px-3 py-2">
                             <i class="fas fa-sign-out-alt text-sm"></i>
-                            <span>Logout</span>
+                            <span class="text-sm xl:text-base">Logout</span>
                         </a>
                     {% else %}
                         <a href="{% url 'accounts:login' %}" 
-                           class="flex items-center space-x-1 text-gray-700 hover:text-primary-700 transition-colors focus-ring rounded px-3 py-2">
+                           class="flex items-center space-x-1 text-gray-700 hover:text-primary-700 transition-colors focus-ring rounded px-2 xl:px-3 py-2">
                             <i class="fas fa-sign-in-alt text-sm"></i>
-                            <span>Login</span>
+                            <span class="text-sm xl:text-base">Login</span>
                         </a>
                     {% endif %}
                     
                     <a href="https://donate.stripe.com/5kQfZh1Yj7GybmV7qjbAs00" 
                        target="_blank" rel="noopener noreferrer"
-                       class="inline-flex items-center space-x-2 bg-secondary-600 text-white px-6 py-2.5 rounded-full font-semibold hover:bg-secondary-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 focus-ring">
+                       class="inline-flex items-center space-x-2 bg-secondary-600 text-white px-4 xl:px-6 py-2 xl:py-2.5 rounded-full font-semibold hover:bg-secondary-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 focus-ring text-sm xl:text-base">
                         <i class="fas fa-heart text-sm"></i>
                         <span>Donate</span>
                     </a>
@@ -225,9 +225,9 @@
 
                 <!-- Mobile menu button -->
                 <button id="menu-toggle" 
-                        class="lg:hidden p-2 rounded-md text-gray-700 hover:text-primary-700 hover:bg-gray-100 transition-colors focus-ring"
+                        class="lg:hidden p-2 rounded-md text-gray-700 hover:text-primary-700 hover:bg-gray-100 transition-colors focus-ring flex-shrink-0"
                         aria-label="Toggle mobile menu">
-                    <i class="fas fa-bars text-xl" id="menu-icon"></i>
+                    <i class="fas fa-bars text-lg" id="menu-icon"></i>
                 </button>
             </div>
         </div>
