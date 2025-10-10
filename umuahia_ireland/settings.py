@@ -191,17 +191,30 @@ if not DEBUG:
             )
         else:
             # Fallback: Use WhiteNoise to serve media files
+            # Store media files alongside static files for persistence
             MEDIA_ROOT = os.path.join(BASE_DIR, "staticfiles", "media")
             MEDIA_URL = "/media/"
+            
+            # Enable WhiteNoise to serve media files
+            WHITENOISE_USE_FINDERS = True
+            WHITENOISE_AUTOREFRESH = True
+            WHITENOISE_MAX_AGE = 31536000  # 1 year cache for media files
+            
             print("⚠️  Cloudinary not configured - using WhiteNoise for media files")
-            print(
-                "   Set CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET"
-            )
+            print(f"   Media files will be served from: {MEDIA_ROOT}")
+            print("   Set CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET")
     except ImportError:
         # Fallback if cloudinary packages not installed
         MEDIA_ROOT = os.path.join(BASE_DIR, "staticfiles", "media")
         MEDIA_URL = "/media/"
+        
+        # Enable WhiteNoise to serve media files
+        WHITENOISE_USE_FINDERS = True
+        WHITENOISE_AUTOREFRESH = True
+        WHITENOISE_MAX_AGE = 31536000
+        
         print("⚠️  Cloudinary packages not installed - using WhiteNoise for media files")
+        print(f"   Media files will be served from: {MEDIA_ROOT}")
 
 LOGIN_URL = "accounts:login"
 
