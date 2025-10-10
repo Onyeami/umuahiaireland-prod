@@ -1,0 +1,61 @@
+<div class="file-input-wrapper" data-field="{{ field_name }}">
+    {{ field }}
+    <div class="file-input-preview" id="preview-{{ field_id }}">
+        <div class="text-center text-muted">
+            <i class="fa fa-cloud-upload" aria-hidden="true"></i>
+            <p class="mb-0">Select files to upload to Cloudinary</p>
+            <small>Files will be uploaded securely and optimized automatically</small>
+        </div>
+    </div>
+</div>
+
+<script>
+// Enhanced file input handling for {{ field_name }}
+(function() {
+    const input = document.getElementById('{{ field_id }}');
+    const preview = document.getElementById('preview-{{ field_id }}');
+    
+    if (input && preview) {
+        // Drag and drop support
+        const wrapper = input.closest('.file-input-wrapper');
+        
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            wrapper.addEventListener(eventName, preventDefaults, false);
+        });
+        
+        ['dragenter', 'dragover'].forEach(eventName => {
+            wrapper.addEventListener(eventName, highlight, false);
+        });
+        
+        ['dragleave', 'drop'].forEach(eventName => {
+            wrapper.addEventListener(eventName, unhighlight, false);
+        });
+        
+        wrapper.addEventListener('drop', handleDrop, false);
+        
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        
+        function highlight(e) {
+            wrapper.classList.add('drag-over');
+        }
+        
+        function unhighlight(e) {
+            wrapper.classList.remove('drag-over');
+        }
+        
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            
+            input.files = files;
+            
+            // Trigger change event
+            const event = new Event('change', { bubbles: true });
+            input.dispatchEvent(event);
+        }
+    }
+})();
+</script>

@@ -1,10 +1,12 @@
 from django.contrib import admin
 from django.utils.html import format_html
 from .models import Minuites, FinancialCheckbook, Testimonial, GalleryFolder, GalleryImage, GalleryVideo
+from .forms import MinuitesForm, FinancialCheckbookForm, TestimonialForm, GalleryFolderForm, GalleryImageForm, GalleryVideoForm
 
 # Register your models here.
 @admin.register(Minuites)
 class MinuitesAdmin(admin.ModelAdmin):
+    form = MinuitesForm
     list_display = ('title', 'date', 'created_at')
     list_filter = ('date', 'created_at')
     search_fields = ('title',)
@@ -13,6 +15,7 @@ class MinuitesAdmin(admin.ModelAdmin):
 
 @admin.register(FinancialCheckbook)
 class FinancialCheckbookAdmin(admin.ModelAdmin):
+    form = FinancialCheckbookForm
     list_display = ('title', 'date', 'created_at')
     list_filter = ('date', 'created_at')
     search_fields = ('title',)
@@ -21,6 +24,7 @@ class FinancialCheckbookAdmin(admin.ModelAdmin):
 
 @admin.register(Testimonial)
 class TestimonialAdmin(admin.ModelAdmin):
+    form = TestimonialForm
     list_display = ('name', 'title', 'is_active', 'order', 'created_at')
     list_filter = ('is_active', 'created_at')
     search_fields = ('name', 'title', 'content')
@@ -48,10 +52,13 @@ class GalleryImageInline(admin.TabularInline):
     readonly_fields = ('image_preview',)
     
     def image_preview(self, obj):
-        if obj.image:
+        # Use Cloudinary URL if available, otherwise local file
+        image_url = obj.image_url if obj.image_url else (obj.image.url if obj.image and hasattr(obj.image, 'url') else None)
+        
+        if image_url:
             return format_html(
                 '<img src="{}" style="max-height: 50px; max-width: 50px;" />',
-                obj.image.url if hasattr(obj.image, 'url') else ''
+                image_url
             )
         return "No image"
     image_preview.short_description = "Preview"
@@ -65,12 +72,15 @@ class GalleryVideoInline(admin.TabularInline):
     readonly_fields = ('video_preview', 'file_size_display')
     
     def video_preview(self, obj):
-        if obj.thumbnail:
+        # Use Cloudinary thumbnail URL if available, otherwise local file
+        thumbnail_url = obj.thumbnail_url if obj.thumbnail_url else (obj.thumbnail.url if obj.thumbnail and hasattr(obj.thumbnail, 'url') else None)
+        
+        if thumbnail_url:
             return format_html(
                 '<img src="{}" style="max-height: 50px; max-width: 50px;" />',
-                obj.thumbnail.url if hasattr(obj.thumbnail, 'url') else ''
+                thumbnail_url
             )
-        elif obj.video:
+        elif obj.video or obj.video_url:
             return format_html(
                 '<div style="background: #f8f9fa; border: 2px solid #dee2e6; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; border-radius: 4px;">'
                 '<span style="font-size: 16px;">🎥</span>'
@@ -86,6 +96,7 @@ class GalleryVideoInline(admin.TabularInline):
 
 @admin.register(GalleryFolder)
 class GalleryFolderAdmin(admin.ModelAdmin):
+    form = GalleryFolderForm
     list_display = ('name', 'slug', 'cover_image_display', 'image_count_display', 'is_active', 'order', 'created_at')
     list_filter = ('is_active', 'created_at', 'updated_at')
     search_fields = ('name', 'description')
@@ -139,6 +150,7 @@ class GalleryFolderAdmin(admin.ModelAdmin):
 
 @admin.register(GalleryImage)
 class GalleryImageAdmin(admin.ModelAdmin):
+    form = GalleryImageForm
     list_display = ('title_display', 'folder', 'image_preview', 'is_active', 'order', 'created_at')
     list_filter = ('folder', 'is_active', 'created_at', 'updated_at')
     search_fields = ('title', 'alt_text', 'folder__name')
@@ -167,10 +179,13 @@ class GalleryImageAdmin(admin.ModelAdmin):
     title_display.short_description = "Title"
     
     def image_preview(self, obj):
-        if obj.image:
+        # Use Cloudinary URL if available, otherwise local file
+        image_url = obj.image_url if obj.image_url else (obj.image.url if obj.image and hasattr(obj.image, 'url') else None)
+        
+        if image_url:
             return format_html(
                 '<img src="{}" style="max-height: 60px; max-width: 60px; border-radius: 4px;" />',
-                obj.image.url if hasattr(obj.image, 'url') else ''
+                image_url
             )
         return "No image"
     image_preview.short_description = "Preview"
@@ -178,6 +193,7 @@ class GalleryImageAdmin(admin.ModelAdmin):
 
 @admin.register(GalleryVideo)
 class GalleryVideoAdmin(admin.ModelAdmin):
+    form = GalleryVideoForm
     list_display = ('title_display', 'folder', 'video_preview', 'file_size_display', 'is_active', 'order', 'created_at')
     list_filter = ('folder', 'is_active', 'created_at', 'updated_at')
     search_fields = ('title', 'folder__name')

@@ -1,14 +1,20 @@
 {% extends './_base.html' %}
 {% load static %}
+{% load upload_alerts %}
 
 {% block page_title %}Edit Minute {{ minuite.title }}{% endblock page_title %}
+
+{% block extra_css %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'css/file-upload-alerts.css' %}">
+{% endblock %}
 
 {% block content %}
 <div class="max-w-4xl mx-auto py-8">
     <h2 class="text-3xl font-bold mb-6 text-center">Edit Minute</h2>
 
     <div class="bg-white shadow-lg rounded-lg p-6 mb-6">
-        <form method="post" action="">
+        <form method="post" enctype="multipart/form-data" class="file-upload-form" {% alert_enabled_form_attrs form %}>
             {% csrf_token %}
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div>
@@ -33,17 +39,33 @@
                         </a>
                     </p>
                     {% endif %}
-                    <input type="file" name="minuites" id="minuite"
-                        class="w-full border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-indigo-300 px-4 py-2">
+                    <div class="file-input-wrapper">
+                        <input type="file" name="minuites" id="minuite" accept=".pdf,.doc,.docx"
+                            class="w-full border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-indigo-300 px-4 py-2"
+                            data-upload-alerts="true">
+                        <div class="file-input-preview mt-2">
+                            <div class="text-center text-gray-500">
+                                <i class="fas fa-cloud-upload-alt text-2xl mb-2"></i>
+                                <p class="mb-0">Select a document to upload to Cloudinary</p>
+                                <small class="text-gray-400">PDF, DOC, DOCX files supported</small>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
             </div>
 
             <button type="submit"
-                class="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition">Update
-                Minuite</button>
+                class="upload-form-button w-full bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition">
+                <span class="button-text">Update Minuite</span>
+            </button>
         </form>
     </div>
 
 </div>
+
+{% block extra_js %}
+{{ block.super }}
+{% upload_alerts_scripts %}
+{% endblock %}
 {% endblock %}
