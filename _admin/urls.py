@@ -32,6 +32,19 @@ from .views import (
     BlogCommentActionView,
     BlogCategoryListView,
     BlogTagListView,
+    # Gallery views
+    GalleryDashboardView,
+    GalleryFolderCreateView,
+    GalleryFolderUpdateView,
+    GalleryFolderDeleteView,
+    GalleryImageUploadView,
+    GalleryImageDeleteView,
+    GalleryVideoUploadView,
+    GalleryVideoDeleteView,
+    GalleryVideoUpdateView,
+    GalleryFolderDetailView,
+    GalleryImageUpdateView,
+    GalleryBulkImageOrderView,
 )
 from app.debug_views import debug_cloudinary_config
 
@@ -122,6 +135,21 @@ urlpatterns = [
     ),
     path("blog/categories/", BlogCategoryListView.as_view(), name="blog_categories"),
     path("blog/tags/", BlogTagListView.as_view(), name="blog_tags"),
+    
+    # Gallery URLs
+    path("gallery/", GalleryDashboardView.as_view(), name="gallery_dashboard"),
+    path("gallery/create-folder/", GalleryFolderCreateView.as_view(), name="gallery_create_folder"),
+    path("gallery/folder/<uuid:folder_id>/", GalleryFolderDetailView.as_view(), name="gallery_folder_detail"),
+    path("gallery/folder/<uuid:folder_id>/edit/", GalleryFolderUpdateView.as_view(), name="gallery_edit_folder"),
+    path("gallery/folder/<uuid:folder_id>/delete/", GalleryFolderDeleteView.as_view(), name="gallery_delete_folder"),
+    path("gallery/folder/<uuid:folder_id>/bulk-order/", GalleryBulkImageOrderView.as_view(), name="gallery_bulk_order"),
+    path("gallery/upload-images/", GalleryImageUploadView.as_view(), name="gallery_upload_images"),
+    path("gallery/upload-videos/", GalleryVideoUploadView.as_view(), name="gallery_upload_videos"),
+    path("gallery/image/<uuid:image_id>/edit/", GalleryImageUpdateView.as_view(), name="gallery_edit_image"),
+    path("gallery/image/<uuid:image_id>/delete/", GalleryImageDeleteView.as_view(), name="gallery_delete_image"),
+    path("gallery/video/<uuid:video_id>/edit/", GalleryVideoUpdateView.as_view(), name="gallery_edit_video"),
+    path("gallery/video/<uuid:video_id>/delete/", GalleryVideoDeleteView.as_view(), name="gallery_delete_video"),
+    
     # Debug URL (admin only)
     path("debug/cloudinary/", debug_cloudinary_config, name="debug_cloudinary"),
 ]
