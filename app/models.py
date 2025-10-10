@@ -42,6 +42,11 @@ class Testimonial(models.Model):
     )
     content = models.TextField()
     image = models.ImageField(upload_to="testimonials/", blank=True, null=True)
+    image_url = models.URLField(
+        blank=True,
+        null=True,
+        help_text="Cloudinary URL for the testimonial image",
+    )
     is_active = models.BooleanField(default=True)
     order = models.PositiveIntegerField(
         default=0, help_text="Order of display (lower numbers appear first)"
@@ -53,6 +58,14 @@ class Testimonial(models.Model):
         ordering = ["order", "-created_at"]
         verbose_name = "Testimonial"
         verbose_name_plural = "Testimonials"
+
+    def get_image_url(self):
+        """Return the Cloudinary URL if available, otherwise the local image URL"""
+        if self.image_url:
+            return self.image_url
+        elif self.image:
+            return self.image.url
+        return None
 
     def __str__(self):
         return f"{self.name} - {self.title}"

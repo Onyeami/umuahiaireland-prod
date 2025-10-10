@@ -20,6 +20,9 @@ from .config import (
     STRIPE_PUBLISHABLE_KEY,
     STRIPE_SECRET_KEY,
     STRIPE_WEBHOOK_SECRET,
+    CLOUDINARY_CLOUD_NAME,
+    CLOUDINARY_API_KEY,
+    CLOUDINARY_API_SECRET,
 )
 
 APP_NAME = APP_NAME
@@ -165,11 +168,11 @@ if not DEBUG:
         import cloudinary.uploader
         import cloudinary.api
 
-        # Cloudinary settings - these will be environment variables in production
+        # Cloudinary settings - using hardcoded credentials from config
         CLOUDINARY_STORAGE = {
-            "CLOUD_NAME": os.getenv("CLOUDINARY_CLOUD_NAME", ""),
-            "API_KEY": os.getenv("CLOUDINARY_API_KEY", ""),
-            "API_SECRET": os.getenv("CLOUDINARY_API_SECRET", ""),
+            "CLOUD_NAME": CLOUDINARY_CLOUD_NAME,
+            "API_KEY": CLOUDINARY_API_KEY,
+            "API_SECRET": CLOUDINARY_API_SECRET,
         }
 
         # Only use cloudinary in production if credentials are available
