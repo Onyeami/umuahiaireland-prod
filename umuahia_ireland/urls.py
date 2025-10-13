@@ -6,6 +6,7 @@ from .errors import custom_error_404, custom_error_500
 from .views import send_email, privacy_statement
 from django.views.generic import TemplateView
 from .media_debug import media_test_view
+from .csrf_test_views import csrf_test
 from .stripe_views import (
     create_checkout_session,
     stripe_webhook,
@@ -26,6 +27,7 @@ urlpatterns = [
     path("auth/", include("django.contrib.auth.urls")),
     path("blog/", include("blog.urls", namespace="blog")),
     path("debug/media-test/", media_test_view, name="media_test"),
+    path("debug/csrf-test/", csrf_test, name="csrf_test"),
     # Stripe Donation URLs
     path(
         "donate/create-session/",
