@@ -62,6 +62,7 @@ MIDDLEWARE = [
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
+    "umuahia_ireland.middleware.CSRFDebugMiddleware",  # Debug CSRF issues
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
@@ -107,12 +108,33 @@ DATABASES = {
     "default": dj_database_url.config(
         default=os.getenv(
             "DATABASE_URL",
-            "postgresql://umuahia_db_cjtb_user:tnVzOQdGLPMsXXleQsTQVdCTdy6IzsWY@dpg-cvtq0lbe5dus73ad9ltg-a.oregon-postgres.render.com/umuahia_db_cjtb",
+            "postgresql://umuahiaireland_db_user:gGuHDNCpqqDUqfiR1Xk9YtwdckJ8VQWB@dpg-d3ml1hbuibrs738vkqo0-a.oregon-postgres.render.com/umuahiaireland_db",
         ),
         conn_max_age=600,
         ssl_require=True,  # Render requires SSL for connections
     )
 }
+
+# Session Configuration
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+SESSION_COOKIE_AGE = 3600  # 1 hour
+SESSION_COOKIE_SECURE = False  # Set to True in production with HTTPS
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = 'Lax'
+SESSION_SAVE_EVERY_REQUEST = True
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+
+# CSRF Configuration
+CSRF_COOKIE_AGE = 3600  # 1 hour
+CSRF_COOKIE_SECURE = False  # Set to True in production with HTTPS
+CSRF_COOKIE_HTTPONLY = False  # Must be False so JavaScript can read it
+CSRF_COOKIE_SAMESITE = 'Lax'
+CSRF_USE_SESSIONS = False  # Keep tokens in cookies, not sessions
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
+    'https://*.render.com',
+]
 
 AUTH_PASSWORD_VALIDATORS = [
     {
