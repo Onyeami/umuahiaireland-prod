@@ -1,0 +1,118 @@
+{% load static %}
+
+<!-- Upload Alerts CSS -->
+<link rel="stylesheet" href="{% static 'css/file-upload-alerts.css' %}">
+
+<!-- Upload Alerts JavaScript -->
+<script src="{% static 'js/file-upload-alerts.js' %}"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize upload results from forms
+    const formsWithResults = document.querySelectorAll('[data-upload-results]');
+    
+    formsWithResults.forEach(function(form) {
+        try {
+            const uploadResults = JSON.parse(form.dataset.uploadResults || '{}');
+            
+            // Show alerts for each upload result
+            Object.keys(uploadResults).forEach(function(fieldName) {
+                const result = uploadResults[fieldName];
+                if (result.success) {
+                    window.fileUploadAlerts.showSuccess(result.message);
+                } else {
+                    window.fileUploadAlerts.showError(result.message);
+                }
+            });
+        } catch (e) {
+            console.warn('Error parsing upload results:', e);
+        }
+    });
+    
+    // Enhanced form submission handling
+    document.addEventListener('submit', function(e) {
+        const form = e.target;
+        const fileInputs = form.querySelectorAll('input[type="file"]');
+        
+        if (fileInputs.length > 0) {
+            // Add uploading class to form
+            form.classList.add('uploading');
+            
+            // Add uploading class to submit button
+            const submitBtn = form.querySelector('button[type="submit"], input[type="submit"]');
+            if (submitBtn) {
+                submitBtn.classList.add('uploading');
+                submitBtn.disabled = true;
+                
+                // Store original text
+                const originalText = submitBtn.textContent || submitBtn.value;
+                submitBtn.dataset.originalText = originalText;
+                
+                // Update button text
+                if (submitBtn.tagName === 'BUTTON') {
+                    submitBtn.innerHTML = '<span class="button-text">Uploading to Cloudinary...</span>';
+                } else {
+                    submitBtn.value = 'Uploading...';
+                }
+            }
+        }
+    });
+    
+    // Handle file input changes for preview
+    document.addEventListener('change', function(e) {
+        if (e.target.type === 'file') {
+            updateFilePreview(e.target);
+        }
+    });
+    
+    function updateFilePreview(input) {
+        const container = input.closest('.file-input-wrapper') || input.parentNode;
+        let preview = container.querySelector('.file-input-preview');
+        
+        if (!preview) {
+            preview = document.createElement('div');
+            preview.className = 'file-input-preview';
+            container.appendChild(preview);
+        }
+        
+        if (input.files && input.files.length > 0) {
+            preview.classList.add('has-files');
+            let html = '';
+            
+            Array.from(input.files).forEach(function(file, index) {
+                const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+                const icon = getFileIcon(file.type);
+                
+                html += `
+                    <div class="file-preview-item">
+                        <div class="file-preview-info">
+                            <div class="file-preview-icon">${icon}</div>
+                            <div>
+                                <div class="file-preview-name">${file.name}</div>
+                                <div class="file-preview-size">${sizeMB} MB</div>
+                            </div>
+                        </div>
+                        <div class="file-preview-status pending">Ready</div>
+                    </div>
+                `;
+            });
+            
+            preview.innerHTML = html;
+        } else {
+            preview.classList.remove('has-files');
+            preview.innerHTML = 'No files selected';
+        }
+    }
+    
+    function getFileIcon(mimeType) {
+        if (mimeType.startsWith('image/')) return '🖼️';
+        if (mimeType.startsWith('video/')) return '🎥';
+        if (mimeType.startsWith('audio/')) return '🎵';
+        if (mimeType.includes('pdf')) return '📄';
+        if (mimeType.includes('word') || mimeType.includes('document')) return '📝';
+        if (mimeType.includes('excel') || mimeType.includes('sheet')) return '📊';
+        if (mimeType.includes('powerpoint') || mimeType.includes('presentation')) return '📈';
+        return '📁';
+    }
+});
+</script>

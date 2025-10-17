@@ -1,0 +1,495 @@
+{% extends '../_base.html' %}
+{% load static %}
+
+{% block page_title %}Gallery Management{% endblock page_title %}
+
+{% block content %}
+<div class="p-4 md:p-6 lg:p-8">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+        <div class="space-y-1">
+            <h1 class="text-2xl md:text-3xl font-bold text-gray-900">Gallery Management</h1>
+            <p class="text-gray-600">Manage photo & video albums and upload media</p>
+        </div>
+        
+        <div class="flex flex-col sm:flex-row gap-3">
+            <button onclick="openCreateFolderModal()"
+                class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 duration-300 text-white font-semibold text-sm rounded-lg">
+                <i class="fas fa-folder-plus mr-2"></i>
+                Create Folder
+            </button>
+            <button onclick="openUploadModal()"
+                class="inline-flex items-center px-4 py-2 bg-primary hover:bg-primary-dark duration-300 text-white font-semibold text-sm rounded-lg">
+                <i class="fas fa-image mr-2"></i>
+                Upload Images
+            </button>
+            <button onclick="openVideoUploadModal()"
+                class="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 duration-300 text-white font-semibold text-sm rounded-lg">
+                <i class="fas fa-video mr-2"></i>
+                Upload Videos
+            </button>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6 mb-8">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-folder text-blue-600 text-xl"></i>
+                    </div>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600">Total Folders</p>
+                    <p class="text-2xl font-bold text-gray-900">{{ total_folders }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-check-circle text-green-600 text-xl"></i>
+                    </div>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600">Active Folders</p>
+                    <p class="text-2xl font-bold text-gray-900">{{ active_folders }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-images text-purple-600 text-xl"></i>
+                    </div>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600">Total Images</p>
+                    <p class="text-2xl font-bold text-gray-900">{{ total_images }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <div class="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-eye text-primary-600 text-xl"></i>
+                    </div>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600">Active Images</p>
+                    <p class="text-2xl font-bold text-gray-900">{{ active_images }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-video text-red-600 text-xl"></i>
+                    </div>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600">Total Videos</p>
+                    <p class="text-2xl font-bold text-gray-900">{{ total_videos }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-play-circle text-orange-600 text-xl"></i>
+                    </div>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600">Active Videos</p>
+                    <p class="text-2xl font-bold text-gray-900">{{ active_videos }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gallery Folders -->
+    {% if folders %}
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="p-6 border-b border-gray-200">
+                <h2 class="text-xl font-bold text-gray-900">Gallery Folders</h2>
+                <p class="text-gray-600 mt-1">Manage your photo albums and their contents</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
+                {% for folder in folders %}
+                <div class="border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
+                    <!-- Folder Preview -->
+                    <div class="h-48 bg-gray-100 flex items-center justify-center relative">
+                        {% with folder.get_cover_image_url as cover_url %}
+                            {% if cover_url %}
+                                <img src="{{ cover_url }}" alt="{{ folder.name }}" 
+                                     class="w-full h-full object-cover">
+                            {% else %}
+                                <i class="fas fa-folder text-6xl text-gray-300"></i>
+                            {% endif %}
+                        {% endwith %}
+                        
+                        <!-- Status Badge -->
+                        <div class="absolute top-3 right-3">
+                            {% if folder.is_active %}
+                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                    <i class="fas fa-eye mr-1"></i> Active
+                                </span>
+                            {% else %}
+                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                    <i class="fas fa-eye-slash mr-1"></i> Inactive
+                                </span>
+                            {% endif %}
+                        </div>
+
+                        <!-- Image Count -->
+                        <div class="absolute bottom-3 left-3">
+                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-black bg-opacity-70 text-white">
+                                {{ folder.images.count }} {% if folder.images.count == 1 %}image{% else %}images{% endif %}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Folder Info -->
+                    <div class="p-4">
+                        <h3 class="font-semibold text-gray-900 mb-1">{{ folder.name }}</h3>
+                        {% if folder.description %}
+                            <p class="text-sm text-gray-600 mb-3 line-clamp-2">{{ folder.description }}</p>
+                        {% endif %}
+                        
+                        <div class="flex items-center justify-between text-sm text-gray-500 mb-4">
+                            <span>Order: {{ folder.order }}</span>
+                            <span>{{ folder.created_at|date:"M d, Y" }}</span>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="space-y-2">
+                            <div class="flex space-x-2">
+                                <button onclick="openEditFolderModal('{{ folder.id }}', '{{ folder.name }}', '{{ folder.description }}', {{ folder.order }}, {{ folder.is_active|yesno:'true,false' }})"
+                                    class="flex-1 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded transition-colors">
+                                    <i class="fas fa-edit mr-1"></i> Edit
+                                </button>
+                                <button onclick="confirmDeleteFolder('{{ folder.id }}', '{{ folder.name }}')"
+                                    class="px-3 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded transition-colors">
+                                    <i class="fas fa-trash mr-1"></i>
+                                </button>
+                            </div>
+                            <a href="{% url 'admin:gallery_folder_detail' folder.id %}"
+                                class="block w-full px-3 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded transition-colors text-center">
+                                <i class="fas fa-images mr-1"></i> Manage Images
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Pagination -->
+            {% if is_paginated %}
+                <div class="px-6 py-4 border-t border-gray-200">
+                    <div class="flex items-center justify-between">
+                        <div class="text-sm text-gray-700">
+                            Showing {{ page_obj.start_index }} to {{ page_obj.end_index }} of {{ paginator.count }} folders
+                        </div>
+                        <div class="flex space-x-2">
+                            {% if page_obj.has_previous %}
+                                <a href="?page={{ page_obj.previous_page_number }}" class="px-3 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded transition-colors">Previous</a>
+                            {% endif %}
+                            {% if page_obj.has_next %}
+                                <a href="?page={{ page_obj.next_page_number }}" class="px-3 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded transition-colors">Next</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    {% else %}
+        <!-- Empty State -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
+            <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-folder-open text-4xl text-gray-400"></i>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">No Gallery Folders</h3>
+            <p class="text-gray-600 mb-6">Create your first photo album to get started with the gallery.</p>
+            <button onclick="openCreateFolderModal()"
+                class="inline-flex items-center px-6 py-3 bg-primary hover:bg-primary-dark text-white font-medium rounded-lg transition-colors">
+                <i class="fas fa-folder-plus mr-2"></i>
+                Create First Folder
+            </button>
+        </div>
+    {% endif %}
+</div>
+
+<!-- Create Folder Modal -->
+<div id="createFolderModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center">
+    <div class="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-semibold">Create New Folder</h3>
+            <button onclick="closeCreateFolderModal()" class="text-gray-400 hover:text-gray-600">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <form method="post" action="{% url 'admin:gallery_create_folder' %}">
+            {% csrf_token %}
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Folder Name</label>
+                    <input type="text" name="name" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                    <textarea name="description" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary"></textarea>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Display Order</label>
+                    <input type="number" name="order" value="0" min="0" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary">
+                </div>
+                
+                <div class="flex items-center">
+                    <input type="checkbox" name="is_active" checked class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
+                    <label class="ml-2 text-sm text-gray-700">Active (visible to public)</label>
+                </div>
+            </div>
+            
+            <div class="flex justify-end space-x-3 mt-6">
+                <button type="button" onclick="closeCreateFolderModal()" class="px-4 py-2 text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50">Cancel</button>
+                <button type="submit" class="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-dark">Create Folder</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Edit Folder Modal -->
+<div id="editFolderModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center">
+    <div class="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-semibold">Edit Folder</h3>
+            <button onclick="closeEditFolderModal()" class="text-gray-400 hover:text-gray-600">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <form method="post" id="editFolderForm">
+            {% csrf_token %}
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Folder Name</label>
+                    <input type="text" name="name" id="editFolderName" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                    <textarea name="description" id="editFolderDescription" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary"></textarea>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Display Order</label>
+                    <input type="number" name="order" id="editFolderOrder" min="0" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary">
+                </div>
+                
+                <div class="flex items-center">
+                    <input type="checkbox" name="is_active" id="editFolderActive" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
+                    <label class="ml-2 text-sm text-gray-700">Active (visible to public)</label>
+                </div>
+            </div>
+            
+            <div class="flex justify-end space-x-3 mt-6">
+                <button type="button" onclick="closeEditFolderModal()" class="px-4 py-2 text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50">Cancel</button>
+                <button type="submit" class="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-dark">Update Folder</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Upload Images Modal -->
+<div id="uploadModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center">
+    <div class="bg-white rounded-lg p-6 w-full max-w-lg mx-4">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-semibold">Upload Images</h3>
+            <button onclick="closeUploadModal()" class="text-gray-400 hover:text-gray-600">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <form method="post" action="{% url 'admin:gallery_upload_images' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Select Folder</label>
+                    <select name="folder" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary">
+                        <option value="">Choose a folder...</option>
+                        {% for folder in folders %}
+                        <option value="{{ folder.id }}">{{ folder.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Images</label>
+                    <input type="file" name="images" multiple accept="image/*" required 
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary">
+                    <p class="text-xs text-gray-500 mt-1">Select multiple images (JPG, PNG, GIF)</p>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Title (optional)</label>
+                    <input type="text" name="title" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Alt Text (optional)</label>
+                    <input type="text" name="alt_text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Display Order</label>
+                    <input type="number" name="order" value="0" min="0" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary">
+                </div>
+            </div>
+            
+            <div class="flex justify-end space-x-3 mt-6">
+                <button type="button" onclick="closeUploadModal()" class="px-4 py-2 text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50">Cancel</button>
+                <button type="submit" class="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-dark">Upload Images</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Upload Videos Modal -->
+<div id="videoUploadModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center">
+    <div class="bg-white rounded-lg p-6 w-full max-w-lg mx-4">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-semibold">Upload Videos</h3>
+            <button onclick="closeVideoUploadModal()" class="text-gray-400 hover:text-gray-600">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <form method="post" action="{% url 'admin:gallery_upload_videos' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Select Folder</label>
+                    <select name="folder" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary">
+                        <option value="">Choose a folder...</option>
+                        {% for folder in folders %}
+                        <option value="{{ folder.id }}">{{ folder.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Videos</label>
+                    <input type="file" name="videos" multiple accept="video/*" required 
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary">
+                    <p class="text-xs text-gray-500 mt-1">Select multiple videos (MP4, MOV, AVI, etc.)</p>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Custom Thumbnail (optional)</label>
+                    <input type="file" name="thumbnail" accept="image/*" 
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary">
+                    <p class="text-xs text-gray-500 mt-1">Upload a custom thumbnail image (JPG, PNG)</p>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Title (optional)</label>
+                    <input type="text" name="title" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Display Order</label>
+                    <input type="number" name="order" value="0" min="0" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary">
+                </div>
+            </div>
+            
+            <div class="flex justify-end space-x-3 mt-6">
+                <button type="button" onclick="closeVideoUploadModal()" class="px-4 py-2 text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50">Cancel</button>
+                <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">Upload Videos</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Modal Functions
+    function openCreateFolderModal() {
+        document.getElementById('createFolderModal').classList.remove('hidden');
+    }
+
+    function closeCreateFolderModal() {
+        document.getElementById('createFolderModal').classList.add('hidden');
+    }
+
+    function openEditFolderModal(folderId, name, description, order, isActive) {
+        document.getElementById('editFolderForm').action = `/dashboard/gallery/folder/${folderId}/edit/`;
+        document.getElementById('editFolderName').value = name;
+        document.getElementById('editFolderDescription').value = description;
+        document.getElementById('editFolderOrder').value = order;
+        document.getElementById('editFolderActive').checked = isActive;
+        document.getElementById('editFolderModal').classList.remove('hidden');
+    }
+
+    function closeEditFolderModal() {
+        document.getElementById('editFolderModal').classList.add('hidden');
+    }
+
+    function openUploadModal() {
+        document.getElementById('uploadModal').classList.remove('hidden');
+    }
+
+    function closeUploadModal() {
+        document.getElementById('uploadModal').classList.add('hidden');
+    }
+
+    function openVideoUploadModal() {
+        document.getElementById('videoUploadModal').classList.remove('hidden');
+    }
+
+    function closeVideoUploadModal() {
+        document.getElementById('videoUploadModal').classList.add('hidden');
+    }
+
+    function confirmDeleteFolder(folderId, folderName) {
+        if (confirm(`Are you sure you want to delete the folder "${folderName}"? This will also delete all images in this folder.`)) {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = `/dashboard/gallery/folder/${folderId}/delete/`;
+            
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            const csrfInput = document.createElement('input');
+            csrfInput.type = 'hidden';
+            csrfInput.name = 'csrfmiddlewaretoken';
+            csrfInput.value = csrfToken;
+            
+            form.appendChild(csrfInput);
+            document.body.appendChild(form);
+            form.submit();
+        }
+    }
+
+    // Close modals when clicking outside
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('bg-black')) {
+            closeCreateFolderModal();
+            closeEditFolderModal();
+            closeUploadModal();
+            closeVideoUploadModal();
+        }
+    });
+</script>
+{% endblock content %}

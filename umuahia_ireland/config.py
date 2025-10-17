@@ -31,3 +31,9 @@ PAYPAL_CLIENT_SECRET = os.getenv("PAYPAL_CLIENT_SECRET")
 STRIPE_PUBLISHABLE_KEY = os.getenv("STRIPE_PUBLISHABLE_KEY")
 STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
 STRIPE_WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET")
+
+# Cloudinary Configuration (hardcoded)
+# Replace these with your actual Cloudinary credentials
+CLOUDINARY_CLOUD_NAME = "your_cloud_name_here"
+CLOUDINARY_API_KEY = "your_api_key_here"
+CLOUDINARY_API_SECRET = "your_api_secret_here"
