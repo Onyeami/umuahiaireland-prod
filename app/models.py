@@ -233,6 +233,28 @@ class GalleryImage(models.Model):
         return self.title or f"Image in {self.folder.name}"
 
 
+class MembersGalleryImage(models.Model):
+    """Model for individual member gallery images"""
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=200, help_text="Member's name")
+    description = models.CharField(max_length=255, blank=True, help_text="Optional description")
+    image = models.ImageField(upload_to="members_gallery/images/", help_text="Member photo")
+    image_url = models.URLField(blank=True, help_text="Cloudinary URL for the image")
+    alt_text = models.CharField(max_length=255, blank=True, help_text="Alternative text for accessibility")
+    is_active = models.BooleanField(default=True, help_text="Whether this image should be visible to the public")
+    order = models.PositiveIntegerField(default=0, help_text="Order of display")
+    uploaded_by = models.CharField(max_length=100, blank=True, help_text="Who uploaded this image")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['order', '-created_at']
+        verbose_name = "Member Gallery Image"
+        verbose_name_plural = "Member Gallery Images"
+
+    def __str__(self):
+        return self.name or "Member Image"
+
 class GalleryVideo(models.Model):
     """Model for individual gallery videos"""
     
