@@ -1,0 +1,58 @@
+
+{% extends "_admin/_base.html" %}
+{% block content %}
+<div class="p-4 md:p-6 lg:p-8">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+        <div class="space-y-1">
+            <h1 class="text-2xl md:text-3xl font-bold text-gray-900">Members Gallery Management</h1>
+            <p class="text-gray-600">Upload and view individual member photos</p>
+        </div>
+        <div>
+            <a href="{% url 'admin:create_member_image' %}" class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 duration-300 text-white font-semibold text-sm rounded-lg">
+                <i class="fas fa-upload mr-2"></i>
+                Upload Member Image
+            </a>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-users text-blue-600 text-xl"></i>
+                    </div>
+                </div>
+                <div class="ml-4">
+                    <div class="text-lg font-bold text-gray-900">{{ total_images }}</div>
+                    <div class="text-sm text-gray-500">Total Member Images</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Member Images Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {% for image in images %}
+        <div class="bg-white rounded-lg shadow p-4 flex flex-col items-center">
+            {% if image.image_url %}
+            <img src="{{ image.image_url }}" alt="{{ image.alt_text }}" class="w-full h-48 object-cover rounded mb-2">
+            {% else %}
+            <img src="{{ image.image.url }}" alt="{{ image.alt_text }}" class="w-full h-48 object-cover rounded mb-2">
+            {% endif %}
+            <div class="w-full">
+                <h2 class="font-semibold text-lg">{{ image.name }}</h2>
+                {% if image.description %}
+                <p class="text-sm text-gray-500">{{ image.description }}</p>
+                {% endif %}
+                <p class="text-xs text-gray-400 mt-2">Uploaded: {{ image.created_at|date:"M d, Y" }}</p>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-span-full text-center text-gray-500 py-8">No member images found.</div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

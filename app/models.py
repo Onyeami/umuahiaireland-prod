@@ -249,8 +249,9 @@ class MembersGalleryImage(models.Model):
 
     class Meta:
         ordering = ['order', '-created_at']
-        verbose_name = "Member Gallery Image"
-        verbose_name_plural = "Member Gallery Images"
+        verbose_name = "Member Gallery"
+        verbose_name_plural = "Member Gallery"
+        app_label = "app"
 
     def __str__(self):
         return self.name or "Member Image"

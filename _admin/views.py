@@ -1,3 +1,63 @@
+# Import required generic views
+from django.views.generic import ListView, View
+from app.forms import MembersGalleryImageForm
+# ...existing code...
+
+# Place MembersGalleryImage views after AdminRequiredMixin definition
+
+from app.models import MembersGalleryImage
+
+class MembersGalleryImageListView(ListView):
+    model = MembersGalleryImage
+    template_name = "_admin/members_gallery.html"
+    context_object_name = "images"
+
+    def get_queryset(self):
+        return MembersGalleryImage.objects.order_by('order', '-created_at')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['total_images'] = self.get_queryset().count()
+        return context
+
+class MembersGalleryImageCreateView(View):
+    def get(self, request):
+        form = MembersGalleryImageForm()
+        return render(request, '_admin/create_member_image.html', {'form': form})
+
+    def post(self, request):
+        form = MembersGalleryImageForm(request.POST, request.FILES)
+        if form.is_valid():
+            member_image = form.save(commit=False)
+            member_image.uploaded_by = request.user.email
+            member_image.save()
+            messages.success(request, 'Member image uploaded successfully.')
+            return redirect('admin:members_gallery')
+        messages.error(request, 'Error uploading member image. Please check your inputs.')
+        return render(request, '_admin/create_member_image.html', {'form': form})
+
+class MembersGalleryImageEditView(View):
+    def get(self, request, image_id):
+        image = get_object_or_404(MembersGalleryImage, id=image_id)
+        form = MembersGalleryImageForm(instance=image)
+        return render(request, '_admin/edit_member_image.html', {'form': form, 'image': image})
+
+    def post(self, request, image_id):
+        image = get_object_or_404(MembersGalleryImage, id=image_id)
+        form = MembersGalleryImageForm(request.POST, request.FILES, instance=image)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Member image updated successfully.')
+            return redirect('admin:members_gallery')
+        messages.error(request, 'Error updating member image. Please check your inputs.')
+        return render(request, '_admin/edit_member_image.html', {'form': form, 'image': image})
+
+class MembersGalleryImageDeleteView(View):
+    def post(self, request, image_id):
+        image = get_object_or_404(MembersGalleryImage, id=image_id)
+        image.delete()
+        messages.success(request, 'Member image deleted successfully.')
+        return redirect('admin:members_gallery')
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.contrib.auth.hashers import make_password
@@ -28,17 +88,25 @@ class DashboardView(AdminRequiredMixin, ListView):
         return CustomUser.objects.all().order_by("-date_joined")[:5]
 
 
-class MemberListView(AdminRequiredMixin, ListView):
-    model = CustomUser
-    template_name = "_admin/members.html"
-    context_object_name = "users"
+
+from app.models import MembersGalleryImage
+
+class MembersGalleryImageListView(AdminRequiredMixin, ListView):
+    model = MembersGalleryImage
+    template_name = "_admin/members_gallery.html"
+    context_object_name = "images"
 
     def get_queryset(self):
-        return CustomUser.objects.all().order_by("-date_joined")
+        return MembersGalleryImage.objects.order_by('order', '-created_at')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["total_users"] = self.get_queryset().count()
+        context['total_images'] = self.get_queryset().count()
+        return context
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["total_images"] = self.get_queryset().count()
         return context
 
 
