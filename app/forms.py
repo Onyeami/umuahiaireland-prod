@@ -250,7 +250,7 @@ class GalleryFolderForm(AlertEnabledFormMixin, forms.ModelForm):
 
 
 class GalleryImageForm(AlertEnabledFormMixin, forms.ModelForm):
-    """Form for uploading gallery images"""
+    """Form for uploading gallery images (Cloudinary-only)."""
     
     class Meta:
         model = GalleryImage
@@ -267,19 +267,32 @@ class GalleryImageForm(AlertEnabledFormMixin, forms.ModelForm):
     def save(self, commit=True):
         instance = super().save(commit=False)
 
-        # If a new image is uploaded, try to upload to Cloudinary
+        # === STRICT CLOUDINARY UPLOAD ONLY ===
         if self.files.get("image"):
             uploaded_file = self.files["image"]
             cloudinary_url = upload_image_to_cloudinary(uploaded_file, folder="gallery/images")
+            
             if cloudinary_url:
                 instance.image_url = cloudinary_url
-                self.add_upload_result('image', True,
-                    f"Gallery image '{uploaded_file.name}' uploaded successfully to Cloudinary with optimization!",
-                    cloudinary_url)
+                self.add_upload_result(
+                    'image',
+                    True,
+                    f"Gallery image '{uploaded_file.name}' uploaded successfully to Cloudinary.",
+                    cloudinary_url
+                )
             else:
-                self.add_upload_result('image', False,
-                    f"Failed to upload '{uploaded_file.name}' to Cloudinary. Image was NOT saved.")
-                raise forms.ValidationError(f"Failed to upload '{uploaded_file.name}' to Cloudinary. Please try again.")
+                self.add_upload_result(
+                    'image',
+                    False,
+                    f"Failed to upload '{uploaded_file.name}' to Cloudinary. Image was NOT saved."
+                )
+                raise forms.ValidationError(
+                    f"Failed to upload '{uploaded_file.name}' to Cloudinary. Please try again."
+                )
+
+        # Ensure Cloudinary URL exists before saving
+        if not instance.image_url:
+            raise forms.ValidationError("A valid Cloudinary image URL is required.")
 
         if commit:
             instance.save()
@@ -287,7 +300,7 @@ class GalleryImageForm(AlertEnabledFormMixin, forms.ModelForm):
 
 
 class GalleryVideoForm(AlertEnabledFormMixin, forms.ModelForm):
-    """Form for uploading gallery videos"""
+    """Form for uploading gallery videos (Cloudinary-only)."""
     
     class Meta:
         model = GalleryVideo
@@ -304,41 +317,59 @@ class GalleryVideoForm(AlertEnabledFormMixin, forms.ModelForm):
 
     def save(self, commit=True):
         instance = super().save(commit=False)
-        
-        upload_results = []
 
-        # If a new video is uploaded, try to upload to Cloudinary
+        # === STRICT CLOUDINARY UPLOADS ONLY ===
+        # 1️⃣ Handle Video Upload
         if self.files.get("video"):
-            uploaded_file = self.files["video"]
-            cloudinary_url = upload_video_to_cloudinary(uploaded_file, folder="gallery/videos")
-            if cloudinary_url:
-                instance.video_url = cloudinary_url
-                self.add_upload_result('video', True,
-                    f"Gallery video '{uploaded_file.name}' uploaded successfully to Cloudinary!",
-                    cloudinary_url)
-                upload_results.append("video uploaded")
+            uploaded_video = self.files["video"]
+            cloudinary_video_url = upload_video_to_cloudinary(uploaded_video, folder="gallery/videos")
+            
+            if cloudinary_video_url:
+                instance.video_url = cloudinary_video_url
+                self.add_upload_result(
+                    'video',
+                    True,
+                    f"Video '{uploaded_video.name}' uploaded successfully to Cloudinary.",
+                    cloudinary_video_url
+                )
             else:
-                self.add_upload_result('video', False,
-                    f"Failed to upload video '{uploaded_file.name}' to Cloudinary. Video saved locally as backup.")
+                self.add_upload_result(
+                    'video',
+                    False,
+                    f"Failed to upload '{uploaded_video.name}' to Cloudinary. Video was NOT saved."
+                )
+                raise forms.ValidationError(
+                    f"Failed to upload video '{uploaded_video.name}' to Cloudinary. Please try again."
+                )
 
-        # If a new thumbnail is uploaded, try to upload to Cloudinary
+        # 2️⃣ Handle Thumbnail Upload
         if self.files.get("thumbnail"):
-            uploaded_file = self.files["thumbnail"]
-            cloudinary_url = upload_image_to_cloudinary(uploaded_file, folder="gallery/thumbnails")
-            if cloudinary_url:
-                instance.thumbnail_url = cloudinary_url
-                self.add_upload_result('thumbnail', True,
-                    f"Video thumbnail uploaded successfully to Cloudinary!",
-                    cloudinary_url)
-                upload_results.append("thumbnail uploaded")
+            uploaded_thumb = self.files["thumbnail"]
+            cloudinary_thumb_url = upload_image_to_cloudinary(uploaded_thumb, folder="gallery/thumbnails")
+            
+            if cloudinary_thumb_url:
+                instance.thumbnail_url = cloudinary_thumb_url
+                self.add_upload_result(
+                    'thumbnail',
+                    True,
+                    f"Thumbnail '{uploaded_thumb.name}' uploaded successfully to Cloudinary.",
+                    cloudinary_thumb_url
+                )
             else:
-                self.add_upload_result('thumbnail', False,
-                    f"Failed to upload thumbnail to Cloudinary. Thumbnail saved locally as backup.")
+                self.add_upload_result(
+                    'thumbnail',
+                    False,
+                    f"Failed to upload thumbnail '{uploaded_thumb.name}' to Cloudinary. Thumbnail was NOT saved."
+                )
+                raise forms.ValidationError(
+                    f"Failed to upload thumbnail '{uploaded_thumb.name}' to Cloudinary. Please try again."
+                )
 
-        # Add combined success message if multiple files uploaded
-        if len(upload_results) > 1:
-            self.add_upload_result('combined', True,
-                f"Gallery video with thumbnail uploaded successfully! ({', '.join(upload_results)})")
+        # 3️⃣ Ensure Cloudinary URLs Exist
+        if not instance.video_url:
+            raise forms.ValidationError("A valid Cloudinary video URL is required.")
+        if not instance.thumbnail_url:
+            raise forms.ValidationError("A valid Cloudinary thumbnail URL is required.")
 
         if commit:
             instance.save()
