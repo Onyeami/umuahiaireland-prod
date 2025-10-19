@@ -11,28 +11,36 @@
       Members Gallery
     </h1>
     <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-      Meet our community members and explore their inspiring profiles.
+      Explore our members and their contributions to our vibrant community.
     </p>
   </div>
 </section>
 
 <!-- Members Gallery -->
-<section class="py-16">
-  <div class="container mx-auto px-0"> <!-- Removed padding for full width -->
+<section class="pb-0 mb-0">
+  <div class="w-full overflow-hidden">
     {% if images %}
-      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-0">
+      <!-- Edge-to-edge grid layout -->
+      <div class="grid grid-cols-3 gap-0">
         {% for image in images %}
-          <a href="{{ image.image_url|default:image.image.url }}" target="_blank" class="block relative group">
-            <img src="{{ image.image_url|default:image.image.url }}"
-                 alt="{{ image.alt_text|default:image.name }}"
-                 class="w-full h-72 object-cover transition-transform duration-300 group-hover:scale-105">
-            <div class="absolute bottom-0 w-full bg-black/50 text-white text-center py-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <span class="font-medium text-sm">{{ image.name }}</span>
-              {% if image.description %}
-                <p class="text-xs">{{ image.description }}</p>
-              {% endif %}
+          <div class="relative group overflow-hidden">
+            <!-- Image (top-aligned) -->
+            <img 
+              src="{{ image.image_url|default:image.image.url }}"
+              alt="{{ image.alt_text|default:image.name }}"
+              class="w-[33vw] h-[60vh] object-top object-cover transform transition-transform duration-500 group-hover:scale-110"
+            >
+
+            <!-- Hover overlay -->
+            <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-start items-start text-left text-white p-4">
+              <h3 class="text-lg font-semibold mb-1">
+                {{ image.name|default:"Unnamed Member" }}
+              </h3>
+              <p class="text-sm text-gray-200 leading-snug">
+                {{ image.description|default:"No description available." }}
+              </p>
             </div>
-          </a>
+          </div>
         {% endfor %}
       </div>
     {% else %}
