@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator
 from umuahia_ireland.config import APP_NAME
-from .models import Testimonial, GalleryFolder, GalleryImage, GalleryVideo
+from .models import Testimonial, GalleryFolder, GalleryImage, GalleryVideo, MembersGalleryImage
 
 # Import blog models
 try:
@@ -61,17 +61,14 @@ def gallery_folders(request):
     return render(request, "gallery/folders.html", context)
 
 
+
+
 def gallery_folder_detail(request, folder_slug):
     """Display mixed media (images and videos) in a specific gallery folder."""
     folder = get_object_or_404(GalleryFolder, slug=folder_slug, is_active=True)
-    
-    # Get active images and videos for this folder
     images = folder.images.filter(is_active=True).order_by('order', 'created_at')
     videos = folder.videos.filter(is_active=True).order_by('order', 'created_at')
-    
-    # Get mixed media sorted by created_at
-    mixed_media = folder.get_latest_media(limit=None)  # Get all media, sorted
-    
+    mixed_media = getattr(folder, 'get_latest_media', lambda limit=None: [])(limit=None)
     context = {
         'folder': folder,
         'images': images,
@@ -80,3 +77,12 @@ def gallery_folder_detail(request, folder_slug):
         'page_title': f'Gallery - {folder.name}'
     }
     return render(request, "gallery/folder_detail.html", context)
+
+def members_gallery(request):
+    """Display all active member gallery images individually with captions."""
+    images = MembersGalleryImage.objects.filter(is_active=True).order_by('order', '-created_at')
+    context = {
+        'images': images,
+        'page_title': 'Members Gallery'
+    }
+    return render(request, "gallery/members_gallery.html", context)

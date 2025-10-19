@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import Minuites, FinancialCheckbook, Testimonial, GalleryFolder, GalleryImage, GalleryVideo
+from .models import Minuites, FinancialCheckbook, Testimonial, GalleryFolder, GalleryImage, GalleryVideo, MembersGalleryImage
 from .forms import MinuitesForm, FinancialCheckbookForm, TestimonialForm, GalleryFolderForm, GalleryImageForm, GalleryVideoForm
 
 # Register your models here.
@@ -191,27 +191,20 @@ class GalleryImageAdmin(admin.ModelAdmin):
     image_preview.short_description = "Preview"
 
 
-@admin.register(GalleryVideo)
-class GalleryVideoAdmin(admin.ModelAdmin):
-    form = GalleryVideoForm
-    list_display = ('title_display', 'folder', 'video_preview', 'file_size_display', 'is_active', 'order', 'created_at')
-    list_filter = ('folder', 'is_active', 'created_at', 'updated_at')
-    search_fields = ('title', 'folder__name')
+@admin.register(MembersGalleryImage)
+class MembersGalleryImageAdmin(admin.ModelAdmin):
+    list_display = ('name', 'description', 'image_preview', 'is_active', 'order', 'created_at')
+    list_filter = ('is_active', 'created_at', 'updated_at')
+    search_fields = ('name', 'description', 'alt_text')
     list_editable = ('is_active', 'order')
-    ordering = ('folder', 'order', '-created_at')
-    
+    ordering = ('order', '-created_at')
     fieldsets = (
-        ('Basic Information', {
-            'fields': ('folder', 'title')
+        ('Member Info', {
+            'fields': ('name', 'description')
         }),
-        ('Video', {
-            'fields': ('video', 'video_url', 'thumbnail', 'thumbnail_url'),
-            'description': 'Upload a video and optional custom thumbnail'
-        }),
-        ('Video Details', {
-            'fields': ('duration', 'file_size'),
-            'classes': ('collapse',),
-            'description': 'These fields can be auto-populated'
+        ('Image', {
+            'fields': ('image', 'image_url', 'alt_text'),
+            'description': 'Upload a member photo or provide Cloudinary URL'
         }),
         ('Display Settings', {
             'fields': ('is_active', 'order')
@@ -221,26 +214,10 @@ class GalleryVideoAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         }),
     )
-    
-    def title_display(self, obj):
-        return obj.title or f"Video #{str(obj.id)[:8]}"
-    title_display.short_description = "Title"
-    
-    def video_preview(self, obj):
-        if obj.thumbnail:
-            return format_html(
-                '<img src="{}" style="max-height: 60px; max-width: 60px; border-radius: 4px;" />',
-                obj.thumbnail.url if hasattr(obj.thumbnail, 'url') else ''
-            )
-        elif obj.video:
-            return format_html(
-                '<div style="background: #f8f9fa; border: 2px solid #dee2e6; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; border-radius: 4px;">'
-                '<span style="font-size: 24px;">🎥</span>'
-                '</div>'
-            )
-        return "No video"
-    video_preview.short_description = "Preview"
-    
-    def file_size_display(self, obj):
-        return obj.get_file_size_display() if obj.file_size else "Unknown"
-    file_size_display.short_description = "File Size"
+
+    def image_preview(self, obj):
+        image_url = obj.image_url if obj.image_url else (obj.image.url if obj.image and hasattr(obj.image, 'url') else None)
+        if image_url:
+            return format_html('<img src="{}" style="max-height: 60px; max-width: 60px; border-radius: 4px;" />', image_url)
+        return "No image"
+    image_preview.short_description = "Preview"
