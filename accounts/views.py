@@ -175,7 +175,6 @@ def verify_account(request, token):
             user.is_verified = True
             user.save()
 
-            messages.success(request, "Your email has been successfully verified!")
             return render(request, "registration/verification_success.html")
 
     except Exception as e:
