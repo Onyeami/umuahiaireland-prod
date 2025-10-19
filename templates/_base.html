@@ -104,6 +104,23 @@
 </head>
 
 <body class="font-sans bg-gray-50">
+        {% if messages %}
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                {% for message in messages %}
+                    Swal.fire({
+                        icon: '{% if message.tags == "success" %}success{% elif message.tags == "error" %}error{% else %}info{% endif %}',
+                        title: '{{ message.tags|title }}',
+                        text: '{{ message|escapejs }}',
+                        timer: 3500,
+                        showConfirmButton: false,
+                        position: 'top',
+                        toast: true
+                    });
+                {% endfor %}
+            });
+        </script>
+        {% endif %}
     <!-- Cookie Consent Banner -->
     <div id="cookie-consent-banner" class="fixed bottom-0 left-0 right-0 z-50 p-4 animate-slide-up" style="display: none;">
         <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-2xl border border-gray-200 p-6">
