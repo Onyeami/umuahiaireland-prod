@@ -278,7 +278,8 @@ class GalleryImageForm(AlertEnabledFormMixin, forms.ModelForm):
                     cloudinary_url)
             else:
                 self.add_upload_result('image', False,
-                    f"Failed to upload '{uploaded_file.name}' to Cloudinary. Image saved locally as backup.")
+                    f"Failed to upload '{uploaded_file.name}' to Cloudinary. Image was NOT saved.")
+                raise forms.ValidationError(f"Failed to upload '{uploaded_file.name}' to Cloudinary. Please try again.")
 
         if commit:
             instance.save()

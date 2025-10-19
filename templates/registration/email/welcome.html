@@ -53,13 +53,19 @@
 
         .verify-btn {
             display: inline-block;
-            background: #007bff;
+            background: #D0AC42; /* Brand color */
             color: white;
             text-decoration: none;
-            padding: 12px 20px;
-            border-radius: 5px;
-            font-size: 16px;
-            margin-top: 20px;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 24px;
+            box-shadow: 0 2px 8px rgba(208,172,66,0.15);
+            transition: background 0.2s;
+        }
+        .verify-btn:hover {
+            background: #b48c2c;
         }
 
         .footer {
@@ -101,6 +107,9 @@
             <!-- Verification Button -->
             <p>Before you get started, please verify your email:</p>
             <a href="{{ VERIFICATION_URL }}" class="verify-btn">Verify My Email</a>
+            <p style="margin-top:10px;font-size:13px;color:#888;">Or copy and paste this link in your browser:<br>
+                <span style="word-break:break-all;color:#D0AC42;">{{ VERIFICATION_URL }}</span>
+            </p>
 
             <p>If you didn't sign up, please ignore this email.</p>
         </div>
