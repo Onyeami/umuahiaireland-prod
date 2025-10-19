@@ -84,8 +84,11 @@
               src="{{ video.video_url|default:video.video.url }}"
               class="w-full h-auto object-contain transition-transform duration-500 group-hover:scale-105"
               controls
+              controlsList="nodownload"
               preload="metadata"
               poster="{{ video.thumbnail_url|default:video.thumbnail.url }}"
+              tabindex="0"
+              aria-label="Play video: {{ video.title|default:'Unnamed Video' }}"
             ></video>
             <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-center items-center text-center text-white p-4">
                   <h3 class="text-lg font-semibold mb-2">{{ video.title|default:"Unnamed Video" }}</h3>
@@ -103,10 +106,8 @@
         </p>
       </div>
     {% endif %}
-  </div>
-</section>
 
-<!-- Lightbox -->
+<!-- Lightbox for images only -->
 <div id="lightbox" class="lightbox">
   <button class="lightbox-close" onclick="closeLightbox()"><i class="fas fa-times"></i></button>
   <div class="lightbox-content">
@@ -114,16 +115,14 @@
   </div>
 </div>
 
+{% load json_script %}
+{% json_script images as "member-images-data" %}
 <script>
-  const memberImages = [
-    {% for image in images %}
-    {
-      url: "{{ image.image_url|default:image.image.url }}",
-      name: "{{ image.name|escapejs }}",
-      desc: "{{ image.description|default:''|escapejs }}"
-    }{% if not forloop.last %},{% endif %}
-    {% endfor %}
-  ];
+  const memberImages = JSON.parse(document.getElementById('member-images-data').textContent).map(img => ({
+    url: img.image_url || img.image?.url || '',
+    name: img.title || '',
+    desc: img.description || ''
+  }));
 
   let currentIndex = 0;
 
@@ -145,4 +144,7 @@
     if (e.target === e.currentTarget) closeLightbox();
   });
 </script>
+  </div>
+</section>
+
 {% endblock %}
