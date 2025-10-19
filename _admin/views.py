@@ -185,7 +185,7 @@ class UserActivateView(AdminRequiredMixin, View):
 class UserDeleteView(AdminRequiredMixin, View):
     def post(self, request, user_id):
         get_object_or_404(CustomUser, id=user_id).delete()
-        return redirect("admin:members")
+        return redirect("admin:dashboard")
 
 
 class UserApproveView(AdminRequiredMixin, View):
