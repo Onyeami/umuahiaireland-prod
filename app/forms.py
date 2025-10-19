@@ -1,7 +1,7 @@
 from django import forms
 from django.forms.widgets import ClearableFileInput
 from django.utils import timezone
-from .models import Minuites, FinancialCheckbook, GalleryFolder, GalleryImage, GalleryVideo, Testimonial
+from .models import Minuites, FinancialCheckbook, GalleryFolder, GalleryImage, GalleryVideo, Testimonial, MembersGalleryImage
 import cloudinary
 import cloudinary.uploader
 from django.conf import settings
@@ -378,3 +378,31 @@ class TestimonialForm(AlertEnabledFormMixin, forms.ModelForm):
         if commit:
             instance.save()
         return instance
+
+
+class MembersGalleryImageForm(forms.ModelForm):
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        # If a new image is uploaded, try to upload to Cloudinary
+        if self.files.get("image"):
+            uploaded_file = self.files["image"]
+            cloudinary_url = upload_image_to_cloudinary(uploaded_file, folder="members_gallery/images")
+            if cloudinary_url:
+                instance.image_url = cloudinary_url
+        if commit:
+            instance.save()
+        return instance
+    class Meta:
+        model = MembersGalleryImage
+        fields = [
+            'name',
+            'description',
+            'image',
+            'alt_text',
+            'is_active',
+            'order'
+        ]
+        widgets = {
+            'description': forms.TextInput(attrs={'placeholder': 'Optional description'}),
+            'alt_text': forms.TextInput(attrs={'placeholder': 'Accessibility alt text'}),
+        }

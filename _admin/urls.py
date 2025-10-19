@@ -2,8 +2,6 @@ from django.urls import path
 from .views import (
     DashboardView,
     ProjectListView,
-    MemberListView,
-    ProjectListView,
     UserCreateView,
     UserUpdateView,
     UserDeactivateView,
@@ -45,6 +43,10 @@ from .views import (
     GalleryFolderDetailView,
     GalleryImageUpdateView,
     GalleryBulkImageOrderView,
+    MembersGalleryImageListView,
+    MembersGalleryImageCreateView,
+    MembersGalleryImageEditView,
+    MembersGalleryImageDeleteView,
 )
 from app.debug_views import debug_cloudinary_config
 
@@ -52,7 +54,6 @@ app_name = "admin"
 
 urlpatterns = [
     path("", DashboardView.as_view(), name="dashboard"),
-    path("members/", MemberListView.as_view(), name="members"),
     path("create-user/", UserCreateView.as_view(), name="create_user"),
     path(
         "user/<uuid:user_id>/deactivate/",
@@ -138,6 +139,7 @@ urlpatterns = [
     
     # Gallery URLs
     path("gallery/", GalleryDashboardView.as_view(), name="gallery_dashboard"),
+    path("gallery/members/", MembersGalleryImageListView.as_view(), name="members_gallery"),
     path("gallery/create-folder/", GalleryFolderCreateView.as_view(), name="gallery_create_folder"),
     path("gallery/folder/<uuid:folder_id>/", GalleryFolderDetailView.as_view(), name="gallery_folder_detail"),
     path("gallery/folder/<uuid:folder_id>/edit/", GalleryFolderUpdateView.as_view(), name="gallery_edit_folder"),
@@ -149,6 +151,9 @@ urlpatterns = [
     path("gallery/image/<uuid:image_id>/delete/", GalleryImageDeleteView.as_view(), name="gallery_delete_image"),
     path("gallery/video/<uuid:video_id>/edit/", GalleryVideoUpdateView.as_view(), name="gallery_edit_video"),
     path("gallery/video/<uuid:video_id>/delete/", GalleryVideoDeleteView.as_view(), name="gallery_delete_video"),
+    path("gallery/members/create/", MembersGalleryImageCreateView.as_view(), name="create_member_image"),
+    path("gallery/members/<uuid:image_id>/edit/", MembersGalleryImageEditView.as_view(), name="edit_member_image"),
+    path("gallery/members/<uuid:image_id>/delete/", MembersGalleryImageDeleteView.as_view(), name="delete_member_image"),
     
     # Debug URL (admin only)
     path("debug/cloudinary/", debug_cloudinary_config, name="debug_cloudinary"),
