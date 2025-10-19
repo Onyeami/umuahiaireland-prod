@@ -227,7 +227,7 @@ class UserApproveView(AdminRequiredMixin, View):
         else:
             messages.error(request, "User cannot be approved at this time.")
 
-        return redirect("admin:members")
+        return redirect("admin:dashboard")
 
 
 class UserRejectView(AdminRequiredMixin, View):
