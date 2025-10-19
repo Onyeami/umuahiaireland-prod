@@ -390,6 +390,8 @@ class MembersGalleryImageForm(forms.ModelForm):
             cloudinary_url = upload_image_to_cloudinary(uploaded_file, folder="members_gallery/images")
             if cloudinary_url:
                 instance.image_url = cloudinary_url
+            else:
+                raise forms.ValidationError(f"Failed to upload '{uploaded_file.name}' to Cloudinary. Please try again.")
         if commit:
             instance.save()
         return instance
