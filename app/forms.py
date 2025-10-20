@@ -55,8 +55,11 @@ class AlertEnabledFormMixin:
     def get_upload_results_json(self):
         """Get upload results as JSON for JavaScript"""
         if hasattr(self, '_upload_results'):
-            return json.dumps(self._upload_results)
-        return '{}'
+            # Add a JS snippet to print errors to the browser console
+            results_json = json.dumps(self._upload_results)
+            js_snippet = f'<script>\ntry {{\n  const uploadResults = {results_json};\n  Object.values(uploadResults).forEach(r => {{\n    if (!r.success && r.message) console.error(r.message);\n  }});\n}} catch(e) {{ console.error(e); }}\n</script>'
+            return js_snippet
+        return ''
 
 
 def upload_to_cloudinary(file):
@@ -165,52 +168,48 @@ class FinancialCheckbookForm(AlertEnabledFormMixin, forms.ModelForm):
 def upload_image_to_cloudinary(image_file, folder="gallery"):
     """Upload image file to Cloudinary and return the URL"""
     try:
-        # Configure Cloudinary (same pattern as blog)
         cloudinary.config(
             cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME", ""),
             api_key=os.getenv("CLOUDINARY_API_KEY", ""),
             api_secret=os.getenv("CLOUDINARY_API_SECRET", ""),
             secure=True,
         )
-
-        # Upload the image
         result = cloudinary.uploader.upload(
             image_file,
-            folder=folder,  # Upload to specified folder in Cloudinary
+            folder=folder,
             resource_type="image",
             quality="auto",
             fetch_format="auto",
         )
-
         return result["secure_url"]
     except Exception as e:
-        print(f"Cloudinary image upload error: {e}")
-        return None
+        import traceback
+        error_msg = f"Cloudinary image upload error: {e}\n{traceback.format_exc()}"
+        print(error_msg)
+        return error_msg
 
 
 def upload_video_to_cloudinary(video_file, folder="gallery"):
     """Upload video file to Cloudinary and return the URL"""
     try:
-        # Configure Cloudinary (same pattern as blog)
         cloudinary.config(
             cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME", ""),
             api_key=os.getenv("CLOUDINARY_API_KEY", ""),
             api_secret=os.getenv("CLOUDINARY_API_SECRET", ""),
             secure=True,
         )
-
-        # Upload the video
         result = cloudinary.uploader.upload(
             video_file,
-            folder=folder,  # Upload to specified folder in Cloudinary
+            folder=folder,
             resource_type="video",
             quality="auto",
         )
-
         return result["secure_url"]
     except Exception as e:
-        print(f"Cloudinary video upload error: {e}")
-        return None
+        import traceback
+        error_msg = f"Cloudinary video upload error: {e}\n{traceback.format_exc()}"
+        print(error_msg)
+        return error_msg
 
 
 # Gallery Forms
@@ -271,8 +270,7 @@ class GalleryImageForm(AlertEnabledFormMixin, forms.ModelForm):
         if self.files.get("image"):
             uploaded_file = self.files["image"]
             cloudinary_url = upload_image_to_cloudinary(uploaded_file, folder="gallery/images")
-            
-            if cloudinary_url:
+            if cloudinary_url and not cloudinary_url.startswith("Cloudinary image upload error"):
                 instance.image_url = cloudinary_url
                 self.add_upload_result(
                     'image',
@@ -281,13 +279,14 @@ class GalleryImageForm(AlertEnabledFormMixin, forms.ModelForm):
                     cloudinary_url
                 )
             else:
+                error_detail = cloudinary_url if cloudinary_url else "Unknown error"
                 self.add_upload_result(
                     'image',
                     False,
-                    f"Failed to upload '{uploaded_file.name}' to Cloudinary. Image was NOT saved."
+                    f"Failed to upload '{uploaded_file.name}' to Cloudinary. Image was NOT saved.\n{error_detail}"
                 )
                 raise forms.ValidationError(
-                    f"Failed to upload '{uploaded_file.name}' to Cloudinary. Please try again."
+                    f"Failed to upload '{uploaded_file.name}' to Cloudinary.\n{error_detail}"
                 )
 
         # Ensure Cloudinary URL exists before saving
@@ -323,8 +322,7 @@ class GalleryVideoForm(AlertEnabledFormMixin, forms.ModelForm):
         if self.files.get("video"):
             uploaded_video = self.files["video"]
             cloudinary_video_url = upload_video_to_cloudinary(uploaded_video, folder="gallery/videos")
-            
-            if cloudinary_video_url:
+            if cloudinary_video_url and not cloudinary_video_url.startswith("Cloudinary video upload error"):
                 instance.video_url = cloudinary_video_url
                 self.add_upload_result(
                     'video',
@@ -333,13 +331,14 @@ class GalleryVideoForm(AlertEnabledFormMixin, forms.ModelForm):
                     cloudinary_video_url
                 )
             else:
+                error_detail = cloudinary_video_url if cloudinary_video_url else "Unknown error"
                 self.add_upload_result(
                     'video',
                     False,
-                    f"Failed to upload '{uploaded_video.name}' to Cloudinary. Video was NOT saved."
+                    f"Failed to upload '{uploaded_video.name}' to Cloudinary. Video was NOT saved.\n{error_detail}"
                 )
                 raise forms.ValidationError(
-                    f"Failed to upload video '{uploaded_video.name}' to Cloudinary. Please try again."
+                    f"Failed to upload video '{uploaded_video.name}' to Cloudinary.\n{error_detail}"
                 )
 
         # 2️⃣ Handle Thumbnail Upload
