@@ -14,7 +14,7 @@
                 </a>
                 <h1 class="text-2xl md:text-3xl font-bold text-gray-900">{{ folder.name }}</h1>
             </div>
-            <p class="text-gray-600">Manage images in this folder</p>
+            <p class="text-gray-600">Manage media in this folder</p>
         </div>
         
         <div class="flex flex-col sm:flex-row gap-3">
@@ -82,9 +82,9 @@
         </div>
     </div>
 
-    <!-- Images Grid -->
+    <!-- Media Grid: Images -->
     {% if images %}
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-8">
             <div class="p-6 border-b border-gray-200">
                 <div class="flex items-center justify-between">
                     <h2 class="text-xl font-bold text-gray-900">Images</h2>
@@ -100,72 +100,49 @@
                     </div>
                 </div>
             </div>
-
-            <div id="imageGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-6">
+            <div id="imageGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-6" style="max-height: 500px; overflow-y: auto;">
                 {% for image in images %}
                 <div class="image-item border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow" 
-                     data-image-id="{{ image.id }}" data-order="{{ image.order }}">
-                    
-                    <!-- Image Preview -->
-                    <div class="relative h-48 bg-gray-100">
-                        <img src="{{ image.image.url }}" alt="{{ image.alt_text }}" 
-                             class="w-full h-full object-cover">
-                        
-                        <!-- Status Badges -->
-                        <div class="absolute top-2 left-2 flex space-x-1">
-                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-black bg-opacity-70 text-white">
-                                #{{ image.order }}
-                            </span>
-                            {% if not image.is_active %}
-                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-500 text-white">
-                                    Hidden
-                                </span>
-                            {% endif %}
-                            {% if forloop.first %}
-                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-500 text-white">
-                                    <i class="fas fa-crown mr-1"></i>Cover
-                                </span>
-                            {% endif %}
-                        </div>
+     data-image-id="{{ image.id }}" data-order="{{ image.order }}">
+    <div class="relative h-48 bg-gray-100 flex items-center justify-center">
+        <img src="{{ image.image_url|default:image.image.url }}" 
+             alt="{{ image.alt_text|default:image.title }}" 
+             class="w-full h-full object-contain">
+        {% if not image.is_active %}
+        <span class="absolute top-2 left-2 px-2 py-1 rounded-full text-xs font-medium bg-red-500 text-white">Hidden</span>
+        {% endif %}
+    </div>
+    <div class="p-4">
+        <div class="mb-2">
+            {% if image.title %}
+                <h4 class="font-medium text-gray-900 mb-1">{{ image.title }}</h4>
+            {% endif %}
+            {% if image.alt_text %}
+                <p class="text-sm text-gray-600 mb-2">{{ image.alt_text }}</p>
+            {% endif %}
+        </div>
+        <div class="text-xs text-gray-500 mb-3">
+            <div>Order: {{ image.order }}</div>
+            <div>Uploaded: {{ image.created_at|date:"M d, Y" }}</div>
+        </div>
+        <div class="flex space-x-2 image-actions">
+            <button onclick="openEditImageModal('{{ image.id }}', '{{ image.title|escapejs }}', '{{ image.alt_text|escapejs }}', '{{ image.order }}', {{ image.is_active|yesno:'true,false' }})"
+                class="flex-1 px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded transition-colors">
+                <i class="fas fa-edit mr-1"></i> Edit
+            </button>
+            <button onclick="confirmDeleteImage('{{ image.id }}', '{{ image.title|default:'this image'|escapejs }}')"
+                class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-xs font-medium rounded transition-colors">
+                <i class="fas fa-trash"></i>
+            </button>
+        </div>
 
-                        <!-- Drag Handle (hidden by default) -->
-                        <div class="drag-handle absolute top-2 right-2 hidden bg-blue-600 text-white p-2 rounded cursor-move">
-                            <i class="fas fa-grip-vertical"></i>
-                        </div>
-                    </div>
+        <!-- Drag handle for bulk reorder -->
+        <div class="drag-handle hidden absolute top-2 right-2 cursor-move bg-white bg-opacity-75 p-1 rounded">
+            <i class="fas fa-grip-lines text-gray-600"></i>
+        </div>
+    </div>
+</div>
 
-                    <!-- Image Info -->
-                    <div class="p-4">
-                        <div class="mb-2">
-                            {% if image.title %}
-                                <h4 class="font-medium text-gray-900 mb-1">{{ image.title }}</h4>
-                            {% endif %}
-                            {% if image.alt_text %}
-                                <p class="text-sm text-gray-600 mb-2">{{ image.alt_text }}</p>
-                            {% endif %}
-                        </div>
-                        
-                        <div class="text-xs text-gray-500 mb-3">
-                            <div>Order: {{ image.order }}</div>
-                            <div>Uploaded: {{ image.created_at|date:"M d, Y" }}</div>
-                            {% if image.uploaded_by %}
-                                <div>By: {{ image.uploaded_by }}</div>
-                            {% endif %}
-                        </div>
-
-                        <!-- Actions -->
-                        <div class="image-actions flex space-x-2">
-                            <button onclick="openEditImageModal('{{ image.id }}', '{{ image.title }}', '{{ image.alt_text }}', {{ image.order }}, {{ image.is_active|yesno:'true,false' }})"
-                                class="flex-1 px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded transition-colors">
-                                <i class="fas fa-edit mr-1"></i> Edit
-                            </button>
-                            <button onclick="confirmDeleteImage('{{ image.id }}', '{{ image.title|default:'this image' }}')"
-                                class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-xs font-medium rounded transition-colors">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
                 {% endfor %}
             </div>
         </div>
@@ -182,6 +159,64 @@
                 <i class="fas fa-upload mr-2"></i>
                 Upload Images
             </button>
+        </div>
+    {% endif %}
+
+    <!-- Media Grid: Videos -->
+    {% if videos %}
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-8">
+            <div class="p-6 border-b border-gray-200">
+                <h2 class="text-xl font-bold text-gray-900">Videos</h2>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-6" style="max-height: 500px; overflow-y: auto;">
+                {% for video in videos %}
+                <div class="border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
+                    <div class="relative h-48 bg-gray-100 flex items-center justify-center">
+                        <video src="{{ video.video_url|default:video.video.url }}" poster="{{ video.thumbnail_url|default:video.thumbnail.url }}" controls class="w-full h-full object-cover"></video>
+                        {% if not video.is_active %}
+                        <span class="absolute top-2 left-2 px-2 py-1 rounded-full text-xs font-medium bg-red-500 text-white">Hidden</span>
+                        {% endif %}
+                    </div>
+                    <div class="p-4">
+                        <div class="mb-2">
+                            {% if video.title %}
+                                <h4 class="font-medium text-gray-900 mb-1">{{ video.title }}</h4>
+                            {% endif %}
+                            {% if video.description %}
+                                <p class="text-sm text-gray-600 mb-2">{{ video.description }}</p>
+                            {% endif %}
+                        </div>
+                        <div class="text-xs text-gray-500 mb-3">
+                            <div>Order: {{ video.order }}</div>
+                            <div>Uploaded: {{ video.created_at|date:"M d, Y" }}</div>
+                            {% if video.uploaded_by %}
+                                <div>By: {{ video.uploaded_by }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="flex space-x-2">
+                            <!-- Edit button (disabled for now, fix JS later) -->
+                            <button disabled class="flex-1 px-3 py-1 bg-blue-300 text-white text-xs font-medium rounded transition-colors opacity-50 cursor-not-allowed">
+                                <i class="fas fa-edit mr-1"></i> Edit
+                            </button>
+                            <!-- Delete button with correct JS quoting -->
+                            <button onclick="confirmDeleteVideo('{{ video.id }}', '{{ video.title|default:'this video'|escapejs }}')"
+                                class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-xs font-medium rounded transition-colors">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        <!-- Empty State for Videos -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
+            <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-video text-4xl text-gray-400"></i>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">No Videos</h3>
+            <p class="text-gray-600 mb-6">Upload your first videos to this folder to get started.</p>
         </div>
     {% endif %}
 </div>
@@ -306,13 +341,27 @@
             const form = document.createElement('form');
             form.method = 'POST';
             form.action = `/dashboard/gallery/image/${imageId}/delete/`;
-            
             const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
             const csrfInput = document.createElement('input');
             csrfInput.type = 'hidden';
             csrfInput.name = 'csrfmiddlewaretoken';
             csrfInput.value = csrfToken;
-            
+            form.appendChild(csrfInput);
+            document.body.appendChild(form);
+            form.submit();
+        }
+    }
+
+    function confirmDeleteVideo(videoId, videoName) {
+        if (confirm(`Are you sure you want to delete "${videoName}"?`)) {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = `/dashboard/gallery/video/${videoId}/delete/`;
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            const csrfInput = document.createElement('input');
+            csrfInput.type = 'hidden';
+            csrfInput.name = 'csrfmiddlewaretoken';
+            csrfInput.value = csrfToken;
             form.appendChild(csrfInput);
             document.body.appendChild(form);
             form.submit();
