@@ -1,0 +1,73 @@
+{% extends '../_base.html' %}
+{% load static %}
+
+{% block page_title %}My Gallery{% endblock page_title %}
+
+{% block content %}
+<div class="p-4 md:p-6 lg:p-8">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+        <div class="space-y-1">
+            <h1 class="text-2xl md:text-3xl font-bold text-gray-900">My Gallery</h1>
+            <p class="text-gray-600">View your photo albums and uploaded media</p>
+        </div>
+        <div class="flex flex-col sm:flex-row gap-3">
+            <a href="#" class="inline-flex items-center px-4 py-2 bg-primary hover:bg-primary-dark duration-300 text-white font-semibold text-sm rounded-lg">
+                <i class="fas fa-image mr-2"></i>
+                Upload Images
+            </a>
+            <a href="#" class="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 duration-300 text-white font-semibold text-sm rounded-lg">
+                <i class="fas fa-video mr-2"></i>
+                Upload Videos
+            </a>
+        </div>
+    </div>
+
+    <!-- Gallery Folders -->
+    {% if folders %}
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="p-6 border-b border-gray-200">
+                <h2 class="text-xl font-bold text-gray-900">My Albums</h2>
+                <p class="text-gray-600 mt-1">Browse your photo albums and their contents</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
+                {% for folder in folders %}
+                <div class="border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
+                    <!-- Folder Preview -->
+                    <div class="h-48 bg-gray-100 flex items-center justify-center relative">
+                        {% with folder.get_cover_image_url as cover_url %}
+                            {% if cover_url %}
+                                <img src="{{ cover_url }}" alt="{{ folder.name }}" class="w-full h-full object-cover">
+                            {% else %}
+                                <i class="fas fa-folder text-6xl text-gray-300"></i>
+                            {% endif %}
+                        {% endwith %}
+                        <!-- Image Count -->
+                        <div class="absolute bottom-3 left-3">
+                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-black bg-opacity-70 text-white">
+                                {{ folder.images.count }} {% if folder.images.count == 1 %}image{% else %}images{% endif %}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-gray-900">{{ folder.name }}</h3>
+                        <p class="text-gray-600 text-sm mb-2">{{ folder.description|default:'No description' }}</p>
+                        <a href="#" class="text-primary hover:underline text-sm">View Album</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8 text-center mt-6">
+            <img src="{% static 'img/gallery.png' %}" alt="No Albums" class="w-16 h-16 mx-auto mb-4 opacity-50">
+            <h3 class="text-lg font-medium text-gray-900 mb-2">No Albums Found</h3>
+            <p class="text-gray-500 mb-4">You have not created any albums yet.</p>
+            <a href="#" class="inline-flex items-center px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-dark focus:ring-2 focus:ring-primary">
+                <i class="ti ti-plus mr-2"></i>
+                Create First Album
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock content %}

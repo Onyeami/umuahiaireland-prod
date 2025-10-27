@@ -19,8 +19,13 @@ def validation_required(view_func):
         if not getattr(request.user, "is_verified", False):
             return HttpResponseForbidden("Your account is not verified. Please check your email for verification link.")
 
+
         # Check if the user is approved by admin
         if not getattr(request.user, "is_approved", False):
+            # If user is verified but not approved, show pending approval page
+            if getattr(request.user, "is_verified", False):
+                from django.shortcuts import render
+                return render(request, "registration/pending_approval.html")
             return HttpResponseForbidden("Your account is pending admin approval. You will be notified once approved.")
 
         # If all checks pass, call the view function

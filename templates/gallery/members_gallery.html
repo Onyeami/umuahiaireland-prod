@@ -21,14 +21,14 @@
   <div class="w-full overflow-hidden">
     {% if images %}
       <!-- Edge-to-edge grid layout -->
-      <div class="grid grid-cols-3 gap-0">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-0 place-items-center">
         {% for image in images %}
-          <div class="relative group overflow-hidden">
+          <div class="relative group overflow-hidden w-[80vw] md:w-full">
             <!-- Image (top-aligned) -->
             <img 
               src="{{ image.image_url|default:image.image.url }}"
               alt="{{ image.alt_text|default:image.name }}"
-              class="w-[33vw] h-[60vh] object-top object-cover transform transition-transform duration-500 group-hover:scale-110"
+              class="w-[80vw] md:w-full h-[60vw] md:h-[60vh] object-top object-cover transform transition-transform duration-500 group-hover:scale-110"
             >
 
             <!-- Hover overlay -->
@@ -39,7 +39,6 @@
               <p class="text-sm text-gray-200 leading-snug">
                 {{ image.description|default:"No description available." }}
               </p>
-             
             </div>
           </div>
         {% endfor %}
