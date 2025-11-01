@@ -35,7 +35,13 @@ SECRET_KEY = SECRET_KEY
 
 DEBUG = DEBUG
 
-ALLOWED_HOSTS = ["*"]
+# Set allowed hosts for production and local development
+ALLOWED_HOSTS = [
+    "127.0.0.1",
+    "localhost",
+    "www.umuahiaireland.ie",
+    "umuahiaireland.ie",
+]
 
 INSTALLED_APPS = [
     "django.contrib.admin",

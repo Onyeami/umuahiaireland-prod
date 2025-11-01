@@ -3,6 +3,7 @@ from django.conf.urls.static import static
 from django.conf import settings
 from django.conf.urls import handler404, handler500
 from .errors import custom_error_404, custom_error_500
+from .errors import custom_error_403, custom_error_400
 from .views import send_email, privacy_statement
 from django.views.generic import TemplateView
 from .media_debug import media_test_view
@@ -15,6 +16,8 @@ from .stripe_views import (
 
 handler404 = custom_error_404
 handler500 = custom_error_500
+handler403 = custom_error_403
+handler400 = custom_error_400
 
 urlpatterns = [
     path("", include("app.urls", namespace="app")),

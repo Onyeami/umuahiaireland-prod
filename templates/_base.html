@@ -108,15 +108,15 @@
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 {% for message in messages %}
-                    Swal.fire({
-                        icon: '{% if message.tags == "success" %}success{% elif message.tags == "error" %}error{% else %}info{% endif %}',
-                        title: '{{ message.tags|title }}',
-                        text: '{{ message|escapejs }}',
-                        timer: 3500,
-                        showConfirmButton: false,
-                        position: 'top',
-                        toast: true
-                    });
+                Swal.fire({
+                    icon: '{% if message.tags == "success" %}success{% elif message.tags == "error" %}error{% else %}info{% endif %}',
+                    title: '{{ message.tags|title }}',
+                    text: '{{ message|escapejs }}',
+                    timer: 3500,
+                    showConfirmButton: false,
+                    position: 'top',
+                    toast: true
+                });
                 {% endfor %}
             });
         </script>
