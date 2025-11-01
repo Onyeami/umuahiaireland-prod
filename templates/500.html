@@ -7,6 +7,6 @@
 </head>
 <body>
     <h1>Error {{ status_code }}</h1>
-    <p>{{ message }}</p>
+        <p>{{ message|default:"An unexpected error occurred. Please try again later." }}</p>
 </body>
 </html>

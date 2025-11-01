@@ -158,10 +158,11 @@ class UserUpdateView(AdminRequiredMixin, View):
         user.first_name = request.POST.get("first_name", user.first_name)
         user.last_name = request.POST.get("last_name", user.last_name)
         user.email = request.POST.get("email", user.email)
-        user.position = request.POST.get("position", user.position)
+        user.location = request.POST.get("location", user.location)
+        user.about = request.POST.get("about", user.about)
         user.save()
         messages.success(request, "User details updated successfully.")
-        return redirect("admin:members")
+        return redirect("admin:edit_user", user_id=user.id)
 
 
 class UserDeactivateView(AdminRequiredMixin, View):
@@ -170,7 +171,7 @@ class UserDeactivateView(AdminRequiredMixin, View):
         if user.is_active:
             user.is_active = False
             user.save()
-        return redirect("admin:members")
+        return redirect("admin:members_gallery")
 
 
 class UserActivateView(AdminRequiredMixin, View):
@@ -179,7 +180,7 @@ class UserActivateView(AdminRequiredMixin, View):
         if not user.is_active:
             user.is_active = True
             user.save()
-        return redirect("admin:members")
+        return redirect("admin:members_gallery")
 
 
 class UserDeleteView(AdminRequiredMixin, View):
@@ -271,7 +272,7 @@ class UserRejectView(AdminRequiredMixin, View):
         else:
             messages.error(request, "User cannot be rejected at this time.")
 
-        return redirect("admin:members")
+        return redirect("admin:members_gallery")
 
 
 class MinuitesListView(AdminRequiredMixin, ListView):
