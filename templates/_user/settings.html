@@ -4,16 +4,16 @@
 {% block page_title %}Settings{% endblock page_title %}
 
 {% block content %}
+<div class="p-6">
+    <div class="max-w-full py-12">
+        <!-- Update Password Form (Left Column) -->
+        <div class="bg-white p-8 rounded-xl ">
+            <h3 class="text-2xl font-bold text-gray-900 mb-4">Update Password</h3>
+            <p class="text-gray-500 mb-6">Enter your current password to make an update</p>
 
-<div class="max-w-full py-12">
-    <!-- Update Password Form (Left Column) -->
-    <div class="bg-white p-8 rounded-xl ">
-        <h3 class="text-2xl font-bold text-gray-900 mb-4">Update Password</h3>
-        <p class="text-gray-500 mb-6">Enter your current password to make an update</p>
-
-        {% if messages %}
-        {% for message in messages %}
-        <div class="p-4 mb-4 border-l-4
+            {% if messages %}
+            {% for message in messages %}
+            <div class="p-4 mb-4 border-l-4
                 {% if 'error' in message.tags %}
                     border-red-500 bg-red-100 text-red-800
                 {% elif 'success' in message.tags %}
@@ -21,50 +21,51 @@
                 {% else %}
                     border-gray-500 bg-gray-100 text-gray-800
                 {% endif %}">
-            <div class="flex justify-between items-center">
-                <span class="ml-2">{{ message }}</span>
-                <button type="button" class="ml-4 text-gray-500 hover:text-gray-700"
-                    onclick="this.parentElement.parentElement.remove()">
-                    &times;
-                </button>
+                <div class="flex justify-between items-center">
+                    <span class="ml-2">{{ message }}</span>
+                    <button type="button" class="ml-4 text-gray-500 hover:text-gray-700"
+                        onclick="this.parentElement.parentElement.remove()">
+                        &times;
+                    </button>
+                </div>
             </div>
+            {% endfor %}
+            {% endif %}
+
+
+            <form action="{% url 'user:change_password' %}" method="post" class="w-full">
+                {% csrf_token %}
+                <div class="space-y-6">
+                    <!-- Current Password -->
+                    <div class="relative">
+                        <input type="password" id="current-password" placeholder="Current Password"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            name="current-password">
+                    </div>
+
+                    <!-- New Password -->
+                    <div class="relative">
+                        <input type="password" id="new-password" placeholder="New Password"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            name="new-password">
+                    </div>
+
+                    <!-- New Password -->
+                    <div class="relative">
+                        <input type="password" id="new-password2" placeholder="New Password"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            name="new-password2" type="button">
+                    </div>
+
+                    <!-- Update Button -->
+                    <button id="update-password-btn"
+                        class="w-full py-3 px-6 bg-primary text-white rounded-lg hover:bg- focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200"
+                        type="submit">
+                        Update Password
+                    </button>
+                </div>
+            </form>
         </div>
-        {% endfor %}
-        {% endif %}
-
-
-        <form action="{% url 'user:change_password' %}" method="post" class="w-full">
-            {% csrf_token %}
-            <div class="space-y-6">
-                <!-- Current Password -->
-                <div class="relative">
-                    <input type="password" id="current-password" placeholder="Current Password"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        name="current-password">
-                </div>
-
-                <!-- New Password -->
-                <div class="relative">
-                    <input type="password" id="new-password" placeholder="New Password"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        name="new-password">
-                </div>
-
-                <!-- New Password -->
-                <div class="relative">
-                    <input type="password" id="new-password2" placeholder="New Password"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        name="new-password2" type="button">
-                </div>
-
-                <!-- Update Button -->
-                <button id="update-password-btn"
-                    class="w-full py-3 px-6 bg-primary text-white rounded-lg hover:bg- focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200"
-                    type="submit">
-                    Update Password
-                </button>
-            </div>
-        </form>
     </div>
 </div>
 </div>

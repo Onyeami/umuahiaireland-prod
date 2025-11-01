@@ -5,48 +5,50 @@
 
 
 {% block content %}
+<div class="p-6">
+    <div class="my-5 flex justify-between items-center">
+        <p class="text-md">Manage your personal information on your account.</p>
 
-<div class="my-5 flex justify-between items-center">
-    <p class="text-md">Manage your personal information on your account.</p>
-
-    <a href="{% url 'user:update_profile' %}" class="px-3 rounded-sm py-2 text-xs border border-black">
-        Edit Profile
-        <i class="ti ti-pencil"></i>
-    </a>
-</div>
-
-<div class="flex w-full mt-5">
-    <div class="flex flex-col items-center justify-center w-2/5">
-        <div
-            class="relative w-24 h-24 bg-[#3b1217] rounded-full flex items-center justify-center text-white text-2xl font-semibold">
-            <img src="https://api.dicebear.com/7.x/initials/svg?seed={{ request.user.first_name }}+{{ request.user.last_name }}"
-                alt="Avatar" class="rounded-full  " />
-            <span class="absolute bottom-1 right-1 w-4 h-4 bg-green-500 border-2 border-white rounded-full"></span>
-        </div>
-        <span class="mt-2 px-2 py-1 bg-green-100 text-green-700 text-sm font-medium rounded-md">
-            Available
-        </span>
-        <p class="mt-2 text-lg font-semibold text-[#3b1217]">{{ request.user.first_name }} {{ request.user.last_name }}
-        </p>
+        <a href="{% url 'user:update_profile' %}" class="px-3 rounded-sm py-2 text-xs border border-black">
+            Edit Profile
+            <i class="ti ti-pencil"></i>
+        </a>
     </div>
 
-    <div class="space-y-3 w-3/5 border-l border-black px-5">
-        <h3 class="tet-3xl uppercase">ROLE</h3>
-        <p class="text-sm">
-            {% if not request.user.is_superuser %}
-            Member
-            {% else %}
-            Administrator
-            {% endif %}
-        </p>
-        <h3 class="tet-3xl uppercase font-semibold">About Me</h3>
-        <p class="text-sm">
-            {% if request.user.about %}
-            {{ request.user.about }}
-            {% else %}
-            -----
-            {% endif %}
-        </p>
+    <div class="flex w-full mt-5">
+        <div class="flex flex-col items-center justify-center w-2/5">
+            <div
+                class="relative w-24 h-24 bg-[#3b1217] rounded-full flex items-center justify-center text-white text-2xl font-semibold">
+                <img src="https://api.dicebear.com/7.x/initials/svg?seed={{ request.user.first_name }}+{{ request.user.last_name }}"
+                    alt="Avatar" class="rounded-full  " />
+                <span class="absolute bottom-1 right-1 w-4 h-4 bg-green-500 border-2 border-white rounded-full"></span>
+            </div>
+            <span class="mt-2 px-2 py-1 bg-green-100 text-green-700 text-sm font-medium rounded-md">
+                Available
+            </span>
+            <p class="mt-2 text-lg font-semibold text-[#3b1217]">
+                {{ request.user.first_name }} {{ request.user.last_name}}
+            </p>
+        </div>
+
+        <div class="space-y-3 w-3/5 border-l border-black px-5">
+            <h3 class="tet-3xl uppercase">ROLE</h3>
+            <p class="text-sm">
+                {% if not request.user.is_superuser %}
+                Member
+                {% else %}
+                Administrator
+                {% endif %}
+            </p>
+            <h3 class="tet-3xl uppercase font-semibold">About Me</h3>
+            <p class="text-sm">
+                {% if request.user.about %}
+                {{ request.user.about }}
+                {% else %}
+                -----
+                {% endif %}
+            </p>
+        </div>
     </div>
 </div>
 

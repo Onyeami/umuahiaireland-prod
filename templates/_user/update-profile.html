@@ -5,49 +5,52 @@
 
 
 {% block content %}
+<div class="p-6">
+    <div class="my-5 flex justify-between items-center">
+        <p class="text-md">Manage your personal information on your account.</p>
+    </div>
 
-<div class="my-5 flex justify-between items-center">
-    <p class="text-md">Manage your personal information on your account.</p>
-</div>
+    <div class="w-full mt-5">
+        <form class="grid grid-cols-1 md:grid-cols-2 gap-5" method="post">
+            {% csrf_token %}
 
-<div class="w-full mt-5">
-    <form class="grid grid-cols-1 md:grid-cols-2 gap-5" method="post">
-        {% csrf_token %}
+            <div class="space-y-1">
+                <label for="fullName">Full Name</label>
+                <input type="text" name="fullName" id="fullName"
+                    class="w-full border border-gray-300 rounded-sm px-3 py-2"
+                    value="{{ request.user.first_name }} {{ request.user.last_name }}" />
+            </div>
 
-        <div class="space-y-1">
-            <label for="fullName">Full Name</label>
-            <input type="text" name="fullName" id="fullName" class="w-full border border-gray-300 rounded-sm px-3 py-2"
-                value="{{ request.user.first_name }} {{ request.user.last_name }}" />
-        </div>
+            <div class="space-y-1">
+                <label for="email">Email</label>
+                <input type="email" name="email" id="email" class="w-full border border-gray-300 rounded-sm px-3 py-2"
+                    value="{{ request.user.email }}" readonly />
+            </div>
 
-        <div class="space-y-1">
-            <label for="email">Email</label>
-            <input type="email" name="email" id="email" class="w-full border border-gray-300 rounded-sm px-3 py-2"
-                value="{{ request.user.email }}" readonly />
-        </div>
+            <div class="space-y-1 col-span-2">
+                <label for="about">About Me</label>
+                <textarea name="about" id="about" class="w-full border border-gray-300 rounded-sm px-3 py-2" rows="5"
+                    value="{{ request.user.about }}"></textarea>
+            </div>
 
-        <div class="space-y-1 col-span-2">
-            <label for="about">About Me</label>
-            <textarea name="about" id="about" class="w-full border border-gray-300 rounded-sm px-3 py-2" rows="5"
-                value="{{ request.user.about }}"></textarea>
-        </div>
+            <div class="space-y-1 col-span-2">
+                <label for="location">Location</label>
+                <input type="location" name="location" id="location"
+                    class="w-full border border-gray-300 rounded-sm px-3 py-2" value="{{ request.user.location }}" />
+            </div>
 
-        <div class="space-y-1 col-span-2">
-            <label for="location">Location</label>
-            <input type="location" name="location" id="location"
-                class="w-full border border-gray-300 rounded-sm px-3 py-2" value="{{ request.user.location }}" />
-        </div>
+            <button onclick="window.location.href='/dashboard/profile'"
+                class="px-6 py-3 border border-gray-400 text-black rounded-sm hover:bg-gray-200 transition"
+                type="button">
+                Cancel
+            </button>
 
-        <button onclick="window.location.href='/dashboard/profile'"
-            class="px-6 py-3 border border-gray-400 text-black rounded-sm hover:bg-gray-200 transition" type="button">
-            Cancel
-        </button>
-
-        <!-- Save Changes Button -->
-        <button class="px-6 py-3 bg-[#3b1217] text-white rounded-sm hover:bg-[#54191e] transition" type="submit">
-            Save Changes
-        </button>
-    </form>
+            <!-- Save Changes Button -->
+            <button class="px-6 py-3 bg-[#3b1217] text-white rounded-sm hover:bg-[#54191e] transition" type="submit">
+                Save Changes
+            </button>
+        </form>
+    </div>
 </div>
 
 {% endblock %}

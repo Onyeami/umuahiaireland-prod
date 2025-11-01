@@ -92,6 +92,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "umuahia_ireland.wsgi.application"
+
 # DATABASES = {
 #     "default": {
 #         "ENGINE": "django.db.backends.postgresql",

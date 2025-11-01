@@ -5,6 +5,7 @@ from users.models import CustomUser
 from django.contrib import messages
 from app.models import Minuites, FinancialCheckbook
 from django.http import HttpResponse
+import os
 
 
 @validation_required
@@ -21,13 +22,31 @@ def minuites(request):
 
         # Return the uploaded file instead of generating a new PDF
         if minute.minuites:
-            response = HttpResponse(
-                minute.minuites, content_type="application/octet-stream"
-            )
-            response["Content-Disposition"] = (
-                f'attachment; filename="{minute.minuites.name}"'
-            )
-            return response
+            try:
+                # Open and read the file content
+                with minute.minuites.open("rb") as file:
+                    file_content = file.read()
+
+                # Determine the content type based on file extension
+                file_name = minute.minuites.name
+                if file_name.lower().endswith(".pdf"):
+                    content_type = "application/pdf"
+                elif file_name.lower().endswith((".doc", ".docx")):
+                    content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                else:
+                    content_type = "application/octet-stream"
+
+                response = HttpResponse(file_content, content_type=content_type)
+                response["Content-Disposition"] = (
+                    f'attachment; filename="{file_name.split("/")[-1]}"'
+                )
+                return response
+            except Exception as e:
+                messages.error(request, f"Error downloading file: {str(e)}")
+                return redirect("user:minuites")
+        else:
+            messages.error(request, "No file available for download.")
+            return redirect("user:minuites")
 
     return render(request, "_user/minuites.html", {"minutes": minutes_list})
 
@@ -41,13 +60,33 @@ def checkbooks(request):
 
         # Return the uploaded checkbook file
         if checkbook.checkbook:
-            response = HttpResponse(
-                checkbook.checkbook, content_type="application/octet-stream"
-            )
-            response["Content-Disposition"] = (
-                f'attachment; filename="{checkbook.checkbook.name}"'
-            )
-            return response
+            try:
+                # Open and read the file content
+                with checkbook.checkbook.open("rb") as file:
+                    file_content = file.read()
+
+                # Determine the content type based on file extension
+                file_name = checkbook.checkbook.name
+                if file_name.lower().endswith(".pdf"):
+                    content_type = "application/pdf"
+                elif file_name.lower().endswith((".doc", ".docx")):
+                    content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                elif file_name.lower().endswith((".xls", ".xlsx")):
+                    content_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                else:
+                    content_type = "application/octet-stream"
+
+                response = HttpResponse(file_content, content_type=content_type)
+                response["Content-Disposition"] = (
+                    f'attachment; filename="{file_name.split("/")[-1]}"'
+                )
+                return response
+            except Exception as e:
+                messages.error(request, f"Error downloading file: {str(e)}")
+                return redirect("user:checkbooks")
+        else:
+            messages.error(request, "No file available for download.")
+            return redirect("user:checkbooks")
 
     return render(request, "_user/checkbooks.html", {"checkbooks": checkbook_list})
 
