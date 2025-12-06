@@ -63,7 +63,7 @@
         <!-- Featured Image -->
         {% if post.featured_image_url %}
         <div class="mb-6">
-          <img src="{{ post.featured_image_url }}" class="w-full h-96 object-cover rounded-lg" alt="{{ post.title }}" />
+          <img src="{{ post.featured_image_url }}" class="w-full h-[32rem] object-contain bg-gray-100 rounded-lg" alt="{{ post.title }}" />
         </div>
         {% endif %}
 
@@ -80,7 +80,7 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             {% for image in post.images.all %}
             <div class="bg-white rounded-lg shadow-md overflow-hidden">
-              <img src="{{ image.image_url }}" class="w-full h-48 object-cover"
+              <img src="{{ image.image_url }}" class="w-full h-48 object-contain bg-gray-100"
                 alt="{{ image.alt_text|default:image.caption }}" />
               {% if image.caption %}
               <div class="p-3">
@@ -247,7 +247,7 @@
                 <div class="flex items-start space-x-3">
                   {% if category_post.featured_image_url %}
                   <img src="{{ category_post.featured_image_url }}"
-                    class="w-16 h-16 object-cover rounded-lg flex-shrink-0" alt="{{ category_post.title }}" />
+                    class="w-16 h-16 object-contain bg-gray-100 rounded-lg flex-shrink-0" alt="{{ category_post.title }}" />
                   {% else %}
                   <div class="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center flex-shrink-0">
                     <i class="fas fa-image text-gray-400"></i>
@@ -290,7 +290,7 @@
             {% for related_post in related_posts %}
             <div class="flex items-start space-x-3">
               {% if related_post.featured_image_url %}
-              <img src="{{ related_post.featured_image_url }}" class="w-16 h-16 object-cover rounded-lg flex-shrink-0"
+              <img src="{{ related_post.featured_image_url }}" class="w-16 h-16 object-contain bg-gray-100 rounded-lg flex-shrink-0"
                 alt="{{ related_post.title }}" />
               {% else %}
               <div class="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center flex-shrink-0">
