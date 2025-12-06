@@ -78,7 +78,9 @@
             >
             <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-center items-center text-center text-white p-4 gallery-overlay">
                   <h3 class="text-lg font-semibold mb-2">{{ image.title|default:"Unnamed Image" }}</h3>
-              <p class="text-sm text-gray-200">{{ image.description|default:"No description available." }}</p>
+              {% if image.title %}
+              <p class="text-sm text-gray-200">{{ image.title }}</p>
+              {% endif %}
             </div>
           </a>
         {% endfor %}
@@ -98,7 +100,9 @@
             </video>
             <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-center items-center text-center text-white p-4 gallery-overlay">
                   <h3 class="text-lg font-semibold mb-2">{{ video.title|default:"Unnamed Video" }}</h3>
-              <p class="text-sm text-gray-200">{{ video.description|default:"No description available." }}</p>
+              {% if video.title %}
+              <p class="text-sm text-gray-200">{{ video.title }}</p>
+              {% endif %}
             </div>
           </a>
         {% endfor %}

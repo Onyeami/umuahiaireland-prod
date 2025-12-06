@@ -36,9 +36,11 @@
               <h3 class="text-lg font-semibold mb-1">
                 {{ image.name|default:"Unnamed Member" }}
               </h3>
+              {% if image.description %}
               <p class="text-sm text-gray-200 leading-snug">
-                {{ image.description|default:"No description available." }}
+                {{ image.description }}
               </p>
+              {% endif %}
             </div>
           </div>
         {% endfor %}
