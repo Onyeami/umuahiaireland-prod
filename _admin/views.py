@@ -68,7 +68,7 @@ from django.core.paginator import Paginator
 from django.db.models import Q, Count
 from users.models import CustomUser
 from app.models import Minuites, FinancialCheckbook, GalleryFolder, GalleryImage, GalleryVideo
-from app.forms import MinuitesForm, FinancialCheckbookForm
+from app.forms import MinuitesForm, FinancialCheckbookForm, GalleryImageForm, GalleryVideoForm
 from blog.models import BlogPost, Category, Tag, Comment, BlogSettings
 from blog.forms import BlogPostForm, BlogImageFormSet, CategoryForm, TagForm
 from django.core.exceptions import ValidationError
@@ -742,27 +742,39 @@ class GalleryImageUploadView(AdminRequiredMixin, View):
         
         success_count = 0
         error_count = 0
+        error_messages = []
 
         for file in uploaded_files:
             try:
-                image = GalleryImage.objects.create(
-                    folder=folder,
-                    title=title or f"Image in {folder.name}",
-                    image=file,
-                    alt_text=alt_text or title or f"Image in {folder.name}",
-                    order=int(order) if order else 0,
-                    uploaded_by=request.user.get_full_name() or request.user.email
-                )
-                success_count += 1
+                # Use GalleryImageForm to handle Cloudinary upload
+                form_data = {
+                    'folder': folder.id,
+                    'title': title or f"Image in {folder.name}",
+                    'alt_text': alt_text or title or f"Image in {folder.name}",
+                    'order': int(order) if order else 0,
+                    'is_active': True
+                }
+                form = GalleryImageForm(form_data, {'image': file})
+                
+                if form.is_valid():
+                    image = form.save(commit=False)
+                    image.uploaded_by = request.user.get_full_name() or request.user.email
+                    image.save()
+                    success_count += 1
+                else:
+                    error_count += 1
+                    error_messages.append(f"{file.name}: {', '.join([str(e) for e in form.errors.values()])}")
             except Exception as e:
                 error_count += 1
+                error_messages.append(f"{file.name}: {str(e)}")
                 print(f"Error uploading {file.name}: {str(e)}")
 
         if success_count > 0:
-            messages.success(request, f"Successfully uploaded {success_count} image(s) to '{folder.name}'!")
+            messages.success(request, f"Successfully uploaded {success_count} image(s) to Cloudinary in '{folder.name}'!")
         
         if error_count > 0:
-            messages.error(request, f"Failed to upload {error_count} image(s).")
+            error_detail = "\n".join(error_messages[:3])  # Show first 3 errors
+            messages.error(request, f"Failed to upload {error_count} image(s). {error_detail}")
 
         return redirect("admin:gallery_dashboard")
 
@@ -781,31 +793,41 @@ class GalleryVideoUploadView(AdminRequiredMixin, View):
         
         success_count = 0
         error_count = 0
+        error_messages = []
 
         for file in uploaded_files:
             try:
-                # Get file size
-                file_size = file.size if hasattr(file, 'size') else None
+                # Use GalleryVideoForm to handle Cloudinary upload
+                form_data = {
+                    'folder': folder.id,
+                    'title': title or f"Video in {folder.name}",
+                    'order': int(order) if order else 0,
+                    'is_active': True,
+                    'uploaded_by': request.user.get_full_name() or request.user.email
+                }
+                files = {'video': file}
+                if thumbnail:
+                    files['thumbnail'] = thumbnail
+                    
+                form = GalleryVideoForm(form_data, files)
                 
-                video = GalleryVideo.objects.create(
-                    folder=folder,
-                    title=title or f"Video in {folder.name}",
-                    video=file,
-                    thumbnail=thumbnail,
-                    file_size=file_size,
-                    order=int(order) if order else 0,
-                    uploaded_by=request.user.get_full_name() or request.user.email
-                )
-                success_count += 1
+                if form.is_valid():
+                    video = form.save()
+                    success_count += 1
+                else:
+                    error_count += 1
+                    error_messages.append(f"{file.name}: {', '.join([str(e) for e in form.errors.values()])}")
             except Exception as e:
                 error_count += 1
+                error_messages.append(f"{file.name}: {str(e)}")
                 print(f"Error uploading {file.name}: {str(e)}")
 
         if success_count > 0:
-            messages.success(request, f"Successfully uploaded {success_count} video(s) to '{folder.name}'!")
+            messages.success(request, f"Successfully uploaded {success_count} video(s) to Cloudinary in '{folder.name}'!")
         
         if error_count > 0:
-            messages.error(request, f"Failed to upload {error_count} video(s).")
+            error_detail = "\n".join(error_messages[:3])  # Show first 3 errors
+            messages.error(request, f"Failed to upload {error_count} video(s). {error_detail}")
 
         return redirect("admin:gallery_dashboard")
 
